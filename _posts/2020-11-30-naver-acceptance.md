@@ -1,7 +1,7 @@
 ---
 title: "네이버 2020 하반기 공채 후기"
 date: 2020-11-30 22:59:10 -0400
-categories: 네이버 공채 2020 후기
+categories: career
 comments: true
 ---
 네이버 2020 하반기 공채에 최종 합격했다.<br>
