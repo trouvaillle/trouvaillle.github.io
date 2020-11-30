@@ -281,3 +281,7 @@ defaults:
       related: true
 
 remote_theme : mmistakes/minimal-mistakes
+# Disqus
+disqus_url: https://trouvaillle.disqus.com
+disqus_name: trouvaillle
+discus-identifier: trouvaillle
