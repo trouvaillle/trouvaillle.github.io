@@ -3,7 +3,7 @@ title: "네이버 2020 하반기 공채 후기"
 date: 2020-11-30 22:59:10 -0400
 categories: 네이버 공채 2020 후기
 ---
-네이버 2020 하반기 공채에 최종 합격했다.
+네이버 2020 하반기 공채에 최종 합격했다.<br>
 아무 정보도 없이 시작한 공채이기에 누군가에게 도움이 될까 싶어 글을 남긴다.
 
 ![naver_acceptance](https://github.com/trouvaillle/trouvaillle.github.io/blob/master/_contents/2020-11-30-naver-acceptance/1.png?raw=true)
