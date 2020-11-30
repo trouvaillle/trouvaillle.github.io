@@ -9,7 +9,7 @@ categories: 네이버 공채 2020 후기
 
 ![naver_acceptance](https://github.com/trouvaillle/trouvaillle.github.io/blob/master/_contents/2020-11-30-naver-acceptance/1.png?raw=true)
 
-네이버 2020 하반기 공채는 다음 4가지 단계 전형으로 이루어졌다.<br>
+네이버 2020 하반기 공채는 다음 4단계 전형으로 이루어졌다.<br>
 서류전형 > 코딩 테스트 > 1차 면접(+인성 검사) > 2차 최종 면접
 
 # 1. 서류전형
