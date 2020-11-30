@@ -1,0 +1,29 @@
+
+# Dependencies
+markdown:         redcarpet
+highlighter:      pygments
+
+# Permalinks
+permalink:        pretty
+relative_permalinks: true
+
+# Setup
+title:            Trouvaillle log.
+tagline:          'A Jekyll theme'
+description:      'Back-end developer'
+url:              http://trouvaillle.github.io
+baseurl:          /
+
+author:
+  name:           'Trouvaillle'
+  url:            http://github.com/trouvaillle
+
+paginate:         5
+
+# Custom vars
+version:          2.1.0
+
+github:
+  repo:           http://github.com/trouvaillle
+
+remote_theme : poole/hyde
