@@ -280,6 +280,8 @@ defaults:
       share: true
       related: true
       sidebar_main: true
+      sidebar:
+        nav: "docs"
 
 remote_theme : mmistakes/minimal-mistakes
 # Disqus
@@ -287,6 +289,3 @@ disqus_url: https://trouvaillle.disqus.com
 disqus_name: trouvaillle
 discus-identifier: trouvaillle
 
-# Sidebar
-sidebar:
-  nav: "docs"
