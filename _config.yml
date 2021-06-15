@@ -282,6 +282,7 @@ defaults:
       sidebar_main: true
       sidebar:
         nav: "docs"
+      classes: wide
 
 remote_theme : mmistakes/minimal-mistakes
 # Disqus
