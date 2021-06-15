@@ -286,9 +286,6 @@ disqus_url: https://trouvaillle.disqus.com
 disqus_name: trouvaillle
 discus-identifier: trouvaillle
 
-#table of contents
----
-toc: true
-toc_label: "My Table of Contents"
-toc_icon: "cog"
----
+# Sidebar
+sidebar:
+  nav: "docs"
