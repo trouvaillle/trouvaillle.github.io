@@ -19,8 +19,8 @@ $ sudo vi /etc/elasticsearch/elasticsearch.yml
 서비스 작업 | 권장 | 다른 방법<sup>1)</sup>
 -- | -- | --
 시작 | `$ sudo systemctl start elasticsearch` | `$ sudo service elasticsearch start`
-중지 | `$ systemctl stop elasticsearch` | `$ service elasticsearch stop`
-상태 확인 | `$ systemctl status elasticsearch` | `$ service elasticsearch status`
+중지 | `$ sudo systemctl stop elasticsearch` | `$ sudo service elasticsearch stop`
+상태 확인 | `$ sudo systemctl status elasticsearch` | `$ sudo service elasticsearch status`
 
 <sub>1) wsl2와 같이 `systemctl` 사용이 불가할 때</sub>
 
