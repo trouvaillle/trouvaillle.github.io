@@ -57,4 +57,4 @@ docker run --name kib01-test --net elastic -p 5601:5601 -e "ELASTICSEARCH_HOSTS=
 ## 접속
 
 * Elasticsearch: http://localhost:9200
-* Kibana: http://localhost:5604
+* Kibana: http://localhost:5601
