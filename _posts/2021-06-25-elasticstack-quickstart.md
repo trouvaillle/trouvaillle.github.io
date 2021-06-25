@@ -42,18 +42,21 @@ https://www.elastic.co/guide/en/kibana/current/docker.html
 docker network create elastic
 docker pull docker.elastic.co/elasticsearch/elasticsearch:7.13.2
 docker run --name es01-test --net elastic -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.13.2
+
 ```
 
 ## Logstash
 ```console
 docker pull docker.elastic.co/logstash/logstash:7.13.2
 docker run --name log01-test --net elastic --rm -it -v ~/pipeline/:/usr/share/logstash/pipeline/ docker.elastic.co/logstash/logstash:7.13.2
+
 ```
 
 ## Kibana
 ```console
 docker pull docker.elastic.co/kibana/kibana:7.13.2
 docker run --name kib01-test --net elastic -p 5601:5601 -e "ELASTICSEARCH_HOSTS=http://es01-test:9200" docker.elastic.co/kibana/kibana:7.13.2
+
 ```
 
 ## 접속
