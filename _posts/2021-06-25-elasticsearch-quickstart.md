@@ -23,7 +23,7 @@ $ sudo vi /etc/elasticsearch/elasticsearch.yml
 중지 | `$ sudo systemctl stop elasticsearch` | `$ sudo service elasticsearch stop`
 상태 확인 | `$ sudo systemctl status elasticsearch` | `$ sudo service elasticsearch status`
 
-<sub>1) wsl2와 같이 `systemctl` 사용이 불가할 때</sub>
+<sup>1) wsl2와 같이 `systemctl` 사용이 불가할 때</sup>
 
 # 접속
 http://localhost:9200
