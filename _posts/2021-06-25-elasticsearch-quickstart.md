@@ -7,6 +7,7 @@ comments: true
 
 # 설치
 ## Ubuntu
+
 https://www.elastic.co/guide/en/elasticsearch/reference/current/deb.html
 
 # 설정
@@ -26,5 +27,6 @@ $ sudo vi /etc/elasticsearch/elasticsearch.yml
 <sup>1) wsl2와 같이 `systemctl` 사용이 불가할 때</sup>
 
 # 접속
+
 http://localhost:9200
 
