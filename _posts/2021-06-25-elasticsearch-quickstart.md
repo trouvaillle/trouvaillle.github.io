@@ -16,6 +16,7 @@ $ sudo vi /etc/elasticsearch/elasticsearch.yml
 맨 마지막 줄에 `network.host: localhost` 추가
 
 # 실행
+
 서비스 작업 | 권장 | 다른 방법<sup>1)</sup>
 -- | -- | --
 시작 | `$ sudo systemctl start elasticsearch` | `$ sudo service elasticsearch start`
@@ -23,4 +24,7 @@ $ sudo vi /etc/elasticsearch/elasticsearch.yml
 상태 확인 | `$ sudo systemctl status elasticsearch` | `$ sudo service elasticsearch status`
 
 <sub>1) wsl2와 같이 `systemctl` 사용이 불가할 때</sub>
+
+# 접속
+http://localhost:9200
 
