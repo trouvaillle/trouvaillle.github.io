@@ -32,8 +32,9 @@ http://localhost:9200
 
 # 도커를 통해 설치
 https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
-https://www.elastic.co/guide/en/kibana/current/docker.html
 https://www.elastic.co/guide/en/logstash/current/docker.html
+https://www.elastic.co/guide/en/logstash/current/docker-config.html
+https://www.elastic.co/guide/en/kibana/current/docker.html
 
 ## Elasticserach
 
@@ -46,6 +47,7 @@ docker run --name es01-test --net elastic -p 9200:9200 -p 9300:9300 -e "discover
 ## Logstash
 ```console
 docker pull docker.elastic.co/logstash/logstash:7.13.2
+docker run --name log01-test --net elastic --rm -it -v ~/pipeline/:/usr/share/logstash/pipeline/ docker.elastic.co/logstash/logstash:7.13.2
 ```
 
 ## Kibana
