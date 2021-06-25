@@ -1,5 +1,5 @@
 ---
-title: "Elasticsearch Quickstart"
+title: "Elasticstack Quickstart"
 date: 2021-06-25 21:28:04 +0900
 categories: Elasticsearch
 comments: true
@@ -31,6 +31,9 @@ $ sudo vi /etc/elasticsearch/elasticsearch.yml
 http://localhost:9200
 
 # 도커를 통해 설치
+https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
+https://www.elastic.co/guide/en/kibana/current/docker.html
+https://www.elastic.co/guide/en/logstash/current/docker.html
 
 ## Elasticserach
 
@@ -38,6 +41,11 @@ http://localhost:9200
 docker network create elastic
 docker pull docker.elastic.co/elasticsearch/elasticsearch:7.13.2
 docker run --name es01-test --net elastic -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.13.2
+```
+
+## Logstash
+```console
+docker pull docker.elastic.co/logstash/logstash:7.13.2
 ```
 
 ## Kibana
