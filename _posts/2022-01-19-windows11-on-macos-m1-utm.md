@@ -17,10 +17,16 @@ comments: true
 1. qemu-image를 통해 다운받은 preview 이미지를 qcow2 포멧으로 변환
 ```sh
 brew install qemu
-qemu-image convert -p -O qcow2 ${SOURCE} ${TARGET}
+qemu-img convert -p -O qcow2 ${SOURCE} ${TARGET}
 # SOURCE=*.vhdx
 # TARGET=*.qcow2
 ```
+
+2. UTM에 가상머신 생성
+Menu | Field | Value
+-- | -- | --
+System | Architecture | ARM64 (aarch64)
+System | System | QEMU 5.2 ARM Virtual Machine (virt-5.2)
 
 
 
