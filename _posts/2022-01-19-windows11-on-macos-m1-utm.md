@@ -7,7 +7,7 @@ comments: true
 
 ## 환경
 - ARM64를 사용하는 macOS(M1, M1 Pro, M1 Max 등)
-- 
+
 ## 준비물
 - [UTM for Mac](https://mac.getutm.app/) 및 [SPICE Guest Tools and QEMU Drivers (Windows)](https://mac.getutm.app/support/)
 - [Windows Client ARM64 Insider Preview](https://www.microsoft.com/en-us/software-download/windowsinsiderpreviewarm64)
@@ -27,6 +27,16 @@ Menu | Field | Value
 -- | -- | --
 System | Architecture | ARM64 (aarch64)
 System | System | QEMU 5.2 ARM Virtual Machine (virt-5.2)
+System | CPU (고급 설정) | Default
+Drive | Drive | *.qcow2 / NVMe
+Drive | Drive | Add Removable Disk / USB
+
+3. Windows 11 설정
+Install without Internet
+
+4. SPICE Guest Tools 설치
+Removable disk에 tools iso 삽입 후 설치(게스트)
+
 
 
 
