@@ -1,7 +1,7 @@
 ---
 title: "리눅스에서 프로그램을 데몬으로 실행하는 방법"
 date: 2021-05-27 01:35:00 -0400
-categories: linux
+categories: Tip
 comments: true
 ---
 
