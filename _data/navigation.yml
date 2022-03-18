@@ -1,13 +1,11 @@
 docs:
   - title: All about code
     children:
-      - title: "React.js"
-        url: /React.js
-      - title: "Database"
-        url: /db
-      - title: "Linux"
-        url: /linux
-      - title: "Study"
-        url: /study
       - title: "Career"
-        url: /Career
+        url: /category/Career
+      - title: "Database"
+        url: /category/Database
+      - title: "Frontend"
+        url: /category/Frontend
+      - title: "Tip"
+        url: /category/Tip

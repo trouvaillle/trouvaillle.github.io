@@ -4,3 +4,19 @@ comments: true
 author_profile: true
 sidebar_main: true
 ---
+<h3 class="category__subtitle">Category</h3>
+<header class="site-category">
+    <ul style="padding: 0;">
+      
+      {% assign pages_list = site.pages %}
+      {% for node in pages_list %}
+        {% if node.title != null %}
+          {% if node.layout == "category" %}
+            <li style="list-style-type: none; padding-bottom: 2px; border-bottom: 1px solid #f2f3f3;"><a class="category-link {% if page.url == node.url %} active{% endif %}"
+            href="{{ site.baseurl }}{{ node.url }}" style="color: #3d4144; text-decoration: none;">{{ node.title }}</a></li>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+      
+  </ul>
+</header>

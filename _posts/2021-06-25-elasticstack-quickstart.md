@@ -1,7 +1,7 @@
 ---
 title: "Elasticstack Quickstart"
 date: 2021-06-25 21:28:04 +0900
-categories: Elasticsearch
+categories: Database
 comments: true
 ---
 
@@ -18,11 +18,11 @@ $ sudo vi /etc/elasticsearch/elasticsearch.yml
 
 ## 실행
 
-서비스 작업 | 권장 | 다른 방법<sup>1)</sup>
--- | -- | --
-시작 | `sudo systemctl start elasticsearch` | `sudo service elasticsearch start`
-중지 | `sudo systemctl stop elasticsearch` | `sudo service elasticsearch stop`
-상태 확인 | `sudo systemctl status elasticsearch` | `sudo service elasticsearch status`
+| 서비스 작업 | 권장 | 다른 방법<sup>1)</sup> |
+| --- | --- | --- |
+| 시작 | `sudo systemctl start elasticsearch` | `sudo service elasticsearch start` |
+| 중지 | `sudo systemctl stop elasticsearch` | `sudo service elasticsearch stop` |
+| 상태 확인 | `sudo systemctl status elasticsearch` | `sudo service elasticsearch status` |
 
 <sup>1) wsl2와 같이 `systemctl` 사용이 불가할 때</sup>
 
@@ -31,14 +31,14 @@ $ sudo vi /etc/elasticsearch/elasticsearch.yml
 http://localhost:9200
 
 # 도커를 통해 설치
-https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
-https://www.elastic.co/guide/en/logstash/current/docker.html
-https://www.elastic.co/guide/en/logstash/current/docker-config.html
+https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html  
+https://www.elastic.co/guide/en/logstash/current/docker.html  
+https://www.elastic.co/guide/en/logstash/current/docker-config.html  
 https://www.elastic.co/guide/en/kibana/current/docker.html
 
 ## Elasticserach
 
-```console
+```sh
 docker network create elastic
 docker pull docker.elastic.co/elasticsearch/elasticsearch:7.13.2
 docker run --name es01-test --net elastic -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.13.2
@@ -46,14 +46,16 @@ docker run --name es01-test --net elastic -p 9200:9200 -p 9300:9300 -e "discover
 ```
 
 ## Logstash
-```console
+
+```sh
 docker pull docker.elastic.co/logstash/logstash:7.13.2
 docker run --name log01-test --net elastic --rm -it -v ~/pipeline/:/usr/share/logstash/pipeline/ docker.elastic.co/logstash/logstash:7.13.2
 
 ```
 
 ## Kibana
-```console
+
+```sh
 docker pull docker.elastic.co/kibana/kibana:7.13.2
 docker run --name kib01-test --net elastic -p 5601:5601 -e "ELASTICSEARCH_HOSTS=http://es01-test:9200" docker.elastic.co/kibana/kibana:7.13.2
 
