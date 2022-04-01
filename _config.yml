@@ -290,6 +290,11 @@ collections:
   app:
     output: true
     permalink: /:collection/:name/
+  googleacf:
+    output: true
+    permalink: /googleacf4b0f40f4c4953.html
 
 minima:
   skin: dark
+
+google_analytics: G-3VSF418X77
