@@ -1,9 +1,11 @@
 ---
+layout: post
 title: "Docker로 Aerospike를 빠르게 학습하기"
 date: 2022-03-18 22:59:00 +0900
 categories: Database
 comments: true
 ---
+
 # 목표
 
 docker contatiner 형태로 aeropsike server를 3대 띄우고  
@@ -12,16 +14,20 @@ clustering 후 data를 CRUD하고, 새로운 data를 저장한다.
 이 과정에서 data는 보존되어야 한다.
 
 # 단계
+
 ## 1. docker image 준비
+
 ### **aerospike server**: community edition [링크](https://hub.docker.com/_/aerospike)
 
-* linux/amd64
+- linux/amd64
+
 ```sh
 docker pull aerospike:ce-5.7.0.11
 ```
 
-* linux/arm64  
+- linux/arm64  
   arm64 버전은 아직 제작되지 않아서 다른 amd64 이미지 사용
+
 ```sh
 docker pull aerospike/aerospike-server:latest
 ```
@@ -29,6 +35,7 @@ docker pull aerospike/aerospike-server:latest
 ### **amc**: aerospike mangement console [링크](https://hub.docker.com/r/aerospike/amc)
 
 aerospike cluster monitoring 도구
+
 ```sh
 docker pull aerospike/amc
 ```
@@ -36,6 +43,7 @@ docker pull aerospike/amc
 ### **aerospike tools** [링크](https://hub.docker.com/r/aerospike/aerospike-tools)
 
 aerospike cluster에 접속하여 data를 CRUD 할 수 있는 도구
+
 ```sh
 docker pull aerospike/aerospike-tools:latest
 ```
@@ -49,10 +57,10 @@ docker run --rm -tid -p 8081:8081 --name aerospike-console aerospike/amc
 ## 3. aerospike server 실행
 
 | 컨테이너 이름 | 외부 노출 포트 | 내부 포트 |
-| --- | --- | --- |
-| aerospike1 | 3000-3002 | 3000-3002 |
-| aerospike2 | 3010-3012 | 3000-3002 |
-| aerospike3 | 3020-3022 | 3000-3002 |
+| ------------- | -------------- | --------- |
+| aerospike1    | 3000-3002      | 3000-3002 |
+| aerospike2    | 3010-3012      | 3000-3002 |
+| aerospike3    | 3020-3022      | 3000-3002 |
 
 ```sh
 docker run -tid --name aerospike1 -p 3000-3002:3000-3002 aerospike:ce-5.7.0.11
@@ -61,7 +69,9 @@ docker run -tid --name aerospike3 -p 3020-3022:3000-3002 aerospike:ce-5.7.0.11
 ```
 
 ## 4. aerospike server ip 확인
+
 [`asinfo -v service`](https://docs.aerospike.com/reference/info/index.html#service)를 이용한다.
+
 > IP address and server port for this node, expected to be a single address/port per node, may be multiple address if this node is configured to listen on multiple interfaces (typically not advised).
 
 ```sh
@@ -73,7 +83,9 @@ docker exec -ti aerospike3 asinfo -v service
 ## 5. clustering
 
 [`asinfo -v tip`](https://docs.aerospike.com/reference/info/index.html#tip)을 이용한다.
-> Add hostname to seed list for mesh-mode heartbeats.  
+
+> Add hostname to seed list for mesh-mode heartbeats.
+>
 > ```
 > tip:host=HOST;port=MESH-PORT
 > ```
@@ -82,9 +94,11 @@ docker exec -ti aerospike3 asinfo -v service
 docker exec -ti aerospike1 asinfo -v 'tip:host=<IP ADDRESS from aerospike2>;port=3002'
 docker exec -ti aerospike1 asinfo -v 'tip:host=<IP ADDRESS from aerospike3>;port=3002'
 ```
+
 ok 문구가 뜨면 됨
 
 ex.
+
 ```sh
 docker exec -ti aerospike1 asinfo -v 'tip:host=172.17.0.4;port=3002'
 docker exec -ti aerospike1 asinfo -v 'tip:host=172.17.0.5;port=3002'
@@ -116,6 +130,7 @@ ex. 172.17.0.3:3000
 Nodes 항목에서 3개가 up 되어있으면 ok
 
 ### 8. aerospike tools로 CRUD
+
 #### aerospike tools 실행
 
 ```sh
@@ -123,6 +138,7 @@ docker run -ti --name aerospike-tools --link aerospike1:aerospike-tools aerospik
 ```
 
 ex.
+
 ```sh
 docker run -ti --name aerospike-tools --link aerospike1:aerospike-tools aerospike/aerospike-tools aql -h 172.17.0.3:3000 --no-config-file
 ```
@@ -230,19 +246,23 @@ aql> show sets
 
 OK
 ```
+
 3개의 node 중 object 갯수가 1인 node가 2개 존재  
 `replication factor: 2`가 기본 설정이기 때문  
 `replication factor`는 네임스페이스 별로 설정되며, 설정 변경 시
 **클러스터 전체 재시작**이 필요하다. [출처](https://discuss.aerospike.com/t/changing-replication-factor/4733)
 
 ### 9. node 삭제
+
 #### tip-clear
 
 aql 아닌 일반 terminal에서 진행  
 이 경우 object가 존재하는 aerospike3 node를 제거한다.
 
 [`asinfo -v tip-clear`](https://docs.aerospike.com/reference/info/index.html#tip-clear)를 이용한다.
-> Clear configured hostname(s) from seed list for mesh-mode heartbeats. Configured hostname(s) means the hostname(s) from config file or added via the tip command. Useful in the case of repurposing a node from a live cluster.  
+
+> Clear configured hostname(s) from seed list for mesh-mode heartbeats. Configured hostname(s) means the hostname(s) from config file or added via the tip command. Useful in the case of repurposing a node from a live cluster.
+>
 > ```
 > tip-clear:host-port-list=Node1:3002,Node2:3002,...
 > ```
@@ -252,11 +272,13 @@ docker exec -ti aerospike1 asinfo -v 'tip-clear:host-port-list=<IP ADDRESS from 
 ```
 
 ex.
+
 ```
 docker exec -ti aerospike1 asinfo -v 'tip-clear:host-port-list=172.17.0.5:3002'
 ```
 
 aql에서
+
 ```sh
 aql> show sets
 +------------------+--------+------------------+---------+-------------------+-------------+--------------+----------+-------------------+-------------------+--------------+------------+
@@ -282,6 +304,7 @@ aql> show sets
 
 OK
 ```
+
 aerospike3 node에서 aerospike1 node로 object가 이동한 것을 볼 수 있음
 
 #### remove container

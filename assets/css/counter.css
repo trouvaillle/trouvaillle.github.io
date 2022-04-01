@@ -1,0 +1,129 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+
+  font-size: calc(min(13vw, 13vh));
+  font-family: "PT Sans", sans-serif;
+
+  background-color: #25282e;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+}
+
+#back {
+  color: white;
+  margin: 0.3rem;
+  font-size: 0.5rem;
+}
+
+#back:hover {
+  color: #25282e;
+}
+
+#back:active {
+  color: white;
+}
+
+#reset {
+  color: white;
+  margin: 0.3rem;
+  font-size: 0.5rem;
+}
+
+#reset:hover {
+  color: #25282e;
+}
+
+#reset:active {
+  color: white;
+}
+
+#header {
+  display: flex;
+  flex: 0 1;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  align-items: center;
+
+  background-color: #363940;
+  box-shadow: #181a2120 0px 0px 8px;
+}
+
+#spanTitle {
+  color: white;
+  font-size: 0.6rem;
+  /* margin: 0.2rem 0.4rem; */
+  margin: 0.3rem auto;
+}
+
+#content {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex: 1 0;
+  flex-direction: column;
+}
+
+#counter {
+  display: flex;
+  flex: 1 0;
+  align-items: center;
+  justify-content: center;
+}
+
+#number {
+  color: #44ba66;
+  font-size: 2.5rem;
+}
+
+#controller {
+  display: flex;
+  flex-direction: row;
+  flex: 0 1;
+  width: 100%;
+  min-height: min(40vw,30vh);
+  color: white;
+}
+
+.divButton {
+  display: flex;
+  flex: 1 1;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  border: 1px solid #33393f;
+
+  font-size: 0.8rem;
+}
+
+.divButton:hover {
+  background-color: #363940;
+}
+
+.divButton:active {
+  color: #25282e;
+}
+
+#elapsedTime {
+  flex: 0 1;
+  min-height: 1rem;
+
+  color: lightgray;
+  font-size: 0.5rem;
+  text-align: center;
+  vertical-align: middle;
+}
