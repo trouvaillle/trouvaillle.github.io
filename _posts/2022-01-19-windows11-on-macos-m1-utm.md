@@ -16,6 +16,8 @@ comments: true
 - [Windows Client ARM64 Insider Preview](https://www.microsoft.com/en-us/software-download/windowsinsiderpreviewarm64)
 - [Homebrew](https://brew.sh/index_ko)
 
+<!-- https://drive.google.com/file/d/1j7TrlQQ4aqgpjKxWpbs58iJIxIJgD67v/view -->
+
 ## 과정
 
 1. qemu-image를 통해 다운받은 preview 이미지를 qcow2 포멧으로 변환
