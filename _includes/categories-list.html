@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 <ul class="categories-list">
     {% assign categories = site.categories | sort %}
     {% for category in categories %}
     <li class="site-category">
         <h2 style="margin-top:15px; margin-bottom: 10px;;">
+=======
+<ul class="categories-list" style="list-style: none;">
+    {% assign categories = site.categories | sort %}
+    {% for category in categories %}
+    <li class="site-category">
+        <h2 style="margin: 0;">
+>>>>>>> 52250d66c3cd75d9ac9d4602136633d85969c488
             <a class="site-category-text" href="{{ site.baseurl }}/category/{{ category[0] }}/">
                 {{ category[0] }}
             </a>
