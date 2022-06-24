@@ -3,7 +3,7 @@ window.onload = () => {
   let startTime = null;
   let beforeTime = null;
 
-  const url = "https://trouvaillle.github.io";
+  const url = "https://trouvaillle.github.io/app";
 
   const localStorageIdOfNumber = "trouvaillle.github.io/app/counter.number";
   const localStorageIdOfStartTime =
