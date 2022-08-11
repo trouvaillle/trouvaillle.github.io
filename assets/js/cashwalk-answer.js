@@ -17,6 +17,7 @@ window.onload = async () => {
   const answersElement = document.querySelector("#answers");
   const spinnerElements = document.querySelectorAll(".spinner");
   const searchElement = document.querySelector("#search");
+  const refreshElement = document.querySelector("#refresh");
 
   let answers = [];
   let busy = false;
@@ -32,12 +33,19 @@ window.onload = async () => {
     headerElement.addEventListener("click", (event) => {
       contentElement.scrollTo({ top: 0, behavior: 'smooth' });
     });
-    contentElement.addEventListener("scroll", (event) => {
+    refreshElement.addEventListener("click", async (event) => {
+      if (!busy) {
+        init();
+        await startPulling();
+      }
+    });
+
+    contentElement.addEventListener("scroll", async (event) => {
       if (contentElement.scrollTop > 10) {
         headerElement.setAttribute('style', 'background-color: #ffffff13;');
         if (contentElement.scrollTop > contentElement.scrollHeight - window.innerHeight - 10) {
           if (!busy) {
-            startPulling();
+            await startPulling();
           }
         }
       } else {
@@ -64,10 +72,12 @@ window.onload = async () => {
 
   async function startPulling() {
     busy = true;
+    refreshElement.removeAttribute('style');
     spinnerElements.forEach(it => it.removeAttribute('style'));
     await getAnswers(updatedMax);
     updatedMax = answers[answers.length - 1]['datetimeText'];
-    spinnerElements.forEach(it => it.setAttribute('style', 'visibility: hidden;'));
+    spinnerElements.forEach(it => it.setAttribute('style', 'display: none;'));
+    refreshElement.setAttribute('style', 'display: block');
     busy = false;
 
     /*
@@ -366,6 +376,13 @@ window.onload = async () => {
     */
   }
 
+  function init() {
+    answers.forEach(it => it['ref'].remove());
+    answers = [];
+    updatedMax = '';
+  }
+
   setEventListeners();
+  init();
   await startPulling();
 };
