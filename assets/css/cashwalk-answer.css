@@ -1,0 +1,259 @@
+:root {
+  --dark: #000;
+  --white: #fff;
+  --glyph-blue: #2997FF;
+  --color-fill-light-blue-secondary: #002a51;
+  --fill-gray: #1c1c1e;
+  --glyph-gray-secondary: #86868B;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+
+  font-size: 18px;
+  font-family: "PT Sans", sans-serif;
+
+  background-color: var(--dark);
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+}
+
+#back, #back-after {
+  color: var(--glyph-blue);
+  margin: 0.3rem 1rem;
+  font-size: 1rem;
+  transition: 0.2s;
+}
+
+#back:hover, #back:active {
+  color: var(--color-fill-light-blue-secondary);
+}
+
+#header {
+  position: absolute;
+
+  display: flex;
+  flex: 0 1;
+  margin: 0;
+  text-align: center;
+  align-items: center;
+
+  width: 100%;
+
+  background-color: transparent;
+  backdrop-filter: blur(20px);
+
+  z-index: 99;
+}
+
+#spanTitle {
+  color: var(--white);
+  font-size: 1rem;
+  margin: 0.8rem auto;
+}
+
+#content {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex: 1 0;
+  flex-direction: column;
+  overflow: scroll;
+}
+
+#inner {
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  margin: 0;
+  padding: 2.6rem 0 1rem 0;
+}
+
+.divButton {
+  display: flex;
+  flex: 1 1;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  border: 1px solid #33393f;
+
+  font-size: 0.7rem;
+}
+
+.divButton:hover {
+  background-color: #363940;
+}
+
+.divButton:active {
+  color: #25282e;
+}
+
+#answers {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item {
+  color: var(--white);
+  background-color: var(--fill-gray);
+  display: block;
+  border-radius: 0.5rem;
+  width: calc(100% - 2rem);
+  height: 100%;
+  margin: 1rem auto;
+}
+
+.item-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: var(--white);
+  background-color: transparent;
+  line-height: 1.5rem;
+
+  height: 100%;
+  padding: 0.5rem 1rem;
+}
+
+.item-detail {
+  display: inline-block;
+  height: 100%;
+  flex: 1 0;
+}
+
+.item-title {
+  cursor: pointer;
+}
+
+.item-body {
+  color: var(--glyph-gray-secondary);
+  margin: 0.5rem 0 0 0;
+}
+
+.item-answer {
+  color: var(--glyph-blue);
+  margin: 0.5rem 0 0 0;
+}
+
+.item-answer > span {
+  cursor: pointer;
+  transition: 0.2s;
+  user-select: none;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
+.item-answer > span:active {
+  color: var(--color-fill-light-blue-secondary);
+}
+
+.item-answer > span.copied:after {
+  content: 'copied!';
+  position: relative;
+  left: 0.5rem;
+  top: 0;
+  color: var(--glyph-gray-secondary);
+  
+}
+
+/* spinner */
+div.spinner {
+  position: relative;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: block;
+  margin: 0rem auto;
+  background: transparent;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+div.spinner div {
+  width: 4.5%;
+  height: 16%;
+  background: #FFF;
+  position: absolute;
+  left: 49%;
+  top: 43%;
+  opacity: 0;
+  -webkit-border-radius: 50px;
+  -webkit-box-shadow: 0 0 3px rgba(0,0,0,0.2);
+  -webkit-animation: fade 1s linear infinite;
+}
+
+@-webkit-keyframes fade {
+  from {opacity: 1;}
+  to {opacity: 0.25;}
+}
+
+div.spinner div.bar1 {
+  -webkit-transform:rotate(0deg) translate(0, -130%);
+  -webkit-animation-delay: 0s;
+}    
+
+div.spinner div.bar2 {
+  -webkit-transform:rotate(30deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.9167s;
+}
+
+div.spinner div.bar3 {
+  -webkit-transform:rotate(60deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.833s;
+}
+div.spinner div.bar4 {
+  -webkit-transform:rotate(90deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.7497s;
+}
+div.spinner div.bar5 {
+  -webkit-transform:rotate(120deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.667s;
+}
+div.spinner div.bar6 {
+  -webkit-transform:rotate(150deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.5837s;
+}
+div.spinner div.bar7 {
+  -webkit-transform:rotate(180deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.5s;
+}
+div.spinner div.bar8 {
+  -webkit-transform:rotate(210deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.4167s;
+}
+div.spinner div.bar9 {
+  -webkit-transform:rotate(240deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.333s;
+}
+div.spinner div.bar10 {
+  -webkit-transform:rotate(270deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.2497s;
+}
+div.spinner div.bar11 {
+  -webkit-transform:rotate(300deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.167s;
+}
+div.spinner div.bar12 {
+  -webkit-transform:rotate(330deg) translate(0, -130%); 
+  -webkit-animation-delay: -0.0833s;
+}
