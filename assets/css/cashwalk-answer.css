@@ -19,6 +19,10 @@ body {
   font-family: "PT Sans", sans-serif;
 
   background-color: var(--dark);
+  color: var(--white);
+
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
 }
 
 .container {
@@ -174,7 +178,7 @@ body {
   left: 0.5rem;
   top: 0;
   color: var(--glyph-gray-secondary);
-  
+  transition: 0.2s;
 }
 
 /* spinner */

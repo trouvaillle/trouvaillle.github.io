@@ -1,11 +1,19 @@
 window.onload = async () => {
   const url = "https://trouvaillle.github.io/app";
   const cashwalkAnswerUrl = 'https://luckyquiz3.blogspot.com/search/label/%EC%BA%90%EC%8B%9C%EC%9B%8C%ED%81%AC%20%EB%8F%88%EB%B2%84%EB%8A%94%ED%80%B4%EC%A6%88?&max-results=30';
-  const whateveroriginUrl = `${window.location.href.split('://')[0]}://www.whateverorigin.org/get?url=`;
 
+  const whateveroriginUrl = `${window.location.href.split('://')[0].toLowerCase().includes('http') ?
+    window.location.href.split('://')[0].toLowerCase() : 'http'
+    }://www.whateverorigin.org/get?url=`;
+  /*
+  const whateveroriginUrl = `${window.location.href.split('://')[0].toLowerCase().includes('http') ?
+    window.location.href.split('://')[0].toLowerCase() : 'http'
+    }://crossorigin.me/`;
+  */
   const backElement = document.querySelector("#back");
   const headerElement = document.querySelector("#header");
   const contentElement = document.querySelector("#content");
+  const innerElement = document.querySelector("#inner");
   const answersElement = document.querySelector("#answers");
   const spinnerElement = document.querySelector("#spinner");
 
@@ -61,7 +69,7 @@ window.onload = async () => {
       }
     });
 
-    bodyElement.setAttribute('style', 'display: none;');
+    // bodyElement.setAttribute('style', 'display: none;');
 
     titleSpanElement.innerText = title;
     bodySpanElement.innerText = body;
@@ -79,7 +87,7 @@ window.onload = async () => {
 
     divElement.className = 'item';
 
-    liElement.setAttribute('data-expanded', false);
+    liElement.setAttribute('data-expanded', true);
 
     titleElement.append(titleSpanElement);
     bodyElement.append(bodySpanElement);
@@ -112,10 +120,12 @@ window.onload = async () => {
     let result = [];
     for (let i of Array.from(articleList)) {
       let response = await getItemFromArticle(i);
-      result.push(response);
+      result.concat(response);
 
-      let item = createItem(response['title'], response['question'], response['answer'], 'date');
-      answersElement.appendChild(item);
+      for (let j of response) {
+        let item = createItem(j['title'], j['question'], j['answer'], 'date');
+        answersElement.appendChild(item);
+      }
     }
     return result;
   }
@@ -145,13 +155,17 @@ window.onload = async () => {
 
     // let quizDetail = await getQuizFromUrl(href);
     let quizDetail = await getQuizFromUrl(href, title);
-    let listItem = {
-      datetime,
-      // datetimeText: translateWeekdayText(dateFormatter.format(datetime)),
-      title,
-      ...quizDetail
-    };
-    // console.log(listItem);
+    let listItem = [];
+    for (let i of quizDetail) {
+      listItem.push(
+        {
+          datetime,
+          // datetimeText: translateWeekdayText(dateFormatter.format(datetime)),
+          title,
+          ...i
+        }
+      );
+    }
     return listItem;
   }
 
@@ -168,10 +182,14 @@ window.onload = async () => {
         .map(it => it.replaceAll('ㅡ', ''))
         .filter(it => it.trim().length != 0);
     })();
+
     let answerStart = -1;
     let question = '';
     let pending = '';
     let answer = '';
+
+    let result = [];
+
     for (var i of quizArea) {
       let trimmed = i.trim();
       if (trimmed.length != 0) {
@@ -189,6 +207,7 @@ window.onload = async () => {
                 pending = "";
                 answer = middleText;
               }
+              result.push({ question, pending, answer });
               answerStart = -1;
             } else {
               question = trimmed;
@@ -203,6 +222,7 @@ window.onload = async () => {
             } else {
               answer = middleText;
             }
+            result.push({ question, pending, answer });
             answerStart = -1;
             break;
         }
@@ -222,8 +242,7 @@ window.onload = async () => {
         answerStart = 0;
       }
     }
-    // console.log({ question, pending, answer });
-    return { question, pending, answer };
+    return result;
   }
 
   function getAnswerWords(wholeText) {
@@ -257,6 +276,7 @@ window.onload = async () => {
       }
       let errorCause = `retries exhausted: ${count}/${count}`;
       // console.error(errorCause);
+      debugPrint(errorCause);
       reject(errorCause);
     });
   }
@@ -273,10 +293,27 @@ window.onload = async () => {
       };
       xhr.onerror = (event) => {
         // console.error(event);
+        debugPrint(event);
+        window.test = event;
         reject(event);
       };
-      xhr.send();
+      try {
+        xhr.send();
+      } catch (exception) {
+        // console.error(exception);
+        debugPrint(exception);
+      }
     });
+  }
+
+  function debugPrint(value) {
+    // console.debug(value);
+    /*
+    let pElement = document.createElement('p');
+    pElement.className = 'debug'
+    pElement.innerText = JSON.stringify(value);
+    innerElement.appendChild(pElement);
+    */
   }
 
   setEventListeners();
