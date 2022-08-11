@@ -34,11 +34,18 @@ body {
   flex-direction: column;
 }
 
-#back, #back-after {
+#back {
   color: var(--glyph-blue);
-  margin: 0.3rem 1rem;
+  margin: 0.3rem 1.5rem 0.3rem 1rem;
   font-size: 1rem;
   transition: 0.2s;
+  z-index: 100;
+}
+
+#back-after {
+  margin: 0.3rem 1rem 0.3rem 0;
+  width: 1rem;
+  height: 1rem;
 }
 
 #back:hover, #back:active {
@@ -179,6 +186,31 @@ body {
   top: 0;
   color: var(--glyph-gray-secondary);
   transition: 0.2s;
+}
+
+#searchBox {
+  background-color: var(--fill-gray);
+  display: flex;
+  flex-direction: row;
+  border-radius: 0.5rem;
+  margin: 1rem 1rem 1.5rem 1rem;
+  padding: 0;
+}
+
+#searchBox > i {
+  flex: 0 0;
+  margin: auto 0 auto 0.5rem;
+  color: gray;
+}
+
+#search {
+  background-color: transparent;
+  color: var(--white);
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  padding: 0.5rem 0.5rem;
+  flex: 1 1;
 }
 
 /* spinner */

@@ -12,28 +12,64 @@ window.onload = async () => {
   */
   const backElement = document.querySelector("#back");
   const headerElement = document.querySelector("#header");
+  const spanTitleElement = document.querySelector('#spanTitle');
   const contentElement = document.querySelector("#content");
-  const innerElement = document.querySelector("#inner");
   const answersElement = document.querySelector("#answers");
-  const spinnerElement = document.querySelector("#spinner");
+  const spinnerElements = document.querySelectorAll(".spinner");
+  const searchElement = document.querySelector("#search");
 
   let answers = [];
+  let busy = false;
+  let updatedMax = '';
 
   function setEventListeners() {
     backElement.addEventListener("click", (event) => {
       window.location.href = url;
     });
+    spanTitleElement.addEventListener("click", (event) => {
+      contentElement.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    headerElement.addEventListener("click", (event) => {
+      contentElement.scrollTo({ top: 0, behavior: 'smooth' });
+    });
     contentElement.addEventListener("scroll", (event) => {
       if (contentElement.scrollTop > 10) {
         headerElement.setAttribute('style', 'background-color: #ffffff13;');
+        if (contentElement.scrollTop > contentElement.scrollHeight - window.innerHeight - 10) {
+          if (!busy) {
+            startPulling();
+          }
+        }
       } else {
         headerElement.removeAttribute('style');
       }
     });
+
+    searchElement.addEventListener("input", (event) => {
+      for (let i of answers) {
+        if (event.currentTarget.value.trim().length == 0) {
+          i['ref'].setAttribute('data-visible', true);
+        } else {
+          i['ref'].setAttribute('data-visible', JSON.stringify(i).toLowerCase().includes(event.currentTarget.value.trim().toLowerCase()));
+        }
+
+        if (i['ref'].getAttribute('data-visible') == 'true') {
+          i['ref'].removeAttribute('style');
+        } else {
+          i['ref'].setAttribute('style', 'display: none;');
+        }
+      }
+    });
   }
 
-  async function init() {
-    answers = await getAnswers();
+  async function startPulling() {
+    busy = true;
+    spinnerElements.forEach(it => it.removeAttribute('style'));
+    await getAnswers(updatedMax);
+    updatedMax = answers[answers.length - 1]['datetimeText'];
+    spinnerElements.forEach(it => it.setAttribute('style', 'visibility: hidden;'));
+    busy = false;
+
     /*
     for (let i = 0; i < answers.length; ++i) {
       let item = createItem(answers[i]['title'], answers[i]['question'], answers[i]['answer'], 'date');
@@ -41,10 +77,9 @@ window.onload = async () => {
       answersElement.appendChild(item);
     }
     */
-    spinnerElement.setAttribute('style', 'display: none;');
   }
 
-  function createItem(title, body, answer, date) {
+  function createItem(title, body, answer, date, dataVisible = true) {
     let liElement = document.createElement('li');
     let divElement = document.createElement('div');
     let innerDivElement = document.createElement('div');
@@ -69,7 +104,7 @@ window.onload = async () => {
       }
     });
 
-    // bodyElement.setAttribute('style', 'display: none;');
+    bodyElement.setAttribute('style', 'display: none;');
 
     titleSpanElement.innerText = title;
     bodySpanElement.innerText = body;
@@ -87,7 +122,12 @@ window.onload = async () => {
 
     divElement.className = 'item';
 
-    liElement.setAttribute('data-expanded', true);
+    liElement.setAttribute('data-expanded', false);
+    liElement.setAttribute('data-visible', dataVisible);
+
+    if (!dataVisible) {
+      liElement.setAttribute('style', 'display: none;');
+    }
 
     titleElement.append(titleSpanElement);
     bodyElement.append(bodySpanElement);
@@ -114,24 +154,29 @@ window.onload = async () => {
     }
   }
 
-  async function getAnswers() {
-    let templateElement = await retry(() => { return getPage(cashwalkAnswerUrl); }, 5);
+  async function getAnswers(updatedMax) {
+    let templateElement = await retry(() => { return getPage(cashwalkAnswerUrl, updatedMax); }, 5);
     let articleList = templateElement.querySelectorAll('div.blog-posts.hfeed.index-post-wrap > article');
     let result = [];
     for (let i of Array.from(articleList)) {
       let response = await getItemFromArticle(i);
-      result.concat(response);
 
       for (let j of response) {
-        let item = createItem(j['title'], j['question'], j['answer'], 'date');
+        let dataVisible = true;
+        if (searchElement.value.trim().length != 0) {
+          dataVisible = JSON.stringify(j).toLowerCase().includes(searchElement.value.trim().toLowerCase());
+        }
+        let item = createItem(j['title'], j['question'], j['answer'], 'date', dataVisible);
         answersElement.appendChild(item);
+        result.push({ ...j, ref: item });
+        answers.push({ ...j, ref: item });
       }
     }
     return result;
   }
 
   async function getItemFromArticle(article) {
-    let _lastDatetime = article.querySelector('.entry-time > time').attributes['datetime']; // '2022-03-31T11:30:00+09:00'
+    let datetimeText = article.querySelector('.entry-time > time').getAttribute('datetime'); // '2022-03-31T11:30:00+09:00'
 
     let href = article.querySelector('.entry-title > a').getAttribute('href');
     if (href != null) {
@@ -159,6 +204,7 @@ window.onload = async () => {
     for (let i of quizDetail) {
       listItem.push(
         {
+          datetimeText,
           datetime,
           // datetimeText: translateWeekdayText(dateFormatter.format(datetime)),
           title,
@@ -281,10 +327,14 @@ window.onload = async () => {
     });
   }
 
-  async function getPage(url) {
+  async function getPage(url, updatedMax = '') {
     return new Promise((resolve, reject) => {
       let xhr = new XMLHttpRequest();
-      xhr.open('GET', `${whateveroriginUrl}${encodeURIComponent(url)}`);
+      xhr.open('GET', `${whateveroriginUrl}${encodeURIComponent(`${url}${updatedMax.trim().length != 0 ? `&updated-max=${encodeURIComponent(updatedMax)}` : ''
+        }`)
+        }`);
+      // xhr.setRequestHeader('origin', 'https://luckyquiz3.blogspot.com');
+      // xhr.setRequestHeader('X-Requested-With', 'XMLHTTPRequest');
       xhr.onload = (event) => {
         let result = JSON.parse(event.currentTarget.responseText).contents;
         let templateElement = document.createElement('template');
@@ -317,5 +367,5 @@ window.onload = async () => {
   }
 
   setEventListeners();
-  await init();
+  await startPulling();
 };
