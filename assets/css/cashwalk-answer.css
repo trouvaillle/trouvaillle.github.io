@@ -73,6 +73,7 @@ body {
 
   background-color: transparent;
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 
   z-index: 99;
 }

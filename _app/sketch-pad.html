@@ -1,0 +1,49 @@
+---
+title: Sketch Pad
+layout: none
+permalink: /app/sketch-pad
+---
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="HandheldFriendly" content="true" />
+    <title>Sketch Pad | Trouvaillle app</title>
+    <link rel="stylesheet" type="text/css" href="../assets/css/sketch-pad.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="../assets/js/sketch-pad.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div id="header">
+            <span id="back"><i class="fa-solid fa-angle-left"></i></span>
+            <span id="spanTitle">Sketch Pad</span>
+            <span id="eraseAll"><i class="fa-solid fa-trash"></i>
+            </span>
+        </div>
+        <div id="content">
+            <canvas id="pad">
+            </canvas>
+            <div id="controller-back">
+                <div id="controller">
+                    <div id="colorList">
+                        <div data-index="0" data-color="white" class="colors selected"></div>
+                        <div data-index="1" data-color="red" class="colors"></div>
+                        <div data-index="2" data-color="orange" class="colors"></div>
+                        <div data-index="3" data-color="green" class="colors"></div>
+                        <div data-index="4" data-color="blue" class="colors"></div>
+                        <div data-index="5" data-color="magenta" class="colors"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
