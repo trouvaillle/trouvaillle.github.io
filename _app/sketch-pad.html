@@ -28,8 +28,9 @@ permalink: /app/sketch-pad
             </span>
         </div>
         <div id="content">
-            <canvas id="pad">
-            </canvas>
+            <canvas id="drawingPad" style="z-index:2;"></canvas>
+            <canvas class="pad" style="z-index:1;"></canvas>
+            <canvas class="pad" style="z-index:0;"></canvas>
             <div id="controller-back">
                 <div id="controller">
                     <div id="colorList">

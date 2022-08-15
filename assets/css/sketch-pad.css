@@ -95,10 +95,25 @@ body {
   overflow: hidden;
 }
 
-#pad {
+#drawingPad {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  -khtml-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+}
+
+.pad {
+  position: absolute;
  width: 100%;
  height: 100%;
  overflow: hidden;
+ z-index: 0;
 }
 
 #controller-back {
@@ -106,6 +121,7 @@ body {
   left: 0;
   bottom: 0;
   width: 100%;
+  z-index: 99;
 }
 
 #controller {

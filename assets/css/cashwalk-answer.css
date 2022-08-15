@@ -115,6 +115,7 @@ body {
   background-color: var(--fill-gray);
   display: block;
   border-radius: 0.5rem;
+  -webkit-border-radius: 0.5rem;
   width: calc(100% - 2rem);
   height: 100%;
   margin: 1rem auto;
@@ -177,6 +178,7 @@ body {
   color: var(--glyph-gray-secondary);
   background-color: transparent;
   border-radius: 0.25rem;
+  -webkit-border-radius: 0.25rem;
   transition: 0.2s;
   font-size: 1rem;
   padding: 0;
@@ -187,6 +189,7 @@ body {
   display: flex;
   flex-direction: row;
   border-radius: 0.5rem;
+  -webkit-border-radius: 0.5rem;
   margin: 1rem 1rem 1.5rem 1rem;
   padding: 0;
 }

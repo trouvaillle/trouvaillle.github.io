@@ -2,8 +2,8 @@ window.onload = async () => {
   const url = "https://trouvaillle.github.io/app";
 
   const backElement = document.querySelector("#back");
-  const padElement = document.querySelector("#pad");
-  const context = padElement.getContext("2d");
+  const drawingPadElement = document.querySelector("#drawingPad");
+  const padElements = document.querySelectorAll(".pad");
   const colorsElement = document.querySelectorAll(".colors");
   const eraseAllElement = document.querySelector("#eraseAll");
 
@@ -17,6 +17,9 @@ window.onload = async () => {
   let colorSelectedIndex = 0;
   let currentColorElement;
   let currentPath;
+  let currentPadIndex = 0;
+  let padElement = padElements[currentPadIndex];
+  let context = padElement.getContext("2d");
 
   function setEventListeners() {
     backElement.addEventListener("click", (event) => {
@@ -24,40 +27,40 @@ window.onload = async () => {
     });
 
     eraseAllElement.addEventListener("click", (event) => {
-      context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+      eraseAll();
     });
 
-    padElement.addEventListener("mousedown", (event) => {
+    drawingPadElement.addEventListener("mousedown", (event) => {
       event.preventDefault();
       drawStart(event);
     });
 
-    padElement.addEventListener("mousemove", (event) => {
+    drawingPadElement.addEventListener("mousemove", (event) => {
       event.preventDefault();
       drawContinue(event);
     });
 
-    padElement.addEventListener("mouseup", (event) => {
+    drawingPadElement.addEventListener("mouseup", (event) => {
       event.preventDefault();
       drawEnd(event);
     });
 
-    padElement.addEventListener("mouseout", (event) => {
+    drawingPadElement.addEventListener("mouseout", (event) => {
       event.preventDefault();
       drawEnd(event);
     });
 
-    padElement.addEventListener("touchstart", (event) => {
+    drawingPadElement.addEventListener("touchstart", (event) => {
       event.preventDefault();
       drawStart(event.touches[0]);
     });
 
-    padElement.addEventListener("touchmove", (event) => {
+    drawingPadElement.addEventListener("touchmove", (event) => {
       event.preventDefault();
       drawContinue(event.touches[0]);
     });
 
-    padElement.addEventListener("touchend", (event) => {
+    drawingPadElement.addEventListener("touchend", (event) => {
       event.preventDefault();
       drawEnd(event.touches[0]);
     });
@@ -134,8 +137,8 @@ window.onload = async () => {
     let diffY = event.clientY - currentColorElement.getBoundingClientRect().y;
     if (diffY < -15) {
       lineWidth = Math.floor(-diffY / 30) * 2;
-      if (lineWidth > 7) {
-        lineWidth = 7;
+      if (lineWidth > 21) {
+        lineWidth = 21;
       }
       if (lineWidth < 1) {
         lineWidth = 1;
@@ -147,7 +150,7 @@ window.onload = async () => {
       it.setAttribute(
         "style",
         `background-color:${it.getAttribute("data-color")};outline-offset:-${
-          1 - lineWidth / 12
+          1 - lineWidth / 30
         }rem`
       );
     });
@@ -158,8 +161,22 @@ window.onload = async () => {
   }
 
   function init() {
+    currentPadIndex = 0;
+    padElements.forEach((it) => {
+      let context = it.getContext("2d");
+      context.canvas.width = window.innerWidth;
+      context.canvas.height = window.innerHeight;
+      // it.setAttribute("style", "visibility: hidden;");
+    });
+
+    let context = drawingPadElement.getContext("2d");
     context.canvas.width = window.innerWidth;
     context.canvas.height = window.innerHeight;
+
+    // padElements[currentPadIndex].removeAttribute("style");
+
+    // context.canvas.width = window.innerWidth;
+    // context.canvas.height = window.innerHeight;4
     colorsElement.forEach((it) => {
       it.setAttribute(
         "style",
@@ -176,9 +193,12 @@ window.onload = async () => {
     currentPath = new Path2D();
     currentPath.moveTo(currX, currY);
 
-    context.beginPath();
-    context.strokeStyle = strokeStyle;
-    context.lineWidth = lineWidth;
+    // context.beginPath();
+    padElements.forEach((it) => {
+      let context = it.getContext("2d");
+      context.strokeStyle = strokeStyle;
+      context.lineWidth = lineWidth;
+    });
   }
 
   function drawContinue(event) {
@@ -190,6 +210,7 @@ window.onload = async () => {
 
       // context.moveTo(prevX, prevY);
       currentPath.lineTo(currX, currY);
+      context.clearRect(0, 0, context.canvas.width, context.canvas.height);
       context.stroke(currentPath);
     }
   }
@@ -198,7 +219,31 @@ window.onload = async () => {
     if (isDrawing) {
       // context.closePath();
       isDrawing = false;
+      let nextPadIndex = (currentPadIndex + 1) % padElements.length;
+      padElements[nextPadIndex].getContext("2d").stroke(currentPath);
+      // padElements[nextPadIndex].removeAttribute("style");
+      // padElements[currentPadIndex].setAttribute("style", "visibility: hidden;");
+      /* padElements[currentPadIndex]
+        .getContext("2d")
+        .drawImage(padElements[nextPadIndex], 0, 0);
+        */
+      eraseCanvas(padElements[currentPadIndex]);
+      // currentPadIndex = nextPadIndex;
+      // context = padElement[currentPadIndex].getContext("2d");
     }
+  }
+
+  function eraseAll() {
+    padElements.forEach((it) => {
+      let context = it.getContext("2d");
+      context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+      context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+    });
+  }
+
+  function eraseCanvas(it) {
+    let context = it.getContext("2d");
+    context.clearRect(0, 0, context.canvas.width, context.canvas.height);
   }
 
   setEventListeners();
