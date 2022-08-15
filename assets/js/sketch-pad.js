@@ -4,8 +4,13 @@ window.onload = async () => {
   const backElement = document.querySelector("#back");
   const drawingPadElement = document.querySelector("#drawingPad");
   const padElements = document.querySelectorAll(".pad");
-  const colorsElement = document.querySelectorAll(".colors");
   const eraseAllElement = document.querySelector("#eraseAll");
+  const colorListElement = document.querySelector("#colorList");
+
+  const strokeStyles = ["white", "red", "orange", "green", "blue", "magenta"];
+
+  let colorsElements = [];
+  let colorsInnerElements = [];
 
   let prevX, prevY;
   let currX, currY;
@@ -69,61 +74,66 @@ window.onload = async () => {
     window.addEventListener("resize", (event) => {
       init();
     });
+  }
 
-    colorsElement.forEach((it) => {
-      it.addEventListener("click", (event) => {
-        event.preventDefault();
-        selectColor(event);
-      });
+  function setColorsEventListeners(it) {
+    it.addEventListener("click", (event) => {
+      event.preventDefault();
+      selectColor(event);
+    });
 
-      it.addEventListener("mousedown", (event) => {
-        event.preventDefault();
-        selectColor(event);
-        settingWidthStart(event);
-      });
+    it.addEventListener("mousedown", (event) => {
+      event.preventDefault();
+      selectColor(event);
+      settingWidthStart(event);
+    });
 
-      it.addEventListener("mousemove", (event) => {
-        event.preventDefault();
-        settingWidthContinue(event);
-      });
+    it.addEventListener("mousemove", (event) => {
+      event.preventDefault();
+      settingWidthContinue(event);
+    });
 
-      it.addEventListener("mouseup", (event) => {
-        event.preventDefault();
-        settingWidthEnd(event);
-      });
-      it.addEventListener("mouseout", (event) => {
-        event.preventDefault();
-        settingWidthEnd(event);
-      });
+    it.addEventListener("mouseup", (event) => {
+      event.preventDefault();
+      settingWidthEnd(event);
+    });
+    it.addEventListener("mouseout", (event) => {
+      event.preventDefault();
+      settingWidthEnd(event);
+    });
 
-      it.addEventListener("touchstart", (event) => {
-        event.preventDefault();
-        selectColor(event);
-        settingWidthStart(event.touches[0]);
-      });
+    it.addEventListener("touchstart", (event) => {
+      event.preventDefault();
+      selectColor(event);
+      settingWidthStart(event.touches[0]);
+    });
 
-      it.addEventListener("touchmove", (event) => {
-        event.preventDefault();
-        settingWidthContinue(event.touches[0]);
-      });
+    it.addEventListener("touchmove", (event) => {
+      event.preventDefault();
+      settingWidthContinue(event.touches[0]);
+    });
 
-      it.addEventListener("touchend", (event) => {
-        event.preventDefault();
-        settingWidthEnd(event.touches[0]);
-      });
+    it.addEventListener("touchend", (event) => {
+      event.preventDefault();
+      settingWidthEnd(event.touches[0]);
     });
   }
 
   function selectColor(event) {
     strokeStyle = event.currentTarget.getAttribute("data-color");
     colorSelectedIndex = parseInt(
-      event.currentTarget.getAttribute("data-selected")
+      event.currentTarget.getAttribute("data-index")
     );
     currentColorElement = event.currentTarget;
-    colorsElement.forEach((it) => {
+    colorsElements.forEach((it) => {
       it.classList.remove("selected");
     });
     event.currentTarget.classList.add("selected");
+
+    colorsInnerElements.forEach((it) => {
+      it.classList.remove("selected");
+    });
+    colorsInnerElements[colorSelectedIndex].classList.add("selected");
   }
 
   function settingWidthStart(event) {
@@ -147,12 +157,24 @@ window.onload = async () => {
     } else {
       lineWidth = 1;
     }
-    colorsElement.forEach((it) => {
+    setColorsInnerByLineWidth();
+    /*
+    colorsElements.forEach((it) => {
       it.setAttribute(
         "style",
         `background-color:${it.getAttribute("data-color")};outline-offset:-${
           1 - lineWidth / 30
         }rem`
+      );
+    });
+    */
+  }
+
+  function setColorsInnerByLineWidth() {
+    colorsInnerElements.forEach((it) => {
+      it.setAttribute(
+        "style",
+        `width:${100 * (lineWidth / 30)}%;height:${100 * (lineWidth / 30)}%;`
       );
     });
   }
@@ -173,12 +195,34 @@ window.onload = async () => {
     context.canvas.width = window.innerWidth;
     context.canvas.height = window.innerHeight;
 
-    colorsElement.forEach((it) => {
-      it.setAttribute(
-        "style",
-        `background-color: ${it.getAttribute("data-color")}`
-      );
+    colorListElement.innerHTML = "";
+    colorsElements = [];
+    colorsInnerElements = [];
+    let index = 0;
+
+    strokeStyles.forEach((it) => {
+      let divColors = document.createElement("div");
+      divColors.setAttribute("data-index", index);
+      divColors.setAttribute("data-color", it);
+      divColors.setAttribute("style", `background-color: ${it}`);
+      divColors.className = "colors";
+      index += 1;
+
+      let divColorsInner = document.createElement("div");
+      divColorsInner.setAttribute("style", "width: 50%; height: 50%;");
+      divColorsInner.className = "colorsInner";
+
+      divColors.appendChild(divColorsInner);
+      colorListElement.appendChild(divColors);
+
+      colorsElements.push(divColors);
+      colorsInnerElements.push(divColorsInner);
+      setColorsEventListeners(divColors);
     });
+    colorsElements[colorSelectedIndex].classList.add("selected");
+    colorsInnerElements[colorSelectedIndex].classList.add("selected");
+
+    setColorsInnerByLineWidth();
   }
 
   function drawStart(event) {
@@ -208,10 +252,8 @@ window.onload = async () => {
       currX = event.clientX - padElement.offsetLeft;
       currY = event.clientY - padElement.offsetTop;
 
-      // context.moveTo(prevX, prevY);
       currentPath.lineTo(currX, currY);
       context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-      // context.stroke(currentPath);
       strokeLine(padElement, currentPath, beginX, beginY, currX, currY);
     }
   }
@@ -219,11 +261,9 @@ window.onload = async () => {
   function drawEnd(event) {
     window.test = currentPath;
     if (isDrawing) {
-      // context.closePath();
       isDrawing = false;
       let nextPadIndex = (currentPadIndex + 1) % padElements.length;
       if (beginX == currX && beginY == currY) {
-        console.log("hi!");
         fillCircle(padElements[nextPadIndex], currX, currY, lineWidth / 2);
       }
       strokeLine(
@@ -265,7 +305,7 @@ window.onload = async () => {
     context.clearRect(0, 0, context.canvas.width, context.canvas.height);
   }
 
-  setEventListeners();
   init();
-  currentColorElement = colorsElement[0];
+  setEventListeners();
+  currentColorElement = colorsElements[0];
 };
