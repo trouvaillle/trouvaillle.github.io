@@ -1,13 +1,26 @@
 window.onload = async () => {
   const url = "https://trouvaillle.github.io/app";
 
+  const MAX_HISTORIES = 128;
+
   const backElement = document.querySelector("#back");
   const drawingPadElement = document.querySelector("#drawingPad");
+  const headerElement = document.querySelector("#header");
   const padElements = document.querySelectorAll(".pad");
+  const saveElement = document.querySelector("#save");
+  const undoElement = document.querySelector("#undo");
   const eraseAllElement = document.querySelector("#eraseAll");
   const colorListElement = document.querySelector("#colorList");
 
-  const strokeStyles = ["white", "red", "orange", "green", "blue", "magenta"];
+  const strokeStyles = [
+    "white",
+    "red",
+    "orange",
+    "green",
+    "blue",
+    "magenta",
+    "eraser",
+  ];
 
   let colorsElements = [];
   let colorsInnerElements = [];
@@ -26,14 +39,27 @@ window.onload = async () => {
   let padElement = padElements[currentPadIndex];
   let context = padElement.getContext("2d");
   let beginX, beginY;
+  let histories = [];
 
   function setEventListeners() {
     backElement.addEventListener("click", (event) => {
+      event.preventDefault();
       window.location.href = url;
     });
 
     eraseAllElement.addEventListener("click", (event) => {
+      event.preventDefault();
+      let nextPadIndex = (currentPadIndex + 1) % padElements.length;
+      histories.push(getImageData(padElements[nextPadIndex]));
       eraseAll();
+    });
+
+    eraseAllElement.addEventListener("dblclick", (event) => {
+      event.preventDefault();
+    });
+
+    headerElement.addEventListener("dblclick", (event) => {
+      event.preventDefault();
     });
 
     drawingPadElement.addEventListener("mousedown", (event) => {
@@ -69,6 +95,41 @@ window.onload = async () => {
     drawingPadElement.addEventListener("touchend", (event) => {
       event.preventDefault();
       drawEnd(event.touches[0]);
+    });
+
+    undoElement.addEventListener("click", (event) => {
+      event.preventDefault();
+      if (event.currentTarget.classList.contains("canUndo")) {
+        if (histories.length != 0) {
+          let nextPadIndex = (currentPadIndex + 1) % padElements.length;
+          eraseCanvas(padElements[nextPadIndex]);
+          let pop = histories.pop();
+          if (pop != null) {
+            padElements[nextPadIndex].getContext("2d").putImageData(pop, 0, 0);
+          }
+        }
+        if (histories.length == 0) {
+          event.currentTarget.classList.remove("canUndo");
+        }
+      }
+    });
+
+    undoElement.addEventListener("dblclick", (event) => {
+      event.preventDefault();
+    });
+
+    saveElement.addEventListener("click", (event) => {
+      event.preventDefault();
+      let nextPadIndex = (currentPadIndex + 1) % padElements.length;
+      let filename = `${getFormmatedDate(new Date())}.png`;
+      let link = document.createElement("a");
+      link.download = filename;
+      link.href = padElements[nextPadIndex].toDataURL();
+      link.click();
+    });
+
+    saveElement.addEventListener("dblclick", (event) => {
+      event.preventDefault();
     });
 
     window.addEventListener("resize", (event) => {
@@ -121,6 +182,9 @@ window.onload = async () => {
 
   function selectColor(event) {
     strokeStyle = event.currentTarget.getAttribute("data-color");
+    if (strokeStyle == "eraser") {
+      strokeStyle = "black";
+    }
     colorSelectedIndex = parseInt(
       event.currentTarget.getAttribute("data-index")
     );
@@ -146,6 +210,9 @@ window.onload = async () => {
       return;
     }
     let diffY = event.clientY - currentColorElement.getBoundingClientRect().y;
+    if (diffY >= 0) {
+      return;
+    }
     if (diffY < -15) {
       lineWidth = Math.floor(-diffY / 30) * 2;
       if (lineWidth > 21) {
@@ -158,16 +225,6 @@ window.onload = async () => {
       lineWidth = 1;
     }
     setColorsInnerByLineWidth();
-    /*
-    colorsElements.forEach((it) => {
-      it.setAttribute(
-        "style",
-        `background-color:${it.getAttribute("data-color")};outline-offset:-${
-          1 - lineWidth / 30
-        }rem`
-      );
-    });
-    */
   }
 
   function setColorsInnerByLineWidth() {
@@ -204,7 +261,14 @@ window.onload = async () => {
       let divColors = document.createElement("div");
       divColors.setAttribute("data-index", index);
       divColors.setAttribute("data-color", it);
-      divColors.setAttribute("style", `background-color: ${it}`);
+      if (it != "eraser") {
+        divColors.setAttribute("style", `background-color: ${it}`);
+      } else {
+        divColors.setAttribute(
+          "style",
+          `background: repeating-conic-gradient(white 0% 25%, gray 0% 50%) 50% / 5vw 5vw`
+        );
+      }
       divColors.className = "colors";
       index += 1;
 
@@ -223,6 +287,8 @@ window.onload = async () => {
     colorsInnerElements[colorSelectedIndex].classList.add("selected");
 
     setColorsInnerByLineWidth();
+
+    eraseAll();
   }
 
   function drawStart(event) {
@@ -263,6 +329,7 @@ window.onload = async () => {
     if (isDrawing) {
       isDrawing = false;
       let nextPadIndex = (currentPadIndex + 1) % padElements.length;
+      histories.push(getImageData(padElements[nextPadIndex]));
       if (beginX == currX && beginY == currY) {
         fillCircle(padElements[nextPadIndex], currX, currY, lineWidth / 2);
       }
@@ -275,7 +342,23 @@ window.onload = async () => {
         currY
       );
       eraseCanvas(padElements[currentPadIndex]);
+      if (histories.length != 0) {
+        undoElement.classList.add("canUndo");
+      }
+      if (histories.length > MAX_HISTORIES) {
+        histories.splice(0, 1);
+      }
     }
+  }
+
+  function getImageData(canvas) {
+    let context = canvas.getContext("2d");
+    return context.getImageData(
+      0,
+      0,
+      context.canvas.width,
+      context.canvas.height
+    );
   }
 
   function fillCircle(canvas, x, y, radius) {
@@ -298,11 +381,33 @@ window.onload = async () => {
       context.clearRect(0, 0, context.canvas.width, context.canvas.height);
       context.clearRect(0, 0, context.canvas.width, context.canvas.height);
     });
+    let nextPadIndex = (currentPadIndex + 1) % padElements.length;
+    let context = padElements[nextPadIndex].getContext("2d");
+    context.fillStyle = "black";
+    context.fillRect(0, 0, context.canvas.width, context.canvas.height);
   }
 
   function eraseCanvas(it) {
     let context = it.getContext("2d");
     context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+  }
+
+  function getFormmatedDate(date) {
+    return (
+      date.getFullYear().toString() +
+      "-" +
+      ("0" + (date.getMonth() + 1).toString()).slice(-2) +
+      "-" +
+      ("0" + date.getDate()).slice(-2) +
+      "T" +
+      ("0" + date.getHours()).slice(-2) +
+      "-" +
+      ("0" + date.getMinutes()).slice(-2) +
+      "-" +
+      ("0" + date.getSeconds()).slice(-2) +
+      "." +
+      ("00" + date.getMilliseconds()).slice(-3)
+    );
   }
 
   init();
