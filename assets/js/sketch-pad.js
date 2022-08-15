@@ -20,6 +20,7 @@ window.onload = async () => {
   let currentPadIndex = 0;
   let padElement = padElements[currentPadIndex];
   let context = padElement.getContext("2d");
+  let beginX, beginY;
 
   function setEventListeners() {
     backElement.addEventListener("click", (event) => {
@@ -166,17 +167,12 @@ window.onload = async () => {
       let context = it.getContext("2d");
       context.canvas.width = window.innerWidth;
       context.canvas.height = window.innerHeight;
-      // it.setAttribute("style", "visibility: hidden;");
     });
 
     let context = drawingPadElement.getContext("2d");
     context.canvas.width = window.innerWidth;
     context.canvas.height = window.innerHeight;
 
-    // padElements[currentPadIndex].removeAttribute("style");
-
-    // context.canvas.width = window.innerWidth;
-    // context.canvas.height = window.innerHeight;4
     colorsElement.forEach((it) => {
       it.setAttribute(
         "style",
@@ -189,15 +185,19 @@ window.onload = async () => {
     isDrawing = true;
     currX = event.clientX - padElement.offsetLeft;
     currY = event.clientY - padElement.offsetTop;
+    prevX = currX;
+    prevY = currY;
+    beginX = currX;
+    beginY = currY;
 
     currentPath = new Path2D();
     currentPath.moveTo(currX, currY);
 
-    // context.beginPath();
     padElements.forEach((it) => {
       let context = it.getContext("2d");
       context.strokeStyle = strokeStyle;
       context.lineWidth = lineWidth;
+      context.fillStyle = strokeStyle;
     });
   }
 
@@ -211,26 +211,45 @@ window.onload = async () => {
       // context.moveTo(prevX, prevY);
       currentPath.lineTo(currX, currY);
       context.clearRect(0, 0, context.canvas.width, context.canvas.height);
-      context.stroke(currentPath);
+      // context.stroke(currentPath);
+      strokeLine(padElement, currentPath, beginX, beginY, currX, currY);
     }
   }
 
   function drawEnd(event) {
+    window.test = currentPath;
     if (isDrawing) {
       // context.closePath();
       isDrawing = false;
       let nextPadIndex = (currentPadIndex + 1) % padElements.length;
-      padElements[nextPadIndex].getContext("2d").stroke(currentPath);
-      // padElements[nextPadIndex].removeAttribute("style");
-      // padElements[currentPadIndex].setAttribute("style", "visibility: hidden;");
-      /* padElements[currentPadIndex]
-        .getContext("2d")
-        .drawImage(padElements[nextPadIndex], 0, 0);
-        */
+      if (beginX == currX && beginY == currY) {
+        console.log("hi!");
+        fillCircle(padElements[nextPadIndex], currX, currY, lineWidth / 2);
+      }
+      strokeLine(
+        padElements[nextPadIndex],
+        currentPath,
+        beginX,
+        beginY,
+        currX,
+        currY
+      );
       eraseCanvas(padElements[currentPadIndex]);
-      // currentPadIndex = nextPadIndex;
-      // context = padElement[currentPadIndex].getContext("2d");
     }
+  }
+
+  function fillCircle(canvas, x, y, radius) {
+    let context = canvas.getContext("2d");
+    let path = new Path2D();
+    path.arc(x, y, radius, 0, 2 * Math.PI, false);
+    context.fill(path);
+  }
+
+  function strokeLine(canvas, path, beginX, beginY, endX, endY) {
+    let context = canvas.getContext("2d");
+    fillCircle(canvas, beginX, beginY, lineWidth / 2);
+    fillCircle(canvas, endX, endY, lineWidth / 2);
+    context.stroke(path);
   }
 
   function eraseAll() {
