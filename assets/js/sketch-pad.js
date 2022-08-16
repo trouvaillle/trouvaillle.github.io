@@ -21,6 +21,7 @@ window.onload = async () => {
     "magenta",
     "eraser",
   ];
+  const scaleFactor = 2.0;
 
   let colorsElements = [];
   let colorsInnerElements = [];
@@ -244,13 +245,13 @@ window.onload = async () => {
     currentPadIndex = 0;
     padElements.forEach((it) => {
       let context = it.getContext("2d");
-      context.canvas.width = window.innerWidth;
-      context.canvas.height = window.innerHeight;
+      context.canvas.width = window.innerWidth * scaleFactor;
+      context.canvas.height = window.innerHeight * scaleFactor;
     });
 
     let context = drawingPadElement.getContext("2d");
-    context.canvas.width = window.innerWidth;
-    context.canvas.height = window.innerHeight;
+    context.canvas.width = window.innerWidth * scaleFactor;
+    context.canvas.height = window.innerHeight * scaleFactor;
 
     colorListElement.innerHTML = "";
     colorsElements = [];
@@ -293,8 +294,8 @@ window.onload = async () => {
 
   function drawStart(event) {
     isDrawing = true;
-    currX = event.clientX - padElement.offsetLeft;
-    currY = event.clientY - padElement.offsetTop;
+    currX = (event.clientX - padElement.offsetLeft) * scaleFactor;
+    currY = (event.clientY - padElement.offsetTop) * scaleFactor;
     prevX = currX;
     prevY = currY;
     beginX = currX;
@@ -315,8 +316,8 @@ window.onload = async () => {
     if (isDrawing) {
       prevX = currX;
       prevY = currY;
-      currX = event.clientX - padElement.offsetLeft;
-      currY = event.clientY - padElement.offsetTop;
+      currX = (event.clientX - padElement.offsetLeft) * scaleFactor;
+      currY = (event.clientY - padElement.offsetTop) * scaleFactor;
 
       currentPath.lineTo(currX, currY);
       context.clearRect(0, 0, context.canvas.width, context.canvas.height);
