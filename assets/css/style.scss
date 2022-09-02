@@ -94,6 +94,11 @@ table {
 
 #disqus_thread {
   margin-top: 2rem;
+  filter: grayscale(1);
+  -webkit-filter: grayscale(1);
+  -moz-filter: grayscale(1);
+  -ms-filter: grayscale(1);
+  -o-filter: grayscale(1);
 }
 
 #form > form > div > div:nth-child(4) > div > div > section > div.connect > ul,
@@ -104,6 +109,18 @@ table {
 
 pre, code, .highlighter-rouge .highlight {
   background-color: #121212;
+}
+
+header.site-header.attached.fixed {
+  position: fixed; 
+  left: 0; 
+  top: 0;
+  width: 100%;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  -moz-backdrop-filter: blur(16px);
+  -ms-backdrop-filter: blur(16px);
+  -o-backdrop-filter: blur(16px);
 }
 
 @media screen and (max-width: 600px) {
@@ -143,18 +160,6 @@ pre, code, .highlighter-rouge .highlight {
 
   .post-list > li {
       margin-bottom: 16px;
-  }
-
-  header.site-header.attached.fixed {
-    position: fixed; 
-    left: 0; 
-    top: 0;
-    width: 100%;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    -moz-backdrop-filter: blur(16px);
-    -ms-backdrop-filter: blur(16px);
-    -o-backdrop-filter: blur(16px);
   }
 
   .excerpt {
