@@ -15,12 +15,16 @@ html, body {
 }
 */
 
+:root {
+  --highlight: white;
+}
+
 body {
   color: #ccc;
 }
 
 .site-title, .site-title:visited {
-  color: white;
+  color: var(--highlight);
 }
 
 .post-meta {
@@ -28,7 +32,7 @@ body {
 }
 
 a, a:visited {
-  color: white;
+  color: var(--highlight);
 }
 
 a:hover {
@@ -65,7 +69,7 @@ table {
 }
 
 .post-page-navigation {
-  color: white;
+  color: var(--highlight);
   display: flex;
 }
 
@@ -123,6 +127,9 @@ header.site-header.attached.fixed {
   -o-backdrop-filter: blur(16px);
 }
 
+.post-title {
+  color: var(--highlight);
+}
 .post-title, .post-content h1 {
   font-size: 2rem;
 }
