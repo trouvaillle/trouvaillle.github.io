@@ -123,6 +123,14 @@ header.site-header.attached.fixed {
   -o-backdrop-filter: blur(16px);
 }
 
+.post-title, .post-content h1 {
+  font-size: 2rem;
+}
+
+.post-content h2 {
+  font-size: 1.6rem;
+}
+
 @media screen and (max-width: 600px) {
   body {
     font-size: 14px;
