@@ -3,10 +3,10 @@ layout: default
 author_profile: true
 sidebar_main: true
 ---
-<h3>{{ page.category }}</h3>
+{%- assign category = page.category | default: page.title -%}
+<h3>{{ category }}</h3>
 <ul class="post-list">
   {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-  {%- assign category = page.category | default: page.title -%}
   {%- for post in site.categories[category] -%}
   <li>
     <span class="post-meta">{{ post.date | date: date_format }}</span>
