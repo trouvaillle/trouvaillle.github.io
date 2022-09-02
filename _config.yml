@@ -298,3 +298,5 @@ minima:
   skin: dark
 
 google_analytics: G-3VSF418X77
+
+show_excerpts: true
