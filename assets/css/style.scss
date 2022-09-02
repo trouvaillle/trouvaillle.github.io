@@ -52,7 +52,7 @@ table {
 .excerpt {
   color: #999;
   font-size: 0.8rem;
-  margin-top: 1rem;
+  margin-top: 0.6rem;
 }
 
 .progress-indicator {
@@ -111,5 +111,11 @@ table {
     -moz-backdrop-filter: blur(16px);
     -ms-backdrop-filter: blur(16px);
     -o-backdrop-filter: blur(16px);
+  }
+
+  .excerpt {
+    color: #999;
+    font-size: 1rem;
+    margin-top: 1rem;
   }
 }
