@@ -1,7 +1,7 @@
-<ul class="categories-list" style="list-style: none;">
+<ul class="categories-list" style="list-style: none; margin-left: 0;">
     {% assign categories = site.categories | sort %}
     {% for category in categories %}
-    <li class="site-category">
+    <li class="site-category" style="border-bottom: solid 1px #333; padding: 8px 0;">
         <h2 style="margin: 0;">
             <a class="site-category-text" href="{{ site.baseurl }}/category/{{ category[0] }}/">
                 {{ category[0] }}

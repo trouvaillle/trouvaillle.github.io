@@ -2,10 +2,10 @@ docs:
   - title: All about code
     children:
       - title: "Career"
-        url: /category/Career
+        url: /category/career
       - title: "Database"
-        url: /category/Database
+        url: /category/database
       - title: "Frontend"
-        url: /category/Frontend
+        url: /category/frontend
       - title: "Tip"
-        url: /category/Tip
+        url: /category/tip

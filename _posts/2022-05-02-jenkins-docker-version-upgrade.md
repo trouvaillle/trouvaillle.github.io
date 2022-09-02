@@ -2,7 +2,7 @@
 layout: post
 title: "Jenkins Docker Version Upgrade"
 date: 2022-05-02 15:35:00 +0900
-categories: Tip
+categories: tip
 comments: true
 ---
 ### 도커 상에서 돌아가는 젠킨스의 버전 업그레이드 하기
