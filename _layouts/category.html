@@ -11,10 +11,12 @@ sidebar_main: true
   <li>
     <span class="post-meta">{{ post.date | date: date_format }}</span>
     <h3>
-      <div>{{ post.title | escape }}</div>
-      {%- if site.show_excerpts -%}
-      <div class="excerpt">{{ post.content | strip_html | truncate: 200 }}</div>
-      {%- endif -%}
+      <a class="post-link" href="{{ post.url | relative_url }}">
+        <div>{{ post.title | escape }}</div>
+        {%- if site.show_excerpts -%}
+        <div class="excerpt">{{ post.content | strip_html | truncate: 200 }}</div>
+        {%- endif -%}
+      </a>
     </h3>
   </li>
   {%- endfor -%}
