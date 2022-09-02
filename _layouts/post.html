@@ -32,9 +32,9 @@ header_pages:
         <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
         <p class="post-meta">
             {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-            {%- assign words = post.content | number_of_words -%}
+            {%- assign words = content | number_of_words -%}
             <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
-                {{ page.date | date: date_format }} &middot; {{- words | divided_by:180 -}} min read
+                {{ page.date | date: date_format }}
             </time>
             {%- if page.modified_date -%}
             ~
@@ -46,10 +46,14 @@ header_pages:
             {%- if page.author -%}
             • {% for author in page.author %}
             <span itemprop="author" itemscope itemtype="http://schema.org/Person">
-                <span class="p-author h-card" itemprop="name">{{ author }}</span></span>
+                <span class="p-author h-card" itemprop="name">
+                    {{- author -}}
+                </span>
+            </span>
             {%- if forloop.last == false %}, {% endif -%}
-            {% endfor %}
+            {%- endfor -%}
             {%- endif -%}
+            &middot; {{ words | divided_by:180 }} min read
         </p>
     </header>
 
