@@ -6,6 +6,8 @@
   "minima/skins/{{ site.minima.skin | default: 'classic' }}",
   "minima/initialize";
 
+@import "syntax.css";
+
 /*
 html, body {
   background-color: black;
