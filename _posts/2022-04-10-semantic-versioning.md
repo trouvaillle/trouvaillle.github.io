@@ -2,7 +2,7 @@
 layout: post
 title: "Semantic Versioning"
 date: 2022-04-10 15:35:00 +0900
-categories: Software-Engineering
+categories: software-engineering
 comments: true
 ---
 ### 의미

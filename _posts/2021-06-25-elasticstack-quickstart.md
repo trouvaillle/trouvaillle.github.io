@@ -2,7 +2,7 @@
 layout: post
 title: "Elasticstack Quickstart"
 date: 2021-06-25 21:28:04 +0900
-categories: Database
+categories: database
 comments: true
 ---
 

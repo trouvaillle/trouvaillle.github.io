@@ -3,18 +3,19 @@ layout: default
 author_profile: true
 sidebar_main: true
 ---
-<ul class="posts-list">
-
-  {% assign category = page.category | default: page.title %}
-  {% for post in site.categories[category] %}
+<ul class="post-list">
+  {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+  {%- assign category = page.category | default: page.title -%}
+  {%- for post in site.categories[category] -%}
   <li>
+    <span class="post-meta">{{ post.date | date: date_format }}</span>
     <h3>
-      <a href="{{ site.baseurl }}{{ post.url }}">
-        {{ post.title }}
-      </a>
-      <small>{{ post.date | date_to_string }}</small>
+      <div>{{ post.title | escape }}</div>
+      {%- if site.show_excerpts -%}
+      <div class="excerpt">{{ post.content | strip_html | truncate: 200 }}</div>
+      {%- endif -%}
     </h3>
   </li>
-  {% endfor %}
+  {%- endfor -%}
 
 </ul>

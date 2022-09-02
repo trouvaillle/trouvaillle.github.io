@@ -2,7 +2,7 @@
 layout: post
 title: "Macbook 2021, M1 MAX, 16inch 에서 스피커에 잡음이 날 때"
 date: 2022-03-31 20:32:00 +0900
-categories: Tip
+categories: tip
 comments: true
 ---
 

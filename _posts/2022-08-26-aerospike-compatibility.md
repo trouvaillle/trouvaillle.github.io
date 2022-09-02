@@ -2,7 +2,7 @@
 layout: post
 title: "Aerospike Compatibility"
 date: 2022-08-26 18:35:00 +0900
-categories: Database
+categories: database
 comments: true
 ---
 # Aerospike 호환성

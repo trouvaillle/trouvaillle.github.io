@@ -2,7 +2,7 @@
 layout: post
 title: "React.js Cheatsheet"
 date: 2021-06-15 23:11:00 -0400
-categories: Frontend
+categories: frontend
 comments: true
 ---
 
