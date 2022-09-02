@@ -66,6 +66,7 @@ table {
   height: 100%;
   pointer-events: none;
   transition: 0.1s;
+  z-index: 11;
 }
 
 .post-page-navigation {
@@ -113,6 +114,10 @@ table {
 
 pre, code, .highlighter-rouge .highlight {
   background-color: #121212;
+}
+
+header.site-header {
+  z-index: 10;
 }
 
 header.site-header.attached.fixed {
