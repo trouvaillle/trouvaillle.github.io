@@ -95,6 +95,10 @@ table {
   filter: grayscale(1);
 }
 
+pre, code, .highlighter-rouge .highlight {
+  background-color: #121212;
+}
+
 @media screen and (max-width: 600px) {
   body {
     font-size: 14px;

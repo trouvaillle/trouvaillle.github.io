@@ -178,7 +178,7 @@
   color: #f8f8f2;
 }
 .highlight .nn {
-  color: #f8f8f2;
+  color: #f8f8f2 !important;
 }
 .highlight .vc {
   color: #f8f8f2;
