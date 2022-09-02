@@ -131,6 +131,24 @@ header.site-header.attached.fixed {
   font-size: 1.6rem;
 }
 
+.footer-col-wrapper {
+  display: flex;
+}
+
+.footer-col {
+  flex: 1 1;
+}
+
+.footer-col:nth-of-type(1) {
+  justify-content: left;
+  text-align: left;
+}
+
+.footer-col:nth-of-type(2) {
+  justify-content: right;
+  text-align: right;
+}
+
 @media screen and (max-width: 600px) {
   body {
     font-size: 14px;
