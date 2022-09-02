@@ -53,8 +53,8 @@ table {
 
 .excerpt {
   color: #999;
-  font-size: 0.8rem;
-  margin-top: 0.6rem;
+  font-size: 1rem;
+  margin-top: 1rem;
 }
 
 .progress-indicator {
@@ -159,7 +159,11 @@ pre, code, .highlighter-rouge .highlight {
 
   .excerpt {
     color: #999;
-    font-size: 1rem;
+    font-size: 0.9rem;
     margin-top: 1rem;
+  }
+
+  blockquote {
+    font-size: 1rem;
   }
 }
