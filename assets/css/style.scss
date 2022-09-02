@@ -87,6 +87,12 @@ table {
   margin-top: 2rem;
 }
 
+#form > form > div > div:nth-child(4) > div > div > section > div.connect > ul,
+#favorite-button > div > div > a > span.label.label-default > span,
+#main-nav > div > nav > ul > li.nav-tab.nav-tab--primary.tab-user > ul > li.nav-tab.nav-tab--primary.notification-menu.unread {
+  filter: grayscale(1);
+}
+
 @media screen and (max-width: 600px) {
   body {
     font-size: 14px;
