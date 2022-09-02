@@ -62,6 +62,31 @@ table {
   transition: 0.1s;
 }
 
+.post-page-navigation {
+  color: white;
+  display: flex;
+}
+
+.post-page-navigation .prev {
+  flex: 1 1;
+  font-size: 1.2rem;
+  font-weight: 400;
+  justify-content: left;
+  text-align: left;
+}
+
+.post-page-navigation .next {
+  flex: 1 1;
+  font-size: 1.2rem;
+  font-weight: 400;
+  justify-content: right;
+  text-align: right;
+}
+
+#disqus_thread {
+  margin-top: 2rem;
+}
+
 @media screen and (max-width: 600px) {
   body {
     font-size: 14px;
