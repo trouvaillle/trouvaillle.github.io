@@ -14,8 +14,8 @@ https://www.elastic.co/guide/en/elasticsearch/reference/current/deb.html
 
 ## 설정
 
-```console
-$ sudo vi /etc/elasticsearch/elasticsearch.yml
+```bash
+sudo vi /etc/elasticsearch/elasticsearch.yml
 ```
 
 맨 마지막 줄에 `network.host: localhost` 추가
