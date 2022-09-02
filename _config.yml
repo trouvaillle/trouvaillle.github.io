@@ -274,7 +274,8 @@ defaults:
         nav: "docs"
       classes: wide
 
-remote_theme: jekyll/minima
+theme: minima
+# remote_theme: jekyll/minima
 # Disqus
 disqus_url: https://trouvaillle.disqus.com
 disqus_name: trouvaillle
