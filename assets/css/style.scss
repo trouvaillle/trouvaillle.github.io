@@ -177,6 +177,11 @@ header.site-header.attached.fixed {
   font-size: 1.2rem;
 }
 
+code {
+  border: none;
+  border-radius: 6px;
+}
+
 @media screen and (max-width: 600px) {
   body {
     font-size: 14px;
