@@ -138,6 +138,11 @@ header.site-header.attached.fixed {
 .post-title {
   color: var(--highlight);
 }
+
+.post-content {
+  line-height: 150%;
+}
+
 .post-title, .post-content h1 {
   font-size: 2rem;
 }
