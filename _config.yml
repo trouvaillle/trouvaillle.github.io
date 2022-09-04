@@ -284,7 +284,7 @@ disqus:
 
 header_pages:
   - _pages/category.md
-  - _pages/app.html
+  - _pages/app.md
 
 collections:
   app:

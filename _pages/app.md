@@ -1,8 +1,9 @@
 ---
 title: App
-layout: page
+layout: default
 permalink: /app/
 ---
+<h3>App</h3>
 {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
 <ul class="app-list" style="list-style: none; margin-left: 0;">
     {%- for app in site.app | sort -%}
