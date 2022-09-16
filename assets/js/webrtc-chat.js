@@ -387,7 +387,7 @@
             })();
 
             // if broadcaster leaves; clear all JSON files from Firebase servers
-            if (socket.onDisconnect) socket.onDisconnect().remove();
+            // if (socket.onDisconnect) socket.onDisconnect().remove();
         };
 
         // called for each new participant
@@ -478,11 +478,12 @@
         // signaling implementation
         // if no custom signaling channel is provided; use Firebase
         if (!root.openSignalingChannel) {
-            if (!window.Firebase) throw 'You must link <https://cdn.firebase.com/v0/firebase.js> file.';
+            // if (!window.Firebase) throw 'You must link <https://cdn.firebase.com/v0/firebase.js> file.';
 
             // Firebase is capable to store data in JSON format
             // root.transmitRoomOnce = true;
-            var socket = new window.Firebase('https://' + (root.firebase || 'webrtc') + '.firebaseIO.com/' + channel);
+            // var socket = new window.Firebase('https://' + (root.firebase || 'webrtc') + '.firebaseIO.com/' + channel);
+            /*
             socket.on('child_added', function(snap) {
                 var data = snap.val();
                 onSocketMessage(data);
@@ -492,6 +493,7 @@
                 // as soon as it is received
                 if (data.userid != userid) snap.ref().remove();
             });
+            */
 
             // method to signal the data
             this.signal = function(data) {
@@ -499,7 +501,8 @@
 
                 // "set" allow us overwrite old data
                 // it is suggested to use "set" however preferred "push"!
-                socket.push(data);
+                // socket.push(data);
+                console.log(`signal: ${JSON.stringify(data)}`)
             };
         } else {
             // custom signaling implementations
