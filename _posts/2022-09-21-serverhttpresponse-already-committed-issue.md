@@ -29,7 +29,7 @@ class ErrorResponseHandler {
         // 이미 커밋된 응답에 대해서
         if (exchange.response.isCommitted) {
             // 헤더 수정 없이 기존 응답을 내보낸다.
-            /return ResponseEntity.status(exchange.response.statusCode!!).build()
+            return ResponseEntity.status(exchange.response.statusCode!!).build()
         }
         return ResponseEntity<ApiResponse>(ApiResponse.fail(e.message), INTERNAL_SERVER_ERROR)
     }
@@ -37,4 +37,4 @@ class ErrorResponseHandler {
 ```  
 
 # 참고 자료
-https://github.com/spring-projects/spring-framework/issues/23510#issuecomment-555971059
+[https://github.com/spring-projects/spring-framework/issues/23510#issuecomment-555971059](https://github.com/spring-projects/spring-framework/issues/23510#issuecomment-555971059)
