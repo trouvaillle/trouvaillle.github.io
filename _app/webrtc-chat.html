@@ -1,0 +1,59 @@
+---
+title: WebRTC Chat
+layout: none
+permalink: /app/webrtc-chat
+date: 2022-09-06 00:00:00 -0400
+---
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="HandheldFriendly" content="true" />
+    <title>{{ page.title | default: "App" }} | {{ site.name | default: "" }} app</title>
+    <link rel="stylesheet" type="text/css" href="../assets/css/webrtc-chat.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://cdn.firebase.com/v0/firebase.js"></script>
+    <script type="text/javascript" src="../assets/js/webrtc-chat.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div id="header">
+            <div>
+                <span id="back" class="button"><i class="fa-solid fa-angle-left"></i></span>
+            </div>
+            <div>
+                <span id="spanTitle">{{ page.title | default: "App" }}</span>
+            </div>
+            <div>
+                <span id="menu" class="button"><i class="fa-solid fa-bars"></i></span>
+            </div>
+        </div>
+        <div id="content">
+            <div>
+                <div id="chat">
+                </div>
+            </div>
+
+            <div>
+                <div id="sender">
+                    <div>
+                        <input id="words" type="text" autofocus/>
+                    </div>
+                    <div id="send" class="button">
+                        <div>
+                            <i class="fa-solid fa-arrow-up"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

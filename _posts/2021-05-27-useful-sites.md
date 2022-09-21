@@ -2,7 +2,7 @@
 layout: post
 title: "Useful sites"
 date: 2021-06-15 23:11:00 -0400
-categories: Tip
+categories: tip
 comments: true
 ---
 

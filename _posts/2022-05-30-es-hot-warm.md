@@ -2,7 +2,7 @@
 layout: post
 title: "Elasticsearch Hot-warm architecture"
 date: 2022-05-30 15:49:00 +0900
-categories: Database
+categories: database
 comments: true
 ---
 # 일렉스틱 서치에서 핫-웜 아키텍쳐 적용하기

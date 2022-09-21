@@ -2,7 +2,7 @@
 layout: post
 title: "MacOS terminal & vim setting"
 date: 2022-04-15 22:31:00 +0900
-categories: Tip
+categories: tip
 comments: true
 ---
 ### Table of contents

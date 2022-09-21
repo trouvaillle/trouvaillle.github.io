@@ -233,7 +233,7 @@ whitelist:
 #  - <base_path>/my-awesome-category/index.html ~> path: /
 category_archive:
   type: liquid
-  path: /categories/
+  path: /categoriy/
 tag_archive:
   type: liquid
   path: /tags/
@@ -283,8 +283,8 @@ disqus:
   shortname: trouvaillle
 
 header_pages:
-  - _pages/categories.md
-  - _pages/app.html
+  - _pages/category.md
+  - _pages/app.md
 
 collections:
   app:
@@ -298,3 +298,6 @@ minima:
   skin: dark
 
 google_analytics: G-3VSF418X77
+
+show_excerpts: true
+github_url: https://github.com/trouvaillle

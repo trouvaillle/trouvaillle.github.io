@@ -1,8 +1,8 @@
 ---
 layout: default
 header_pages:
-- _pages/categories.md
-- _pages/app.html
+- _pages/category.md
+- _pages/app.md
 ---
 
 <head>
@@ -25,10 +25,14 @@ header_pages:
 
 <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
+    <div class="prev">
+        <a class="prev" href="javascript:history.back()">&laquo; back</a>
+    </div>
     <header class="post-header">
         <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
         <p class="post-meta">
             {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+            {%- assign words = content | number_of_words -%}
             <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
                 {{ page.date | date: date_format }}
             </time>
@@ -42,15 +46,32 @@ header_pages:
             {%- if page.author -%}
             • {% for author in page.author %}
             <span itemprop="author" itemscope itemtype="http://schema.org/Person">
-                <span class="p-author h-card" itemprop="name">{{ author }}</span></span>
+                <span class="p-author h-card" itemprop="name">
+                    {{- author -}}
+                </span>
+            </span>
             {%- if forloop.last == false %}, {% endif -%}
-            {% endfor %}
+            {%- endfor -%}
             {%- endif -%}
+            &middot; {{ words | divided_by:180 }} min read
         </p>
     </header>
 
     <div class="post-content e-content" itemprop="articleBody">
         {{ content }}
+    </div>
+    
+    <div class="post-page-navigation">
+        <div class="prev">
+            {% if page.previous.url %}
+            <a class="prev" href="{{page.previous.url}}">&laquo; previous</a>
+            {% endif %}
+        </div>
+        <div class="next">
+            {% if page.next.url %}
+            <a class="next" href="{{page.next.url}}">next &raquo;</a>
+            {% endif %}
+        </div>
     </div>
 
     {%- if site.disqus.shortname -%}

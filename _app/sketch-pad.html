@@ -2,6 +2,7 @@
 title: Sketch Pad
 layout: none
 permalink: /app/sketch-pad
+date: 2022-08-15 00:00:00 -0400
 ---
 <!DOCTYPE html>
 <html lang="ko">
@@ -10,7 +11,7 @@ permalink: /app/sketch-pad
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="HandheldFriendly" content="true" />
-    <title>Sketch Pad | Trouvaillle app</title>
+    <title>{{ page.title | default: "App" }} | {{ site.name | default: "My" }} app</title>
     <link rel="stylesheet" type="text/css" href="../assets/css/sketch-pad.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,7 +24,7 @@ permalink: /app/sketch-pad
     <div class="container">
         <div id="header">
             <span id="back"><i class="fa-solid fa-angle-left"></i></span>
-            <span id="spanTitle">Sketch Pad</span>
+            <span id="spanTitle">{{ page.title | default: "App" }}</span>
             <span id="save"><i class="fa-solid fa-save"></i></span>
             <span id="undo"><i class="fa-solid fa-undo"></i></span>
             <span id="eraseAll"><i class="fa-solid fa-trash"></i></span>

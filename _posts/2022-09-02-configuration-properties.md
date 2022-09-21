@@ -2,7 +2,7 @@
 layout: post
 title: "Spring ConfigurationProperties"
 date: 2022-09-02 17:03:00 +0900
-categories: Backend
+categories: backend
 comments: true
 ---
 # ConfigurationProperties와 RefreshScope

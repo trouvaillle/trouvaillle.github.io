@@ -1,10 +1,24 @@
 window.onload = async () => {
-  const url = "https://trouvaillle.github.io/app";
+  const homeUrl = "https://trouvaillle.github.io/app";
   const cashwalkAnswerUrl = 'https://luckyquiz3.blogspot.com/search/label/%EC%BA%90%EC%8B%9C%EC%9B%8C%ED%81%AC%20%EB%8F%88%EB%B2%84%EB%8A%94%ED%80%B4%EC%A6%88?&max-results=30';
 
-  const whateveroriginUrl = `${window.location.href.split('://')[0].toLowerCase().includes('http') ?
-    window.location.href.split('://')[0].toLowerCase() : 'http'
-    }://www.whateverorigin.org/get?url=`;
+  const schema = window.location.href.split('://')[0]
+    .toLowerCase()
+    .includes('http') ?
+      window.location.href.split('://')[0].toLowerCase() : 
+      'http';
+  const proxies = [
+    {
+      'url': `${schema}://www.whateverorigin.org/get?url=`,
+      'urlEncode': true
+    },
+    {
+      'url': `${schema}://proxy.cors.sh/`,
+      'urlEncode': false
+    }
+  ]
+  let proxyIndex = 0;
+
   /*
   const whateveroriginUrl = `${window.location.href.split('://')[0].toLowerCase().includes('http') ?
     window.location.href.split('://')[0].toLowerCase() : 'http'
@@ -25,7 +39,7 @@ window.onload = async () => {
 
   function setEventListeners() {
     backElement.addEventListener("click", (event) => {
-      window.location.href = url;
+      window.location.href = homeUrl;
     });
     spanTitleElement.addEventListener("click", (event) => {
       contentElement.scrollTo({ top: 0, behavior: 'smooth' });
@@ -165,7 +179,7 @@ window.onload = async () => {
   }
 
   async function getAnswers(updatedMax) {
-    let templateElement = await retry(() => { return getPage(cashwalkAnswerUrl, updatedMax); }, 5);
+    let templateElement = await retry(() => { return getPage(cashwalkAnswerUrl, updatedMax); }, 10);
     let articleList = templateElement.querySelectorAll('div.blog-posts.hfeed.index-post-wrap > article');
     let result = [];
     for (let i of Array.from(articleList)) {
@@ -226,7 +240,7 @@ window.onload = async () => {
   }
 
   async function getQuizFromUrl(url, title) {
-    let templateElement = await retry(() => { return getPage(url); }, 5);
+    let templateElement = await retry(() => { return getPage(url); }, 10);
     let quizArea = (() => {
       let innerHTML = templateElement.querySelector('#quizarea').innerHTML.replaceAll('<br>', '\n').replaceAll('<div>', '\n').replaceAll('</div>', '\n');
       let anotherTemplateElement = document.createElement('template');
@@ -316,7 +330,8 @@ window.onload = async () => {
     return result;
   }
 
-  async function retry(func, count) {
+  /* delay: ms */
+  async function retry(func, count, delay = 100) {
     return new Promise(async (resolve, reject) => {
       let result = undefined;
       for (let i = 0; i < count; ++i) {
@@ -329,6 +344,9 @@ window.onload = async () => {
           resolve(result);
           return;
         }
+        if (delay > 0) {
+          await new Promise(r => setTimeout(r, delay));
+        }
       }
       let errorCause = `retries exhausted: ${count}/${count}`;
       // console.error(errorCause);
@@ -340,15 +358,32 @@ window.onload = async () => {
   async function getPage(url, updatedMax = '') {
     return new Promise((resolve, reject) => {
       let xhr = new XMLHttpRequest();
-      xhr.open('GET', `${whateveroriginUrl}${encodeURIComponent(`${url}${updatedMax.trim().length != 0 ? `&updated-max=${encodeURIComponent(updatedMax)}` : ''
-        }`)
-        }`);
+      let proxyUrl = proxies[proxyIndex].url;
+      let proxyPath = `${url}${updatedMax.trim().length != 0 ? 
+            `&updated-max=${encodeURIComponent(updatedMax)}` : 
+            ''
+        }`;
+      if (proxies[proxyIndex].urlEncode) {
+        proxyPath = encodeURIComponent(proxyPath);
+      }
+      let targetUrl = `${proxyUrl}${proxyPath}`;
+      xhr.open('GET', targetUrl);
       // xhr.setRequestHeader('origin', 'https://luckyquiz3.blogspot.com');
       // xhr.setRequestHeader('X-Requested-With', 'XMLHTTPRequest');
       xhr.onload = (event) => {
-        let result = JSON.parse(event.currentTarget.responseText).contents;
+        let result = '';
+        switch (proxyIndex) {
+          case 0:
+            result = JSON.parse(event.currentTarget.responseText).contents;;
+            break;
+          case 1:
+          default:
+            result = event.currentTarget.responseText;
+            break;
+        }
         let templateElement = document.createElement('template');
         templateElement.innerHTML = result;
+        proxyIndex = (proxyIndex + 1) % proxies.length;
         resolve(templateElement.content);
       };
       xhr.onerror = (event) => {

@@ -2,7 +2,7 @@
 layout: post
 title: "Docker로 Aerospike를 빠르게 학습하기"
 date: 2022-03-18 22:59:00 +0900
-categories: Database
+categories: database
 comments: true
 ---
 

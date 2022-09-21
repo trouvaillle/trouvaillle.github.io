@@ -2,7 +2,7 @@
 layout: post
 title: "Elasticstack Quickstart"
 date: 2021-06-25 21:28:04 +0900
-categories: Database
+categories: database
 comments: true
 ---
 
@@ -14,8 +14,8 @@ https://www.elastic.co/guide/en/elasticsearch/reference/current/deb.html
 
 ## 설정
 
-```console
-$ sudo vi /etc/elasticsearch/elasticsearch.yml
+```bash
+sudo vi /etc/elasticsearch/elasticsearch.yml
 ```
 
 맨 마지막 줄에 `network.host: localhost` 추가

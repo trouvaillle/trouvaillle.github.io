@@ -2,7 +2,7 @@
 layout: post
 title: "네이버 2020 하반기 공채 후기"
 date: 2020-11-30 22:59:10 -0400
-categories: Career
+categories: career
 comments: true
 ---
 
