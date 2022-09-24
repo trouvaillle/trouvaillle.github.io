@@ -2,7 +2,7 @@
 layout: post
 title: "ServerHttpResponse already committed 이슈 해결"
 date: 2022-09-21 11:09:00 +0900
-categories: Backend
+categories: backend
 comments: true
 ---
 # 이슈
