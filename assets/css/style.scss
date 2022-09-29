@@ -17,6 +17,7 @@ html, body {
 
 :root {
   --highlight: white;
+  --background: #181818;
 }
 
 body {
@@ -49,6 +50,7 @@ a:hover {
 
 table {
   border: none;
+  width: auto;
 }
 
 .pagination li div.pager-edge {
