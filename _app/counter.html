@@ -23,9 +23,9 @@ date: 2022-04-01 00:00:00 -0400
 <body>
     <div class="container">
         <div id="header">
-            <span id="back"><i class="fa-solid fa-angle-left"></i></span>
+            <span class="header-button" id="back"><i class="fa-solid fa-angle-left"></i></span>
             <span id="spanTitle">{{ page.title | default: "App" }}</span>
-            <span id="reset"><i class="fa-solid fa-arrow-rotate-left"></i></span>
+            <span class="header-button"></span>
         </div>
         <div id="content">
             <div id="counter">
@@ -41,6 +41,12 @@ date: 2022-04-01 00:00:00 -0400
 
                 <div class="divButton" id="buttonUp">
                     <span><i class="fa-solid fa-plus"></i></span>
+                </div>
+                
+                <div id="reset-parent">
+                    <div id="reset">
+                        <i class="fa-solid fa-arrow-rotate-left"></i>
+                    </div>
                 </div>
             </div>
         </div>

@@ -2,6 +2,7 @@ window.onload = () => {
   let number = 0;
   let startTime = null;
   let beforeTime = null;
+  let beforeNumber = 0;
 
   const url = "https://trouvaillle.github.io/app";
 
@@ -28,7 +29,9 @@ window.onload = () => {
   });
 
   resetElement.addEventListener("click", (event) => {
-    setNumber(0);
+    let tempNumber = number;
+    setNumber(beforeNumber);
+    beforeNumber = tempNumber;
   });
 
   backElement.addEventListener("click", (event) => {
@@ -73,10 +76,12 @@ window.onload = () => {
   }
 
   function addNumber() {
+    beforeNumber = 0;
     setNumber(number + 1);
   }
 
   function minusNumber() {
+    beforeNumber = 0;
     if (number > 0) {
       setNumber(number - 1);
     } else {
@@ -108,18 +113,23 @@ window.onload = () => {
 
   function showElaspedTime() {
     if (startTime == null) {
-      elapsedTimeElement.innerHTML = "0:00.00";
+      elapsedTimeElement.innerHTML = '0:00<small>.00</small>';
     } else {
       let elapsedTime = new Date().getTime() - startTime;
-      let minute = Math.floor(elapsedTime / 1000 / 60);
-      let second = Math.floor(elapsedTime / 1000) - minute * 60;
-      let milisecond = elapsedTime - second * 1000;
+      let days = Math.floor(elapsedTime / 1000 / 60 / 60 / 24);
+      let hours = Math.floor(elapsedTime / 1000 / 60 / 60);
+      let minutes = Math.floor(elapsedTime / 1000 / 60);
+      let seconds = Math.floor(elapsedTime / 1000) - minutes * 60;
+      let miliseconds = elapsedTime - seconds * 1000;
       elapsedTimeElement.innerHTML =
-        minute +
+        (days > 0 ? "<small>" + days + "d+</small> " : "") +
+        (hours > 0 ? (days > 0 ? ("0" + hours).slice(-2) : hours) + ":" : "") +
+        (hours > 0 ? ("0" + minutes).slice(-2) : minutes) +
         ":" +
-        ("0" + second).slice(-2) +
-        "." +
-        ("00" + milisecond).slice(-3).slice(0, 2);
+        ("0" + seconds).slice(-2) +
+        "<small>." +
+        ("00" + miliseconds).slice(-3).slice(0, 2) +
+        "</small>";
     }
   }
 
