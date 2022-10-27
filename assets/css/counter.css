@@ -54,7 +54,12 @@ body {
   margin: auto;
   font-size: 0.8rem;
   background-color: black;
-  padding: 0.5rem;
+  width: 1.9rem;
+  height: 1.9rem;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  display: flex;
   border-radius: 100%;
   pointer-events: all;
 }
