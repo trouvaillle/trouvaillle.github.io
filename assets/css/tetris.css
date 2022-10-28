@@ -105,18 +105,18 @@ body {
 #content {
   display: flex;
   flex: 1 1;
-  flex-direction: column;
+  flex-direction: row;
 }
 
 #board {
   display: flex;
   flex-direction: column-reverse;
-  flex: 1 1;
-  margin: auto;
+  
   overflow: hidden;
   padding: 3px;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  width: fit-content;
 }
 
 #board::-webkit-scrollbar {
@@ -200,6 +200,7 @@ body {
 .row {
   display: flex;
   flex-direction: row;
+  width: fit-content;
 }
 
 .cell {
@@ -214,4 +215,12 @@ body {
   box-shadow: black 0 0 3px inset;
   /* outline: 2px solid #ffffff40;
   outline-offset: -4px; */
+}
+
+#information-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1;
+  font-size: 0.8rem;
+
 }
