@@ -1,0 +1,196 @@
+:root {
+  --dark: #000;
+  --white: #fff;
+  --glyph-blue: #2997FF;
+  --color-fill-light-blue-secondary: #002a51;
+  --fill-gray: #1c1c1e;
+  --fill-gray-alpha: #ffffff13;
+  --glyph-gray-secondary: #86868B;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+
+  font-size: 18px;
+  font-family: "PT Sans", sans-serif;
+
+  background-color: var(--dark);
+  color: var(--white);
+
+  overflow: hidden;
+  
+  overscroll-behavior-x: contain;
+  overscroll-behavior-y: auto;
+
+  user-select: none;
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  -khtml-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  -webkit-tap-highlight-color:rgba(0,0,0,0);
+
+  touch-action: manipulation;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+}
+
+#header {
+  display: flex;
+  flex: 0 1;
+  margin: 0;
+  padding: 0.8rem 0;
+  text-align: center;
+  align-items: center;
+
+  width: 100%;
+
+  background-color: transparent;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  -moz-backdrop-filter: blur(10px);
+  -ms-backdrop-filter: blur(10px);
+  -o-backdrop-filter: blur(10px);
+
+  z-index: 99;
+}
+
+.header-button {
+  width: 1.5rem;
+}
+
+#header > div:nth-child(2) {
+  flex: 1 1;
+}
+
+#header > div:nth-child(1) {
+  text-align: left;
+  padding-left: 0.8rem;
+}
+
+#header > div:nth-child(3) {
+  text-align: right;
+  padding-right: 0.8rem;
+}
+
+#spanTitle {
+  color: var(--white);
+  font-size: 1rem;
+  margin: 0.8rem auto;
+  padding: 0;
+}
+
+.button {
+  color: var(--glyph-blue);
+  font-size: 1rem;
+  transition: 0.2s;
+}
+
+.button:hover, .button:active {
+  color: var(--color-fill-light-blue-secondary);
+}
+
+#content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+#board {
+  flex: 1 1;
+  padding: 1rem;
+  overflow: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+#board::-webkit-scrollbar {
+  display: none;
+}
+
+#controller {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  flex: 0 1;
+  width: 100%;
+  min-height: 9rem;
+  color: white;
+}
+
+.divButton {
+  display: flex;
+  flex: 1 1;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+
+  font-size: 2rem;
+  background-color: #121212;
+  
+  pointer-events: all;
+  touch-action: manipulation;
+}
+
+.divButton:hover, .divButton:active {
+  text-shadow: 0 0 10px white;
+}
+
+#center-parent {
+  position: absolute;
+  display: flex;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+#updown-parent {
+  display: flex;
+  flex-direction: column;
+
+  width: 4rem;
+  height: 8rem;
+  margin: auto;
+  overflow: hidden;
+}
+
+#buttonUp, #buttonDown {
+  background-color: black;
+}
+
+#buttonLeft {
+  padding-right: 2rem;
+  border-right: 3px solid black;
+}
+
+#buttonRight {
+  padding-left: 2rem;
+}
+
+#buttonDown {
+  border-top: 3px solid #121212;
+}
+
+#buttonUp {
+  border-radius: 15%;
+}
+
+#buttonDown {
+  border-radius: 15%;
+}
