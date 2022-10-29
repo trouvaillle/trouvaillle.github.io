@@ -23,17 +23,17 @@ body {
   color: var(--white);
 
   overflow: hidden;
-  
+
   overscroll-behavior-x: contain;
   overscroll-behavior-y: auto;
 
   user-select: none;
-  -webkit-touch-callout:none;
-  -webkit-user-select:none;
-  -khtml-user-select:none;
-  -moz-user-select:none;
-  -ms-user-select:none;
-  -webkit-tap-highlight-color:rgba(0,0,0,0);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 
   touch-action: manipulation;
 }
@@ -71,16 +71,16 @@ body {
   width: 1.5rem;
 }
 
-#header > div:nth-child(2) {
+#header>div:nth-child(2) {
   flex: 1 1;
 }
 
-#header > div:nth-child(1) {
+#header>div:nth-child(1) {
   text-align: left;
   padding-left: 0.8rem;
 }
 
-#header > div:nth-child(3) {
+#header>div:nth-child(3) {
   text-align: right;
   padding-right: 0.8rem;
 }
@@ -98,7 +98,8 @@ body {
   transition: 0.2s;
 }
 
-.button:hover, .button:active {
+.button:hover,
+.button:active {
   color: var(--color-fill-light-blue-secondary);
 }
 
@@ -108,10 +109,20 @@ body {
   flex-direction: row;
 }
 
+#board-parent {
+  position: relative;
+  display: flex;
+
+  overflow: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  width: fit-content;
+}
+
 #board {
   display: flex;
   flex-direction: column-reverse;
-  
+
   overflow: hidden;
   padding: 3px;
   -ms-overflow-style: none;
@@ -143,12 +154,13 @@ body {
 
   font-size: 2rem;
   background-color: #121212;
-  
+
   pointer-events: all;
   touch-action: manipulation;
 }
 
-.divButton:hover, .divButton:active {
+.divButton:hover,
+.divButton:active {
   text-shadow: 0 0 10px white;
 }
 
@@ -166,23 +178,24 @@ body {
   display: flex;
   flex-direction: column;
 
-  width: 4rem;
-  height: 8rem;
+  width: 6rem;
+  height: 8.8rem;
   margin: auto;
   overflow: hidden;
 }
 
-#buttonUp, #buttonDown {
+#buttonUp,
+#buttonDown {
   background-color: black;
 }
 
 #buttonLeft {
-  padding-left: 2rem;
+  /* padding-left: 0.5rem; */
   border-right: 3px solid black;
 }
 
 #buttonRight {
-  padding-right: 2rem;
+  /* padding-right: 0.5rem; */
 }
 
 #buttonDown {
@@ -217,10 +230,57 @@ body {
   outline-offset: -4px; */
 }
 
+#next-block-panel {
+  display: flex;
+  flex-direction: column-reverse;
+
+  overflow: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  width: fit-content;
+}
+
+.next-block-row {
+  display: flex;
+  flex-direction: row;
+  width: fit-content;
+}
+
+.next-block-cell {
+  background-color: #121212;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin: 1px;
+  border-radius: 10%;
+}
+
 #information-panel {
   display: flex;
   flex-direction: column;
   flex: 1 1;
   font-size: 0.8rem;
+  padding: 1px;
+}
 
+#overlay {
+  display: flex;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  text-shadow: white 0 0 8px;
+}
+
+.blur-effect {
+  background-color: #00000040;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  -moz-backdrop-filter: blur(4px);
+  -ms-backdrop-filter: blur(4px);
+  -o-backdrop-filter: blur(4px);
 }

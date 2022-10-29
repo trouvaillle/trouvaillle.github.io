@@ -6,9 +6,11 @@ window.onload = () => {
     let contentElement = document.querySelector('#content');
     let boardElement = document.querySelector('#board');
     let scoreElement = document.querySelector('#score');
+    let overlayElement = document.querySelector('#overlay');
+    let nextBlockPanelElement = document.querySelector('#next-block-panel');
 
     let gameCurrentState = 'PAUSED';
-    let gameNextState = '';
+    let gameNextState = 'PAUSED';
 
     let gameIntervalHandler = null;
     let moveBlockIntervalHandler = null;
@@ -16,7 +18,8 @@ window.onload = () => {
     let completeLinesTimeOffset = 0;
     let completedLines = [];
 
-    let gameIntervalDelay = 500;
+    let gameManualDownDelay = 120;
+    let gameIntervalDelay = 550;
     let gameNextButton = null;
 
     const blockSize = 4;
@@ -38,10 +41,13 @@ window.onload = () => {
     let rows;
     let columns;
 
+    let nextBlockPanelCells;
+
     applyPreventDefault([buttonLeft, buttonRight, buttonUp, buttonDown, contentElement, boardElement]);
     assignListeners();
     window.onresize = () => {
         boardElement.innerHTML = "";
+        nextBlockPanelElement.innerHTML = "";
         initBoard();
         render();
     }
@@ -98,6 +104,51 @@ window.onload = () => {
         buttonDown.addEventListener('pointerdown', downHandler);
         buttonDown.addEventListener('mouseup', resetHandler);
         buttonDown.addEventListener('pointerup', resetHandler);
+
+        window.addEventListener('keydown', (event) => {
+            if (event.ctrlKey || event.altKey || event.shiftKey) {
+                return;
+            }
+            switch(event.key) {
+                case 'ArrowLeft':
+                case 'a':
+                    leftHandler(event);
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                    rightHandler(event);
+                    break;
+                case 'ArrowUp':
+                case 'w':
+                    upHandler(event);
+                    break;
+                case 'ArrowDown':
+                case 's':
+                    downHandler(event);
+                    break;
+                default:
+                    break;
+            }
+        });
+        window.addEventListener('keyup', (event) => {
+            if (event.ctrlKey || event.altKey || event.shiftKey) {
+                return;
+            }
+            switch(event.key) {
+                case 'ArrowLeft':
+                case 'a':
+                case 'ArrowRight':
+                case 'd':
+                case 'ArrowUp':
+                case 'w':
+                case 'ArrowDown':
+                case 's':
+                    resetHandler(event);
+                    break;
+                default:
+                    break;
+            }
+        })
     }
 
     function applyPreventDefault(element) {
@@ -155,10 +206,11 @@ window.onload = () => {
     function proceed() {
         switch (gameCurrentState) {
             case 'PLAYING':
+                gameNextState = 'PLAYING';
                 if (gameNextButton != null && gameNextButton.trim().length != 0) {
                     if (moveBlockIntervalHandler == null) {
                         moveBlock();
-                        moveBlockIntervalHandler = setInterval(moveBlock, 150);
+                        moveBlockIntervalHandler = setInterval(moveBlock, gameManualDownDelay);
                     }
                 } else {
                     if (moveBlockIntervalHandler != null) {
@@ -166,14 +218,14 @@ window.onload = () => {
                         moveBlockIntervalHandler = null;
                     }
                 }
-                gameNextState = 'PLAYING';
                 break;
             case 'PAUSED':
                 if (gameNextButton != null && gameNextButton.trim().length != 0) {
+                    gameNextState = 'PLAYING';
                     if (gameNextButton != null && gameNextButton.trim().length != 0) {
                         if (moveBlockIntervalHandler == null) {
                             moveBlock();
-                            moveBlockIntervalHandler = setInterval(moveBlock, 150);
+                            moveBlockIntervalHandler = setInterval(moveBlock, gameManualDownDelay);
                         }
                     } else {
                         if (moveBlockIntervalHandler != null) {
@@ -182,18 +234,18 @@ window.onload = () => {
                         }
                     }
                     gameIntervalHandler = setInterval(gameloop, gameIntervalDelay);
-                    gameNextState = 'PLAYING';
                 } else {
                     gameNextState = 'PAUSED';
                 }
                 break;
             case 'GAMEOVER':
                 if (gameNextButton != null && gameNextButton.trim().length != 0) {
+                    gameNextState = 'PLAYING';
                     init();
                     if (gameNextButton != null && gameNextButton.trim().length != 0) {
                         if (moveBlockIntervalHandler == null) {
                             moveBlock();
-                            moveBlockIntervalHandler = setInterval(moveBlock, 150);
+                            moveBlockIntervalHandler = setInterval(moveBlock, gameManualDownDelay);
                         }
                     } else {
                         if (moveBlockIntervalHandler != null) {
@@ -202,7 +254,6 @@ window.onload = () => {
                         }
                     }
                     gameIntervalHandler = setInterval(gameloop, gameIntervalDelay);
-                    gameNextState = 'PLAYING';
                 } else {
                     gameNextState = 'GAMEOVER';
                 }
@@ -213,12 +264,14 @@ window.onload = () => {
             default:
                 break;
         }
-        console.log(`${gameCurrentState} -> ${gameNextState}`);
+        // console.log(`${gameCurrentState} -> ${gameNextState}`);
         gameCurrentState = gameNextState;
     }
 
     function gameloop() {
-        gravity();
+        if (gameNextButton != 'DOWN') {
+            gravity();
+        }
     }
 
     function gravity() {
@@ -269,6 +322,7 @@ window.onload = () => {
 
             return true;
         } else {
+            switchToNextBlock();
             return false;
         }
     }
@@ -280,8 +334,8 @@ window.onload = () => {
                 gameIntervalHandler = null;
             }
             score += (completedLines.length + 1) * (completedLines.length) / 2;
-            scoreElement.innerHTML = score;
             compactLines();
+            switchToNextBlock();
             render();
             gameIntervalHandler = setInterval(gameloop, gameIntervalDelay);
             gameCurrentState = 'PLAYING';
@@ -365,6 +419,9 @@ window.onload = () => {
     function fixAndGetNextBlock() {
         fixCurrentBlock();
         checkCompleteLines();
+    }
+
+    function switchToNextBlock() {
         currentBlock = nextBlock;
         resetCurrentBlockOffset();
         nextBlock = generateBlock();
@@ -460,9 +517,7 @@ window.onload = () => {
     }
 
     function initBoard() {
-        if (boardElement.innerHTML.trim().length == 0) {
-            boardElement.innerHTML = "";
-            
+        if (boardElement.innerHTML.trim().length == 0) {            
             adjustCellSize();
 
             cells = [];
@@ -487,6 +542,29 @@ window.onload = () => {
                 boardElement.appendChild(row);
                 rows.push(row);
                 cells.push(cellsOfRow);
+            }
+        }
+
+        if (nextBlockPanelElement.innerHTML.trim().length == 0) {
+            nextBlockPanelCells = [];
+
+            for (let y = 0; y < blockSize; ++y) {
+                let row = document.createElement('div');
+                let cellsOfRow = [];
+                row.id = `next-block-row-${y}`;
+                row.classList.add(`next-block-row`);
+                row.classList.add(`next-block-row-${y}`);
+                for (let x = 0; x < blockSize; ++x) {
+                    let cell = document.createElement('div');
+                    cell.id = `next-block-cell-${x}-${y}`;
+                    cell.classList.add(`next-block-cell`);
+                    cell.classList.add(`next-block-cell-x-${x}`);
+                    cell.classList.add(`next-block-cell-y-${y}`);
+                    row.appendChild(cell);
+                    cellsOfRow.push(cell);
+                }   
+                nextBlockPanelElement.appendChild(row);
+                nextBlockPanelCells.push(cellsOfRow);
             }
         }
     }
@@ -542,6 +620,36 @@ window.onload = () => {
                     cells[y][x].removeAttribute('style');
                 }
             }
+        }
+
+        for (let y = 0; y < blockSize; ++y) {
+            for (let x = 0; x < blockSize; ++x) {
+                let backgroundColor = getColor(nextBlock.block[y][x]);
+                if (backgroundColor.length != 0) {
+                    nextBlockPanelCells[y][x].classList.add('cells-filled');
+                    nextBlockPanelCells[y][x].setAttribute('style', `background-color:${backgroundColor};`)
+                } else {
+                    nextBlockPanelCells[y][x].classList.remove('cells-filled');
+                    nextBlockPanelCells[y][x].removeAttribute('style');
+                }
+            }
+        }
+
+        scoreElement.innerHTML = score;
+
+        switch (gameNextState) {
+            case 'PAUSED':
+                overlayElement.classList.add('blur-effect');
+                overlayElement.innerHTML = '<span>PAUSED</span>';
+                break;
+            case 'GAMEOVER':
+                overlayElement.classList.add('blur-effect');
+                overlayElement.innerHTML = '<span>GAMEOVER</span>';
+                break;
+            default:
+                overlayElement.classList.remove('blur-effect');
+                overlayElement.innerHTML = '';
+                break;
         }
     }
 
@@ -732,4 +840,4 @@ window.onload = () => {
     function convertRemToPixels(rem) {    
         return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
     }
-}
+};
