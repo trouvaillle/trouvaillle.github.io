@@ -1,4 +1,76 @@
 window.onload = () => {
+    class AudioController {
+        constructor() {
+          this.bgMusicController = undefined;
+          this.bgMusicPlaying = false;
+          this.muted = true;
+          this.soundIconElement = document.querySelector("#soundIcon");
+        }
+    
+        startMusic() {
+          if (this.bgMusicController !== undefined) {
+            this.bgMusicController.play();
+          } else {
+            let source = "../assets/media/original-tetris-theme.mp3";
+            this.bgMusicController = document.createElement("audio");
+            this.bgMusicController.autoplay = true;
+            this.bgMusicController.loop = true;
+            this.bgMusicController.addEventListener(
+              "load",
+              function () {
+                this.bgMusicController.play();
+              },
+              true
+            );
+            this.bgMusicController.src = source;
+            this.bgMusicController.load();
+          }
+          this.muted = false;
+          this.bgMusicPlaying = true;
+          this.soundIconElement.className = "fa-solid fa-volume-high";
+        }
+    
+        stopMusic() {
+          if (this.bgMusicController !== undefined) {
+            this.bgMusicController.pause();
+            this.bgMusicController.currentTime = 0;
+          }
+          this.bgMusicPlaying = false;
+        }
+    
+        pauseMusic() {
+          if (this.bgMusicController !== undefined) {
+            this.bgMusicController.pause();
+          }
+          this.bgMusicPlaying = false;
+        }
+    
+        setMute(value) {
+          this.muted = value;
+          if (this.bgMusicPlaying && value) {
+            this.pauseMusic();
+          }
+          if (value) {
+            this.soundIconElement.className = "fa-solid fa-volume-xmark";
+          } else {
+            this.soundIconElement.className = "fa-solid fa-volume-high";
+          }
+        }
+    
+        toggleSound() {
+          if (this.bgMusicController === undefined || !this.bgMusicPlaying) {
+            this.startMusic();
+          } else {
+            this.setMute(true);
+          }
+        }
+      }
+
+    const appListUrl = "https://trouvaillle.github.io/app";
+
+    const backElement = document.querySelector("#back");
+    const soundElement = document.querySelector("#sound");
+
     let buttonLeft = document.querySelector('#buttonLeft');
     let buttonRight = document.querySelector('#buttonRight');
     let buttonUp = document.querySelector('#buttonUp');
@@ -30,7 +102,7 @@ window.onload = () => {
     let boardWidth = 10;
     let boardHeight = 20;
     let board = [];
-    
+
     let fixedBlocks = [];
     let currentBlock;
     let nextBlock;
@@ -43,6 +115,7 @@ window.onload = () => {
 
     let nextBlockPanelCells;
 
+    let audioController = new AudioController();
     applyPreventDefault([buttonLeft, buttonRight, buttonUp, buttonDown, contentElement, boardElement]);
     assignListeners();
     window.onresize = () => {
@@ -109,7 +182,7 @@ window.onload = () => {
             if (event.ctrlKey || event.altKey || event.shiftKey) {
                 return;
             }
-            switch(event.key) {
+            switch (event.key) {
                 case 'ArrowLeft':
                 case 'a':
                     leftHandler(event);
@@ -130,11 +203,12 @@ window.onload = () => {
                     break;
             }
         });
+
         window.addEventListener('keyup', (event) => {
             if (event.ctrlKey || event.altKey || event.shiftKey) {
                 return;
             }
-            switch(event.key) {
+            switch (event.key) {
                 case 'ArrowLeft':
                 case 'a':
                 case 'ArrowRight':
@@ -148,7 +222,44 @@ window.onload = () => {
                 default:
                     break;
             }
-        })
+        });
+
+        backElement.addEventListener("click", (_) => {
+            window.location.href = appListUrl;
+        });
+
+        soundElement.addEventListener("click", (event) => {
+            if (gameCurrentState == "PLAYING") {
+                audioController.toggleSound();
+            } else {
+                if (audioController.muted) {
+                    audioController.setMute(false);
+                } else {
+                    audioController.setMute(true);
+                }
+            }
+        });
+
+        document.addEventListener("visibilitychange", (event) => {
+            switch (document.visibilityState) {
+              case "hidden":
+                if (!audioController.muted) {
+                  audioController.pauseMusic();
+                }
+                /* if (game !== undefined && !game.gameOver) {
+                  game.pause();
+                } */
+                break;
+              case "visible":
+                /* if (game !== undefined && !game.gameOver) {
+                  game.resume();
+                  if (!audioController.muted) {
+                    audioController.startMusic();
+                  }
+                } */
+                break;
+            }
+          });
     }
 
     function applyPreventDefault(element) {
@@ -181,7 +292,7 @@ window.onload = () => {
         playing = false;
         boardWidth = 10;
         boardHeight = 20;
-        
+
         fixedBlocks = get2DArrayWithZeros(boardHeight, boardWidth);
         board = get2DArrayWithZeros(boardHeight, boardWidth);
 
@@ -222,6 +333,9 @@ window.onload = () => {
             case 'PAUSED':
                 if (gameNextButton != null && gameNextButton.trim().length != 0) {
                     gameNextState = 'PLAYING';
+                    if (audioController != null && !audioController.muted) {
+                        audioController.startMusic();
+                    }
                     if (gameNextButton != null && gameNextButton.trim().length != 0) {
                         if (moveBlockIntervalHandler == null) {
                             moveBlock();
@@ -239,9 +353,15 @@ window.onload = () => {
                 }
                 break;
             case 'GAMEOVER':
+                if (audioController != null) {
+                    audioController.stopMusic();
+                }
                 if (gameNextButton != null && gameNextButton.trim().length != 0) {
                     gameNextState = 'PLAYING';
                     init();
+                    if (audioController != null && !audioController.muted) {
+                        audioController.startMusic();
+                    }
                     if (gameNextButton != null && gameNextButton.trim().length != 0) {
                         if (moveBlockIntervalHandler == null) {
                             moveBlock();
@@ -390,7 +510,7 @@ window.onload = () => {
         let expectedBlock = currentBlock;
         let expectedBlockOffset = [currentBlockOffset[0], currentBlockOffset[1]];
         let valid;
-        switch(gameNextButton) {
+        switch (gameNextButton) {
             case 'LEFT':
                 expectedBlockOffset[1] = currentBlockOffset[1] - 1;
                 break;
@@ -445,10 +565,10 @@ window.onload = () => {
         for (let y = 0; y < blockSize; ++y) {
             for (let x = 0; x < blockSize; ++x) {
                 let calculatedX = x + expectedBlockOffset[1] - expectedBlock.center[1];
-                let calculatedY = y + expectedBlockOffset[0] - expectedBlock.center[0]; 
+                let calculatedY = y + expectedBlockOffset[0] - expectedBlock.center[0];
                 if (expectedBlock.block[y][x] != 0) {
                     if (!(calculatedX >= 0 && calculatedX < boardWidth &&
-                        calculatedY >= 0 && calculatedY < boardHeight) || 
+                        calculatedY >= 0 && calculatedY < boardHeight) ||
                         fixedBlocks[calculatedY][calculatedX] != 0) {
                         valid = false;
                         break;
@@ -464,7 +584,7 @@ window.onload = () => {
         for (let y = 0; y < blockSize; ++y) {
             for (let x = 0; x < blockSize; ++x) {
                 let calculatedX = x + currentBlockOffset[1] - currentBlock.center[1];
-                let calculatedY = y + currentBlockOffset[0] - currentBlock.center[0]; 
+                let calculatedY = y + currentBlockOffset[0] - currentBlock.center[0];
                 if (currentBlock.block[y][x] != 0) {
                     if ((calculatedX >= 0 && calculatedX < boardWidth &&
                         calculatedY >= 0 && calculatedY < boardHeight) &&
@@ -476,12 +596,12 @@ window.onload = () => {
         }
         ++stackCount;
     }
-    
+
     function resetCurrentBlockOffset() {
         currentBlockOffset = [0, 0];
         blockRect = getBlockRect();
         currentBlockOffset = [
-            boardHeight - 1 - blockRect[0][1], 
+            boardHeight - 1 - blockRect[0][1],
             Math.floor(boardWidth / 2) - blockRect[1][0] - Math.floor((blockRect[1][1] - blockRect[1][0] + 1) / 2)
         ];
     }
@@ -495,7 +615,7 @@ window.onload = () => {
         for (let y = 0; y < blockSize; ++y) {
             for (let x = 0; x < blockSize; ++x) {
                 let calculatedX = x + currentBlockOffset[1] - currentBlock.center[1];
-                let calculatedY = y + currentBlockOffset[0] - currentBlock.center[0]; 
+                let calculatedY = y + currentBlockOffset[0] - currentBlock.center[0];
                 if (currentBlock.block[y][x] != 0) {
                     if (minX > calculatedX) {
                         minX = calculatedX;
@@ -517,7 +637,7 @@ window.onload = () => {
     }
 
     function initBoard() {
-        if (boardElement.innerHTML.trim().length == 0) {            
+        if (boardElement.innerHTML.trim().length == 0) {
             adjustCellSize();
 
             cells = [];
@@ -538,7 +658,7 @@ window.onload = () => {
                     cell.classList.add(`cell-y-${y}`);
                     row.appendChild(cell);
                     cellsOfRow.push(cell);
-                }   
+                }
                 boardElement.appendChild(row);
                 rows.push(row);
                 cells.push(cellsOfRow);
@@ -562,7 +682,7 @@ window.onload = () => {
                     cell.classList.add(`next-block-cell-y-${y}`);
                     row.appendChild(cell);
                     cellsOfRow.push(cell);
-                }   
+                }
                 nextBlockPanelElement.appendChild(row);
                 nextBlockPanelCells.push(cellsOfRow);
             }
@@ -595,19 +715,19 @@ window.onload = () => {
             for (let x = 0; x < boardWidth; ++x) {
                 board[y][x] = fixedBlocks[y][x];
             }
-        } 
+        }
 
         for (let y = 0; y < blockSize; ++y) {
             for (let x = 0; x < blockSize; ++x) {
                 let calculatedX = x + currentBlockOffset[1] - currentBlock.center[1];
-                let calculatedY = y + currentBlockOffset[0] - currentBlock.center[0]; 
+                let calculatedY = y + currentBlockOffset[0] - currentBlock.center[0];
                 if (calculatedX >= 0 && calculatedX < boardWidth &&
                     calculatedY >= 0 && calculatedY < boardHeight &&
                     currentBlock.block[y][x] != 0) {
                     board[calculatedY][calculatedX] = currentBlock.block[y][x];
                 }
             }
-        } 
+        }
 
         for (let y = 0; y < boardHeight; ++y) {
             for (let x = 0; x < boardWidth; ++x) {
@@ -696,7 +816,7 @@ window.onload = () => {
         let block;
         let blockCenter;
         let result;
-        
+
         function fillO() {
             let result = get2DArrayWithZeros(blockSize, blockSize);
             result[0][0] = 1;
@@ -790,11 +910,11 @@ window.onload = () => {
         for (let y = 0; y < source.length; ++y) {
             for (let x = 0; x < source[0].length; ++x) {
                 result[y][x] = source[y][source[0].length - 1 - x];
-            }    
+            }
         }
         return result;
     }
-    
+
 
     function rotateBlock(source, count) {
         function rotate(sourceBlock) {
@@ -807,7 +927,7 @@ window.onload = () => {
             for (let y = 0; y < sourceBlock.block.length; ++y) {
                 for (let x = 0; x < sourceBlock.block[0].length; ++x) {
                     result.block[y][x] = sourceBlock.block[x][sourceBlock.block.length - 1 - y];
-                }    
+                }
             }
             result.center = [sourceBlock.block[0].length - 1 - result.center[1], result.center[0]];
             return result;
@@ -817,7 +937,7 @@ window.onload = () => {
         }
         let result = source;
         for (let i = 0; i < count; ++i) {
-            result = rotate(result); 
+            result = rotate(result);
         }
         return result;
     }
@@ -826,8 +946,8 @@ window.onload = () => {
         let result = get2DArrayWithZeros(source.length, source[0].length);
         for (let y = 0; y < source.length; ++y) {
             for (let x = 0; x < source[0].length; ++x) {
-                result[y][x] = (source[y][x] == 0 ? 0: color);
-            }    
+                result[y][x] = (source[y][x] == 0 ? 0 : color);
+            }
         }
         return result;
     }
@@ -837,7 +957,7 @@ window.onload = () => {
         return Math.floor(Math.random() * (max - min)) + min;
     }
 
-    function convertRemToPixels(rem) {    
+    function convertRemToPixels(rem) {
         return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
     }
 };
