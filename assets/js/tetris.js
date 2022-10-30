@@ -5,69 +5,49 @@ window.onload = () => {
             this.sfxController = undefined;
             this.bgMusicPlaying = false;
             this.muted = true;
+            this.sfxOnly = false;
             this.soundIconElement = document.querySelector("#soundIcon");
             this.constructSfxController();
         }
 
         constructSfxController() {
             if (this.sfxController === undefined) {
-                this.sfxController = document.createElement("audio");
-                this.sfxController.autoplay = true;
-                this.sfxController.loop = false;
-                this.sfxController.addEventListener(
-                    "load",
-                    function () {
-                        this.sfxController.play();
-                    },
-                    true
-                );
+                const sfxList = [
+                    ['ROTATE', '../assets/media/se_game_rotate.mp3', 1.0],
+                    ['LANDING', '../assets/media/se_game_landing.mp3', 1.0],
+                    ['COMPLETE', '../assets/media/se_game_double.mp3', 1.0],
+                    ['COMPACT', '../assets/media/se_game_ko2.mp3', 1.0],
+                    ['COMBOS', '../assets/media/se_game_triple.mp3', 1.0],
+                    ['MOVE', '../assets/media/se_game_move.mp3', 1.0]
+                ];
+                this.sfxController = {};
+
+                for (let sfx of sfxList) {
+                    let controller = document.createElement("audio");
+                    controller.autoplay = false;
+                    controller.loop = false;
+                    controller.volume = sfx[2];
+                    controller.src = sfx[1];
+                    controller.load();
+                    this.sfxController[sfx[0]] = controller;
+                }
             }
         }
 
         playSoundEffect(type) {
-            if (this.sfxController === undefined || this.muted == true) {
+            if (this.sfxController === undefined || 
+                this.muted == true ||
+                !(type in this.sfxController)) {
                 return;
             }
-            this.sfxController.volume = 1;
-            switch (type) {
-                case 'ROTATE':
-                    this.sfxController.src = "../assets/media/se_game_rotate.mp3";
-                    // this.sfxController.volume = 0.35;
-                    this.sfxController.load();
-                    break;
-                case 'LANDING':
-                    this.sfxController.src = "../assets/media/se_game_landing.mp3";
-                    // this.sfxController.volume = 0.5;
-                    this.sfxController.load();
-                    break;
-                case 'COMPLETE':
-                    this.sfxController.src = "../assets/media/se_game_double.mp3";
-                    // this.sfxController.volume = 0.5;
-                    this.sfxController.load();
-                    break;
-                case 'COMPACT':
-                    this.sfxController.src = "../assets/media/se_game_ko2.mp3";
-                    // this.sfxController.volume = 0.4;
-                    this.sfxController.load();
-                    break;
-                case 'COMBOS':
-                    this.sfxController.src = "../assets/media/se_game_triple.mp3";
-                    // this.sfxController.volume = 0.5;
-                    this.sfxController.load();
-                    break;
-                case 'MOVE':
-                    this.sfxController.src = "../assets/media/se_game_move.mp3";
-                    // this.sfxController.volume = 0.50;
-                    this.sfxController.load();
-                    break;
-                default:
-                    break;
-            }
+            this.sfxController[type].pause();
+            this.sfxController[type].currentTime = 0;
+            this.sfxController[type].play().then();
         }
 
-        startMusic() {
+        async startMusic() {
             if (this.bgMusicController !== undefined) {
-                this.bgMusicController.play();
+                await this.bgMusicController.play();
             } else {
                 let source = "../assets/media/tetris-soundtrack.mp3";
                 this.bgMusicController = document.createElement("audio");
@@ -76,8 +56,8 @@ window.onload = () => {
                 this.bgMusicController.loop = true;
                 this.bgMusicController.addEventListener(
                     "load",
-                    function () {
-                        this.bgMusicController.play();
+                    async function () {
+                        await this.bgMusicController.play();
                     },
                     true
                 );
@@ -112,14 +92,25 @@ window.onload = () => {
             if (value) {
                 this.soundIconElement.className = "fa-solid fa-volume-xmark";
             } else {
-                this.soundIconElement.className = "fa-solid fa-volume-high";
+                if (this.sfxOnly) {
+                    this.soundIconElement.className = "fa-solid fa-volume-low";
+                } else {
+                    this.soundIconElement.className = "fa-solid fa-volume-high";
+                }
             }
         }
 
-        toggleSound() {
+        async toggleSound() {
             if (this.bgMusicController === undefined || !this.bgMusicPlaying) {
-                this.startMusic();
+                if (this.sfxOnly) {
+                    this.sfxOnly = false;
+                    await this.startMusic();
+                } else {
+                    this.sfxOnly = true;
+                    this.setMute(false);
+                }
             } else {
+                this.sfxOnly = false;
                 this.setMute(true);
             }
         }
@@ -231,9 +222,15 @@ window.onload = () => {
                 audioController.toggleSound();
             } else {
                 if (audioController.muted) {
+                    audioController.sfxOnly = true;
                     audioController.setMute(false);
                 } else {
-                    audioController.setMute(true);
+                    if (audioController.sfxOnly) {
+                        audioController.sfxOnly = false;
+                        audioController.setMute(false);
+                    } else {
+                        audioController.setMute(true);
+                    }
                 }
             }
         };
@@ -332,7 +329,7 @@ window.onload = () => {
                     } */
                     break;
                 case "visible":
-                    if (gameCurrentState == "PLAYING" && !audioController.muted) {
+                    if (gameCurrentState == "PLAYING" && !audioController.muted && !audioController.sfxOnly) {
                         audioController.startMusic();
                     }
                     /* if (game !== undefined && !game.gameOver) {
@@ -462,7 +459,7 @@ window.onload = () => {
         if (startTime == null) {
             startTime = new Date();
         }
-        if (audioController != null && !audioController.muted) {
+        if (audioController != null && !audioController.muted && !audioController.sfxOnly) {
             audioController.startMusic();
         }
         if (gameNextButton != null && gameNextButton.trim().length != 0) {
