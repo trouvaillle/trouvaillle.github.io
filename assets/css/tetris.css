@@ -308,14 +308,16 @@ body {
 @keyframes combos-animation {
   0% {
     font-size: 9rem;
-    transform: rotateZ(60deg);
+    opacity: 0;
+    /* transform: rotateZ(60deg); */
   }
   30% {
     font-size: 1rem;
-    transform: rotateZ(0deg);
+    /* transform: rotateZ(0deg); */
   }
   60% {
     font-size: 2rem;
+    opacity: 1;
   }
   100% {
     font-size: 2rem;

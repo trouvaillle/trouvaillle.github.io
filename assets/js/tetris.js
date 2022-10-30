@@ -28,33 +28,39 @@ window.onload = () => {
             if (this.sfxController === undefined || this.muted == true) {
                 return;
             }
+            this.sfxController.volume = 1;
             switch (type) {
-                case "ROTATE":
-                    this.sfxController.src = "../assets/media/se_game_pinput.wav";
-                    this.sfxController.volume = 0.4;
+                case 'ROTATE':
+                    this.sfxController.src = "../assets/media/se_game_rotate.mp3";
+                    // this.sfxController.volume = 0.35;
                     this.sfxController.load();
                     break;
-                case "LANDING":
-                    this.sfxController.src = "../assets/media/se_game_landing.wav";
-                    this.sfxController.volume = 0.8;
+                case 'LANDING':
+                    this.sfxController.src = "../assets/media/se_game_landing.mp3";
+                    // this.sfxController.volume = 0.5;
                     this.sfxController.load();
                     break;
-                case "COMPLETE":
-                    this.sfxController.src = "../assets/media/se_game_tactics.wav";
-                    this.sfxController.volume = 1;
+                case 'COMPLETE':
+                    this.sfxController.src = "../assets/media/se_game_double.mp3";
+                    // this.sfxController.volume = 0.5;
                     this.sfxController.load();
                     break;
-                case "COMPACT":
-                    this.sfxController.src = "../assets/media/se_game_ko2.wav";
-                    this.sfxController.volume = 0.6;
+                case 'COMPACT':
+                    this.sfxController.src = "../assets/media/se_game_ko2.mp3";
+                    // this.sfxController.volume = 0.4;
                     this.sfxController.load();
                     break;
-                case "COMBOS":
-                    this.sfxController.src = "../assets/media/se_game_triple.wav";
-                    this.sfxController.volume = 0.6;
+                case 'COMBOS':
+                    this.sfxController.src = "../assets/media/se_game_triple.mp3";
+                    // this.sfxController.volume = 0.5;
                     this.sfxController.load();
                     break;
-                    deafult:
+                case 'MOVE':
+                    this.sfxController.src = "../assets/media/se_game_move.mp3";
+                    // this.sfxController.volume = 0.50;
+                    this.sfxController.load();
+                    break;
+                default:
                     break;
             }
         }
@@ -124,7 +130,7 @@ window.onload = () => {
     const backElement = document.querySelector("#back");
     const soundElement = document.querySelector("#sound");
     const pauseElement = document.querySelector("#pause");
-    const pauseIconElement = document.querySelector("#pauseIcon");    
+    const pauseIconElement = document.querySelector("#pauseIcon");
 
     let buttonLeft = document.querySelector('#buttonLeft');
     let buttonRight = document.querySelector('#buttonRight');
@@ -220,6 +226,17 @@ window.onload = () => {
                 moveBlockIntervalHandler = null;
             }
         }
+        let toggleSound = () => {
+            if (gameCurrentState == "PLAYING") {
+                audioController.toggleSound();
+            } else {
+                if (audioController.muted) {
+                    audioController.setMute(false);
+                } else {
+                    audioController.setMute(true);
+                }
+            }
+        };
 
         buttonLeft.addEventListener('mousedown', leftHandler);
         buttonLeft.addEventListener('pointerdown', leftHandler);
@@ -262,6 +279,9 @@ window.onload = () => {
                 case 's':
                     downHandler(event);
                     break;
+                case 'm':
+                    toggleSound();
+                    break;
                 default:
                     break;
             }
@@ -293,15 +313,7 @@ window.onload = () => {
 
         soundElement.addEventListener("click", (event) => {
             event.preventDefault();
-            if (gameCurrentState == "PLAYING") {
-                audioController.toggleSound();
-            } else {
-                if (audioController.muted) {
-                    audioController.setMute(false);
-                } else {
-                    audioController.setMute(true);
-                }
-            }
+            toggleSound();
         });
 
         pauseElement.addEventListener('click', (event) => {
@@ -499,7 +511,7 @@ window.onload = () => {
                 pauseGame();
                 break;
             case "PAUSED":
-            case "GAMEOVER":
+            case 'GAMEOVER':
                 resumeGame();
                 break;
             default:
@@ -665,9 +677,11 @@ window.onload = () => {
         switch (gameNextButton) {
             case 'LEFT':
                 expectedBlockOffset[1] = currentBlockOffset[1] - 1;
+                // audioController.playSoundEffect('MOVE');
                 break;
             case 'RIGHT':
                 expectedBlockOffset[1] = currentBlockOffset[1] + 1;
+                // audioController.playSoundEffect('MOVE');
                 break;
             case 'UP':
                 expectedBlock = rotateBlock(currentBlock, 1);
@@ -676,6 +690,7 @@ window.onload = () => {
                 break;
             case 'DOWN':
                 expectedBlockOffset[0] = currentBlockOffset[0] - 1;
+                // audioController.playSoundEffect('MOVE');
                 break;
             default:
                 break;
@@ -701,6 +716,7 @@ window.onload = () => {
         nextBlock = generateBlock();
         if (!checkBlockValid(currentBlock, currentBlockOffset)) {
             gameCurrentState = 'GAMEOVER';
+            gameNextButton = null;
             if (gameIntervalHandler != null) {
                 clearInterval(gameIntervalHandler);
                 gameIntervalHandler = null;
@@ -709,7 +725,6 @@ window.onload = () => {
                 clearInterval(moveBlockIntervalHandler);
                 moveBlockIntervalHandler = null;
             }
-            gameNextButton = null;
             proceed();
         }
     }
