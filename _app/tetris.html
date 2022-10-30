@@ -3,7 +3,7 @@ title: Tetris
 layout: none
 permalink: /app/tetris
 date: 2022-10-28 23:55:00 +0900
-visible: false
+visible: true
 ---
 <!DOCTYPE html>
 <html lang="ko">
@@ -24,14 +24,17 @@ visible: false
 <body>
     <div class="container">
         <div id="header">
-            <div class="header-button" >
+            <div class="header-button" style="width:3rem;">
                 <span id="back" class="button"><i class="fa-solid fa-angle-left"></i></span>
             </div>
             <div>
                 <span id="spanTitle">{{ page.title | default: "App" }}</span>
             </div>
-            <div class="header-button" >
+            <div class="header-button">
                 <span id="sound" class="button"><i id="soundIcon" class="fa-solid fa-volume-xmark"></i></span>
+            </div>
+            <div class="header-button">
+                <span id="pause" class="button"><i id="pauseIcon" class="fa-solid fa-pause"></i></span>
             </div>
         </div>
 
@@ -45,27 +48,7 @@ visible: false
             </div>
             
             <div id="information-panel">
-                <div id="score-parent">
-                    <div>
-                        <div>
-                            <span>Score</span>
-                        </div>
-                        <div>
-                            <span id="score">0</span>
-                        </div>
-                    </div>
-                </div>
-                <div id="time-parent">
-                    <div>
-                        <div>
-                            <span>Time</span>
-                        </div>
-                        <div>
-                            <span id="Time">0</span>
-                        </div>
-                    </div>
-                </div>
-                <div id="next=block-parent">
+                <div id="next-block-parent">
                     <div>
                         <div>
                             <span>Next</span>
@@ -74,6 +57,36 @@ visible: false
                             <div id="next-block-panel">
                                 
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="score-parent">
+                    <div>
+                        <div>
+                            <span>Score</span>
+                        </div>
+                        <div id="score-span-parent">
+                            <span id="score">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="lines-parent">
+                    <div>
+                        <div>
+                            <span>Lines</span>
+                        </div>
+                        <div id="lines-span-parent">
+                            <span id="lines">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="time-parent">
+                    <div>
+                        <div>
+                            <span>Time</span>
+                        </div>
+                        <div id="time-span-parent">
+                            <span id="time">00:00:00</span>
                         </div>
                     </div>
                 </div>

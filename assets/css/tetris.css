@@ -80,7 +80,12 @@ body {
   padding-left: 0.8rem;
 }
 
-#header>div:nth-child(3) {
+#header>div:nth-child(4) {
+  text-align: right;
+  padding-right: 0.8rem;
+}
+
+#header>div:nth-child(4) {
   text-align: right;
   padding-right: 0.8rem;
 }
@@ -107,11 +112,13 @@ body {
   display: flex;
   flex: 1 1;
   flex-direction: row;
+  justify-content: center;
 }
 
 #board-parent {
   position: relative;
   display: flex;
+  flex-direction: column;
 
   overflow: hidden;
   -ms-overflow-style: none;
@@ -257,7 +264,6 @@ body {
 #information-panel {
   display: flex;
   flex-direction: column;
-  flex: 1 1;
   font-size: 0.8rem;
   padding: 1px;
 }
@@ -283,4 +289,46 @@ body {
   -moz-backdrop-filter: blur(4px);
   -ms-backdrop-filter: blur(4px);
   -o-backdrop-filter: blur(4px);
+}
+
+#next-block-parent, #lines-parent, #score-parent {
+  margin-bottom: 6px;
+}
+
+#score-span-parent, #lines-span-parent, #time-span-parent {
+  text-align: right;
+}
+
+.animate-combos {
+  animation: combos-animation 1.5s ease-in-out;
+  transition: 0.4s;
+  white-space: nowrap;
+}
+
+@keyframes combos-animation {
+  0% {
+    font-size: 9rem;
+    transform: rotateZ(60deg);
+  }
+  30% {
+    font-size: 1rem;
+    transform: rotateZ(0deg);
+  }
+  60% {
+    font-size: 2rem;
+  }
+  100% {
+    font-size: 2rem;
+  }
+}
+
+#time-span-parent {
+  max-width: calc(2.8rem + 8px);
+  overflow: hidden;
+}
+
+#time {
+  overflow: hidden;
+  word-break: keep-all;
+  white-space: nowrap;
 }

@@ -1,75 +1,130 @@
 window.onload = () => {
     class AudioController {
         constructor() {
-          this.bgMusicController = undefined;
-          this.bgMusicPlaying = false;
-          this.muted = true;
-          this.soundIconElement = document.querySelector("#soundIcon");
+            this.bgMusicController = undefined;
+            this.sfxController = undefined;
+            this.bgMusicPlaying = false;
+            this.muted = true;
+            this.soundIconElement = document.querySelector("#soundIcon");
+            this.constructSfxController();
         }
-    
+
+        constructSfxController() {
+            if (this.sfxController === undefined) {
+                this.sfxController = document.createElement("audio");
+                this.sfxController.autoplay = true;
+                this.sfxController.loop = false;
+                this.sfxController.addEventListener(
+                    "load",
+                    function () {
+                        this.sfxController.play();
+                    },
+                    true
+                );
+            }
+        }
+
+        playSoundEffect(type) {
+            if (this.sfxController === undefined || this.muted == true) {
+                return;
+            }
+            switch (type) {
+                case "ROTATE":
+                    this.sfxController.src = "../assets/media/se_game_pinput.wav";
+                    this.sfxController.volume = 0.4;
+                    this.sfxController.load();
+                    break;
+                case "LANDING":
+                    this.sfxController.src = "../assets/media/se_game_landing.wav";
+                    this.sfxController.volume = 0.8;
+                    this.sfxController.load();
+                    break;
+                case "COMPLETE":
+                    this.sfxController.src = "../assets/media/se_game_tactics.wav";
+                    this.sfxController.volume = 1;
+                    this.sfxController.load();
+                    break;
+                case "COMPACT":
+                    this.sfxController.src = "../assets/media/se_game_ko2.wav";
+                    this.sfxController.volume = 0.6;
+                    this.sfxController.load();
+                    break;
+                case "COMBOS":
+                    this.sfxController.src = "../assets/media/se_game_triple.wav";
+                    this.sfxController.volume = 0.6;
+                    this.sfxController.load();
+                    break;
+                    deafult:
+                    break;
+            }
+        }
+
         startMusic() {
-          if (this.bgMusicController !== undefined) {
-            this.bgMusicController.play();
-          } else {
-            let source = "../assets/media/original-tetris-theme.mp3";
-            this.bgMusicController = document.createElement("audio");
-            this.bgMusicController.autoplay = true;
-            this.bgMusicController.loop = true;
-            this.bgMusicController.addEventListener(
-              "load",
-              function () {
+            if (this.bgMusicController !== undefined) {
                 this.bgMusicController.play();
-              },
-              true
-            );
-            this.bgMusicController.src = source;
-            this.bgMusicController.load();
-          }
-          this.muted = false;
-          this.bgMusicPlaying = true;
-          this.soundIconElement.className = "fa-solid fa-volume-high";
-        }
-    
-        stopMusic() {
-          if (this.bgMusicController !== undefined) {
-            this.bgMusicController.pause();
-            this.bgMusicController.currentTime = 0;
-          }
-          this.bgMusicPlaying = false;
-        }
-    
-        pauseMusic() {
-          if (this.bgMusicController !== undefined) {
-            this.bgMusicController.pause();
-          }
-          this.bgMusicPlaying = false;
-        }
-    
-        setMute(value) {
-          this.muted = value;
-          if (this.bgMusicPlaying && value) {
-            this.pauseMusic();
-          }
-          if (value) {
-            this.soundIconElement.className = "fa-solid fa-volume-xmark";
-          } else {
+            } else {
+                let source = "../assets/media/tetris-soundtrack.mp3";
+                this.bgMusicController = document.createElement("audio");
+                this.bgMusicController.volume = 1;
+                this.bgMusicController.autoplay = true;
+                this.bgMusicController.loop = true;
+                this.bgMusicController.addEventListener(
+                    "load",
+                    function () {
+                        this.bgMusicController.play();
+                    },
+                    true
+                );
+                this.bgMusicController.src = source;
+                this.bgMusicController.load();
+            }
+            this.muted = false;
+            this.bgMusicPlaying = true;
             this.soundIconElement.className = "fa-solid fa-volume-high";
-          }
         }
-    
+
+        stopMusic() {
+            if (this.bgMusicController !== undefined) {
+                this.bgMusicController.pause();
+                this.bgMusicController.currentTime = 0;
+            }
+            this.bgMusicPlaying = false;
+        }
+
+        pauseMusic() {
+            if (this.bgMusicController !== undefined) {
+                this.bgMusicController.pause();
+            }
+            this.bgMusicPlaying = false;
+        }
+
+        setMute(value) {
+            this.muted = value;
+            if (this.bgMusicPlaying && value) {
+                this.pauseMusic();
+            }
+            if (value) {
+                this.soundIconElement.className = "fa-solid fa-volume-xmark";
+            } else {
+                this.soundIconElement.className = "fa-solid fa-volume-high";
+            }
+        }
+
         toggleSound() {
-          if (this.bgMusicController === undefined || !this.bgMusicPlaying) {
-            this.startMusic();
-          } else {
-            this.setMute(true);
-          }
+            if (this.bgMusicController === undefined || !this.bgMusicPlaying) {
+                this.startMusic();
+            } else {
+                this.setMute(true);
+            }
         }
-      }
+    }
 
     const appListUrl = "https://trouvaillle.github.io/app";
 
     const backElement = document.querySelector("#back");
     const soundElement = document.querySelector("#sound");
+    const pauseElement = document.querySelector("#pause");
+    const pauseIconElement = document.querySelector("#pauseIcon");    
 
     let buttonLeft = document.querySelector('#buttonLeft');
     let buttonRight = document.querySelector('#buttonRight');
@@ -78,26 +133,33 @@ window.onload = () => {
     let contentElement = document.querySelector('#content');
     let boardElement = document.querySelector('#board');
     let scoreElement = document.querySelector('#score');
+    let linesElement = document.querySelector('#lines');
+    let timeElement = document.querySelector('#time');
     let overlayElement = document.querySelector('#overlay');
     let nextBlockPanelElement = document.querySelector('#next-block-panel');
+    let informationPanelElement = document.querySelector('#information-panel');
 
     let gameCurrentState = 'PAUSED';
     let gameNextState = 'PAUSED';
 
     let gameIntervalHandler = null;
     let moveBlockIntervalHandler = null;
+    let showCombosHandler = null;
     let completeLinesIntervalHandler = null;
     let completeLinesTimeOffset = 0;
     let completedLines = [];
 
-    let gameManualDownDelay = 120;
+    let gameManualDownDelay = 100; // 120;
     let gameIntervalDelay = 550;
     let gameNextButton = null;
 
     const blockSize = 4;
 
     let score = 0;
+    let lines = 0;
+    let combos = -1;
     let stackCount = 0;
+    let startTime = null;
     let playing = false;
     let boardWidth = 10;
     let boardHeight = 20;
@@ -105,8 +167,9 @@ window.onload = () => {
 
     let fixedBlocks = [];
     let currentBlock;
-    let nextBlock;
     let currentBlockOffset;
+    let nextBlock;
+    let nextBlockCandidates = [];
 
     let cellSize = 0;
     let cells;
@@ -229,6 +292,7 @@ window.onload = () => {
         });
 
         soundElement.addEventListener("click", (event) => {
+            event.preventDefault();
             if (gameCurrentState == "PLAYING") {
                 audioController.toggleSound();
             } else {
@@ -240,26 +304,34 @@ window.onload = () => {
             }
         });
 
+        pauseElement.addEventListener('click', (event) => {
+            event.preventDefault();
+            toggleGame();
+        });
+
         document.addEventListener("visibilitychange", (event) => {
             switch (document.visibilityState) {
-              case "hidden":
-                if (!audioController.muted) {
-                  audioController.pauseMusic();
-                }
-                /* if (game !== undefined && !game.gameOver) {
-                  game.pause();
-                } */
-                break;
-              case "visible":
-                /* if (game !== undefined && !game.gameOver) {
-                  game.resume();
-                  if (!audioController.muted) {
-                    audioController.startMusic();
-                  }
-                } */
-                break;
+                case "hidden":
+                    if (!audioController.muted) {
+                        audioController.pauseMusic();
+                    }
+                    /* if (game !== undefined && !game.gameOver) {
+                      game.pause();
+                    } */
+                    break;
+                case "visible":
+                    if (gameCurrentState == "PLAYING" && !audioController.muted) {
+                        audioController.startMusic();
+                    }
+                    /* if (game !== undefined && !game.gameOver) {
+                      game.resume();
+                      if (!audioController.muted) {
+                        audioController.startMusic();
+                      }
+                    } */
+                    break;
             }
-          });
+        });
     }
 
     function applyPreventDefault(element) {
@@ -267,18 +339,30 @@ window.onload = () => {
             for (i of element) {
                 i.addEventListener('click', (event) => {
                     event.preventDefault();
-                })
+                });
                 i.addEventListener('dblclick', (event) => {
                     event.preventDefault();
-                })
+                });
+                /* i.addEventListener('touchstart', (event) => {
+                    event.preventDefault();
+                });
+                i.addEventListener('touchend', (event) => {
+                    event.preventDefault();
+                }); */
             }
         } else {
             element.addEventListener('click', (event) => {
                 event.preventDefault();
-            })
+            });
             element.addEventListener('dblclick', (event) => {
                 event.preventDefault();
-            })
+            });
+            /* element.addEventListener('touchstart', (event) => {
+                event.preventDefault();
+            });
+            element.addEventListener('touchend', (event) => {
+                event.preventDefault();
+            }); */
         }
     }
 
@@ -288,7 +372,10 @@ window.onload = () => {
             gameIntervalHandler = null;
         }
         score = 0;
+        lines = 0;
+        combos = -1;
         stackCount = 0;
+        startTime = null;
         playing = false;
         boardWidth = 10;
         boardHeight = 20;
@@ -298,6 +385,7 @@ window.onload = () => {
 
         currentBlock = generateBlock();
         resetCurrentBlockOffset();
+        nextBlockCandidates = [0, 1, 2, 3, 4, 5, 6];
         nextBlock = generateBlock();
         initBoard();
     }
@@ -332,22 +420,7 @@ window.onload = () => {
                 break;
             case 'PAUSED':
                 if (gameNextButton != null && gameNextButton.trim().length != 0) {
-                    gameNextState = 'PLAYING';
-                    if (audioController != null && !audioController.muted) {
-                        audioController.startMusic();
-                    }
-                    if (gameNextButton != null && gameNextButton.trim().length != 0) {
-                        if (moveBlockIntervalHandler == null) {
-                            moveBlock();
-                            moveBlockIntervalHandler = setInterval(moveBlock, gameManualDownDelay);
-                        }
-                    } else {
-                        if (moveBlockIntervalHandler != null) {
-                            clearInterval(moveBlockIntervalHandler);
-                            moveBlockIntervalHandler = null;
-                        }
-                    }
-                    gameIntervalHandler = setInterval(gameloop, gameIntervalDelay);
+                    resumeGame();
                 } else {
                     gameNextState = 'PAUSED';
                 }
@@ -357,23 +430,8 @@ window.onload = () => {
                     audioController.stopMusic();
                 }
                 if (gameNextButton != null && gameNextButton.trim().length != 0) {
-                    gameNextState = 'PLAYING';
                     init();
-                    if (audioController != null && !audioController.muted) {
-                        audioController.startMusic();
-                    }
-                    if (gameNextButton != null && gameNextButton.trim().length != 0) {
-                        if (moveBlockIntervalHandler == null) {
-                            moveBlock();
-                            moveBlockIntervalHandler = setInterval(moveBlock, gameManualDownDelay);
-                        }
-                    } else {
-                        if (moveBlockIntervalHandler != null) {
-                            clearInterval(moveBlockIntervalHandler);
-                            moveBlockIntervalHandler = null;
-                        }
-                    }
-                    gameIntervalHandler = setInterval(gameloop, gameIntervalDelay);
+                    resumeGame();
                 } else {
                     gameNextState = 'GAMEOVER';
                 }
@@ -386,6 +444,67 @@ window.onload = () => {
         }
         // console.log(`${gameCurrentState} -> ${gameNextState}`);
         gameCurrentState = gameNextState;
+    }
+
+    function resumeGame() {
+        if (startTime == null) {
+            startTime = new Date();
+        }
+        if (audioController != null && !audioController.muted) {
+            audioController.startMusic();
+        }
+        if (gameNextButton != null && gameNextButton.trim().length != 0) {
+            if (moveBlockIntervalHandler == null) {
+                moveBlock();
+                moveBlockIntervalHandler = setInterval(moveBlock, gameManualDownDelay);
+            }
+        } else {
+            if (moveBlockIntervalHandler != null) {
+                clearInterval(moveBlockIntervalHandler);
+                moveBlockIntervalHandler = null;
+            }
+        }
+        overlayElement.classList.remove('blur-effect');
+        overlayElement.innerHTML = '';
+        gameIntervalHandler = setInterval(gameloop, gameIntervalDelay);
+        pauseIconElement.classList.remove('fa-play');
+        pauseIconElement.classList.add('fa-pause');
+        gameCurrentState = 'PLAYING';
+        gameNextState = 'PLAYING';
+        render();
+    }
+
+    function pauseGame() {
+        if (gameIntervalHandler != null) {
+            clearInterval(gameIntervalHandler);
+            gameIntervalHandler = null;
+        }
+        if (moveBlockIntervalHandler != null) {
+            clearInterval(moveBlockIntervalHandler);
+            moveBlockIntervalHandler = null;
+        }
+        if (!audioController.muted) {
+            audioController.pauseMusic();
+        }
+        pauseIconElement.classList.remove('fa-pause');
+        pauseIconElement.classList.add('fa-play');
+        gameCurrentState = "PAUSED";
+        gameNextState = "PAUSED";
+        render();
+    }
+
+    function toggleGame() {
+        switch (gameCurrentState) {
+            case "PLAYING":
+                pauseGame();
+                break;
+            case "PAUSED":
+            case "GAMEOVER":
+                resumeGame();
+                break;
+            default:
+                break;
+        }
     }
 
     function gameloop() {
@@ -422,6 +541,7 @@ window.onload = () => {
                 completedLines.push(y);
             }
         }
+
         if (completedLines.length != 0) {
             if (gameIntervalHandler != null) {
                 clearInterval(gameIntervalHandler);
@@ -440,11 +560,37 @@ window.onload = () => {
             completeLinesTimeOffset = 0;
             completeLinesIntervalHandler = setInterval(completeLineBlinking, 120);
 
+            audioController.playSoundEffect('COMPLETE');
+
+            combos += 1;
+            if (combos > 0) {
+                showCombos();
+            }
+
             return true;
         } else {
+            combos = -1;
             switchToNextBlock();
+            audioController.playSoundEffect('LANDING');
             return false;
         }
+    }
+
+    function showCombos() {
+        if (showCombosHandler != null) {
+            clearTimeout(showCombosHandler);
+            showCombosHandler = null;
+        }
+        if (overlayElement.innerHTML.length != 0) {
+            return;
+        }
+        overlayElement.innerHTML = `<span>${combos} COMBO</span>`;
+        overlayElement.classList.add('animate-combos');
+        showCombosHandler = setTimeout(() => {
+            overlayElement.innerHTML = '';
+            overlayElement.classList.remove('animate-combos');
+        }, 1080);
+        audioController.playSoundEffect('COMBOS');
     }
 
     function completeLineBlinking() {
@@ -453,7 +599,10 @@ window.onload = () => {
                 clearInterval(gameIntervalHandler);
                 gameIntervalHandler = null;
             }
-            score += (completedLines.length + 1) * (completedLines.length) / 2;
+
+            score += ((completedLines.length + 1) * (completedLines.length) / 2) * (combos + 1);
+            lines += completedLines.length;
+
             compactLines();
             switchToNextBlock();
             render();
@@ -463,6 +612,8 @@ window.onload = () => {
                 clearInterval(completeLinesIntervalHandler);
                 completeLinesIntervalHandler = null;
             }
+
+            audioController.playSoundEffect('COMPACT');
         } else {
             for (let row of completedLines) {
                 if (completeLinesTimeOffset % 2 == 0) {
@@ -500,6 +651,7 @@ window.onload = () => {
                         }
                     }
                 }
+                y = startY;
                 startY = -1;
                 endY = -1;
             }
@@ -519,6 +671,8 @@ window.onload = () => {
                 break;
             case 'UP':
                 expectedBlock = rotateBlock(currentBlock, 1);
+                gameNextButton = null;
+                audioController.playSoundEffect('ROTATE');
                 break;
             case 'DOWN':
                 expectedBlockOffset[0] = currentBlockOffset[0] - 1;
@@ -690,8 +844,12 @@ window.onload = () => {
     }
 
     function adjustCellSize() {
-        let tempCellSizeByWidth = (getComputedStyle(contentElement).width.replaceAll('px', '')) / boardWidth;
-        let tempCellSizeByHeight = (getComputedStyle(boardElement).height.replaceAll('px', '')) / boardHeight;
+        let computedContentSize = getComputedStyle(contentElement);
+        let tempCellSizeByWidth = (
+            computedContentSize.width.replaceAll('px', '') -
+            getComputedStyle(informationPanelElement).width.replaceAll('px', '')
+        ) / boardWidth;
+        let tempCellSizeByHeight = (computedContentSize.height.replaceAll('px', '')) / boardHeight;
         cellSize = Math.min(tempCellSizeByWidth, tempCellSizeByHeight) - 3;
 
         let cellStyleElement = document.querySelector('#cell-style');
@@ -756,6 +914,8 @@ window.onload = () => {
         }
 
         scoreElement.innerHTML = score;
+        linesElement.innerHTML = lines;
+        timeElement.innerHTML = getElapsedTime();
 
         switch (gameNextState) {
             case 'PAUSED':
@@ -767,9 +927,22 @@ window.onload = () => {
                 overlayElement.innerHTML = '<span>GAMEOVER</span>';
                 break;
             default:
-                overlayElement.classList.remove('blur-effect');
-                overlayElement.innerHTML = '';
                 break;
+        }
+    }
+
+    function getElapsedTime() {
+        if (startTime == null) {
+            return '0:00:00';
+        } else {
+            let elapsedTime = new Date() - startTime;
+            let hours = Math.floor(elapsedTime / 1000 / 60 / 60);
+            let minutes = Math.floor(elapsedTime / 1000 / 60);
+            let seconds = Math.floor(elapsedTime / 1000);
+            // hours = ('0' + hours).slice(-2);
+            minutes = ('0' + minutes).slice(-2);
+            seconds = ('0' + seconds).slice(-2);
+            return `${hours}:${minutes}:${seconds}`;
         }
     }
 
@@ -811,11 +984,20 @@ window.onload = () => {
     }
 
     function generateBlock() {
-        let blockType = randBetween(0, 7);
+        let nextBlockCandidatesIndex;
+        let blockType;
         let rotation = randBetween(0, 4);
         let block;
         let blockCenter;
         let result;
+
+        //7-bag system
+        if (nextBlockCandidates == null || nextBlockCandidates.length == 0) {
+            nextBlockCandidates = Array.from(Array(7).keys());
+        }
+        nextBlockCandidatesIndex = randBetween(0, nextBlockCandidates.length);
+        blockType = nextBlockCandidates[nextBlockCandidatesIndex];
+        nextBlockCandidates.splice(nextBlockCandidatesIndex, 1);
 
         function fillO() {
             let result = get2DArrayWithZeros(blockSize, blockSize);
@@ -926,10 +1108,17 @@ window.onload = () => {
             result.block = get2DArrayWithZeros(sourceBlock.block.length, sourceBlock.block[0].length);
             for (let y = 0; y < sourceBlock.block.length; ++y) {
                 for (let x = 0; x < sourceBlock.block[0].length; ++x) {
-                    result.block[y][x] = sourceBlock.block[x][sourceBlock.block.length - 1 - y];
+                    // clockwise
+                    // result.block[y][x] = sourceBlock.block[x][sourceBlock.block.length - 1 - y];
+                    // anti-clockwise
+                    result.block[y][x] = sourceBlock.block[sourceBlock.block[0].length - 1 - x][y];
                 }
             }
-            result.center = [sourceBlock.block[0].length - 1 - result.center[1], result.center[0]];
+            // clockwise
+            // result.center = [sourceBlock.block[0].length - 1 - result.center[1], result.center[0]];
+            // anti-clockwise
+            result.center = [result.center[1], sourceBlock.block[1].length - 1 - result.center[0]];
+
             return result;
         }
         if (source.type == 0) {
