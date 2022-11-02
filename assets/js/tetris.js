@@ -352,14 +352,19 @@ window.onload = () => {
                     if (!audioController.muted) {
                         audioController.pauseMusic();
                     }
-                    /* if (game !== undefined && !game.gameOver) {
-                      game.pause();
-                    } */
+                    if (gameCurrentState == "PLAYING" || gameCurrentState == "PAUSED") {
+                        pauseGame();
+                    }
+                    console.log("hidden");
                     break;
                 case "visible":
                     if (gameCurrentState == "PLAYING" && !audioController.muted && !audioController.sfxOnly) {
                         audioController.startMusic();
                     }
+                    if (gameCurrentState == "PLAYING" || gameCurrentState == "PAUSED") {
+                        resumeGame();
+                    }
+                    console.log("visible");
                     /* if (game !== undefined && !game.gameOver) {
                       game.resume();
                       if (!audioController.muted) {
