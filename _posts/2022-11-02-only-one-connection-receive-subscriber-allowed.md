@@ -47,21 +47,21 @@ package reactor.netty.channel;
 ...
 final class FluxReceive extends Flux<Object> implements Subscription, Disposable {
   final void startReceiver(CoreSubscriber<? super Object> s) {
-  if (once == 0 && ONCE.compareAndSet(this, 0, 1)) {
-    ...
-  }
-  else {
-    if (inboundDone && getPending() == 0) {
+    if (once == 0 && ONCE.compareAndSet(this, 0, 1)) {
       ...
     }
     else {
-      ...
-      // There is the LOG!
-      Operators.error(s,
-        new IllegalStateException(
-          "Only one connection receive subscriber allowed."));
+      if (inboundDone && getPending() == 0) {
+        ...
+      }
+      else {
+        ...
+        // There is the LOG!
+        Operators.error(s,
+          new IllegalStateException(
+            "Only one connection receive subscriber allowed."));
+      }
     }
-  }
   }
   ...
 }

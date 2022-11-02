@@ -281,6 +281,7 @@ disqus_name: trouvaillle
 discus-identifier: trouvaillle
 disqus:
   shortname: trouvaillle
+  enabled: false
 
 header_pages:
   - _pages/category.md

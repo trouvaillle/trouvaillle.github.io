@@ -83,7 +83,7 @@ header_pages:
         async>
     </script>
 
-    {%- if site.disqus.shortname -%}
+    {%- if site.disqus.shortname and site.disqus.enabled -%}
     {%- include disqus_comments.html -%}
     {%- endif -%}
 

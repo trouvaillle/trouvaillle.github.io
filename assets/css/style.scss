@@ -117,8 +117,16 @@ table {
   filter: grayscale(1);
 }
 
-pre {
-  background-color: rgba(110,118,129,0.2);
+.highlighter-rouge > .highlight,div.highlight { 
+  background: transparent;
+}
+
+code, code.highlight, pre, pre.highlight {
+  background: rgba(110,118,129,0.16) !important;
+}
+
+pre > code { 
+  background: transparent !important;
 }
 
 header.site-header {
