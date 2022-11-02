@@ -9,7 +9,8 @@
   font-style: italic !important;
 }
 .highlight .c1 {
-  color: #5e5d83 !important;
+  /* color: #5e5d83 !important; */
+  color: #7e7da3 !important;
   font-style: italic !important;
 }
 .highlight .cp {
