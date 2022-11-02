@@ -8,6 +8,17 @@ window.onload = () => {
             this.sfxOnly = false;
             this.soundIconElement = document.querySelector("#soundIcon");
             this.constructSfxController();
+            this.initAudioContext();
+        }
+
+        initAudioContext() {
+            if ('AudioContext' in window) {
+                this.audioContext = new AudioContext();
+            } else if ('webkitAudioContext' in window) {
+                this.audioContext = new webkitAudioContext();
+            } else {
+                this.audioContext = null;
+            }
         }
 
         constructSfxController() {
@@ -28,21 +39,38 @@ window.onload = () => {
                     controller.loop = false;
                     controller.volume = sfx[2];
                     controller.src = sfx[1];
+                    controller.source = null;
                     controller.load();
                     this.sfxController[sfx[0]] = controller;
+
+                    let request = new XMLHttpRequest();
+                    request.open('GET', sfx[1], true);
+                    request.responseType = 'arraybuffer';
+                    request.addEventListener('load', (event) => {
+                        var request = event.target;
+                        var source = this.audioContext.createBufferSource();
+                        source.buffer = this.audioContext.createBuffer(request.response, false);
+                        controller.source = source;
+                    }, false);
+                    request.send();
                 }
             }
         }
 
         playSoundEffect(type) {
-            if (this.sfxController === undefined || 
+            if (this.sfxController === undefined ||
                 this.muted == true ||
                 !(type in this.sfxController)) {
                 return;
             }
-            this.sfxController[type].pause();
-            this.sfxController[type].currentTime = 0;
-            this.sfxController[type].play().then();
+            if (this.audioContext != null && this.sfxController[type].source != null) {
+                this.sfxController[type].source.noteOn(0);
+                this.sfxController[type].source.connect(this.audioContext.destination);
+            } else {
+                this.sfxController[type].pause();
+                this.sfxController[type].currentTime = 0;
+                this.sfxController[type].play().then();
+            }
         }
 
         async startMusic() {
