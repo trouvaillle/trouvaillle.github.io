@@ -133,9 +133,12 @@ window.onload = () => {
 
         async toggleSound() {
             if (this.bgMusicController === undefined || !this.bgMusicPlaying) {
-                if (this.sfxOnly) {
+                if (this.sfxOnly || getMobileOperatingSystem() == "iOS") {
                     this.sfxOnly = false;
-                    await this.startMusic();
+                    this.setMute(false);
+                    if (gameCurrentState == "PLAYING") {
+                        await this.startMusic();
+                    }
                 } else {
                     this.sfxOnly = true;
                     this.setMute(false);
@@ -249,18 +252,22 @@ window.onload = () => {
             }
         }
         let toggleSound = () => {
-            if (gameCurrentState == "PLAYING") {
+             if (gameCurrentState == "PLAYING") {
                 audioController.toggleSound();
             } else {
-                if (audioController.muted) {
-                    audioController.sfxOnly = true;
-                    audioController.setMute(false);
+                if (getMobileOperatingSystem() == "iOS") {
+                    audioController.setMute(!audioController.muted);
                 } else {
-                    if (audioController.sfxOnly) {
-                        audioController.sfxOnly = false;
+                    if (audioController.muted) {
+                        audioController.sfxOnly = true;
                         audioController.setMute(false);
                     } else {
-                        audioController.setMute(true);
+                        if (audioController.sfxOnly) {
+                            audioController.sfxOnly = false;
+                            audioController.setMute(false);
+                        } else {
+                            audioController.setMute(true);
+                        }
                     }
                 }
             }
@@ -358,16 +365,14 @@ window.onload = () => {
                     if (gameCurrentState == "PLAYING" || gameCurrentState == "PAUSED") {
                         pauseGame();
                     }
-                    console.log("hidden");
                     break;
                 case "visible":
                     if (gameCurrentState == "PLAYING" && !audioController.muted && !audioController.sfxOnly) {
                         audioController.startMusic();
                     }
-                    if (gameCurrentState == "PLAYING" || gameCurrentState == "PAUSED") {
+                    /* if (gameCurrentState == "PLAYING" || gameCurrentState == "PAUSED") {
                         resumeGame();
-                    }
-                    console.log("visible");
+                    } */
                     /* if (game !== undefined && !game.gameOver) {
                       game.resume();
                       if (!audioController.muted) {
