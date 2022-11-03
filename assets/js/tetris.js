@@ -429,6 +429,8 @@ window.onload = () => {
         playing = false;
         boardWidth = 10;
         boardHeight = 20;
+        gameManualDownDelay = 100;
+        gameIntervalDelay = 550;
 
         fixedBlocks = get2DArrayWithZeros(boardHeight, boardWidth);
         board = get2DArrayWithZeros(boardHeight, boardWidth);
@@ -656,6 +658,8 @@ window.onload = () => {
             compactLines();
             switchToNextBlock();
             render();
+            gameIntervalDelay = Math.floor(550 / Math.pow(stackCount, 0.1));
+            gameManualDownDelay = Math.floor(100 / Math.pow(stackCount, 0.1));
             gameIntervalHandler = setInterval(gameloop, gameIntervalDelay);
             gameCurrentState = 'PLAYING';
             if (completeLinesIntervalHandler != null) {
