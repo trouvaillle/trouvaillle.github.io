@@ -8,6 +8,7 @@ sidebar_main: true
 <ul class="post-list">
   {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
   {%- for post in site.categories[category] -%}
+  {%- if post.visible == true or post.visible == "true" or post.visible == nul -%}
   {%- assign words = post.content | number_of_words -%}
   <li>
     <span class="post-meta">{{- post.date | date: date_format }} &middot; {{ words | divided_by:180 }} min read</span>
@@ -20,6 +21,7 @@ sidebar_main: true
       </a>
     </h3>
   </li>
+  {%- endif -%}
   {%- endfor -%}
 
 </ul>
