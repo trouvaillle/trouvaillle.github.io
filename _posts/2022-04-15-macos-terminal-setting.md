@@ -83,13 +83,6 @@ POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status)
 EOF
 ```
 
-
-### 참고. iTerm 기능
-* Split view
-  * Command + D: Vertical View
-  * Command + Shift + D: Horizontal View
-
-
 ### <a id="no6" href="#no6">6. vim 설정</a>
 
 ``` sh
@@ -133,3 +126,12 @@ augroup CursorLine
 augroup END
 EOF
 ```
+
+
+### 참고. iTerm 기능
+* Split view
+  * Command + D: Vertical View
+  * Command + Shift + D: Horizontal View
+
+### 참고. oh-my-zsh offline install
+https://gist.github.com/hewerthomn/65bb351bf950470f6c9e6aba8c0c04f1
