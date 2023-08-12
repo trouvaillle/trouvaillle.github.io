@@ -1,0 +1,8 @@
+gem "jekyll"
+gem "jekyll-paginate"
+gem "jekyll-sitemap"
+gem "jekyll-gist"
+gem "jekyll-feed"
+gem "jekyll-include-cache"
+gem "jekyll-sass-converter"
+gem "kramdown-parser-gfm"

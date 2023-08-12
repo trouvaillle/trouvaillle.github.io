@@ -1,0 +1,50 @@
+body {
+    background: var(--background);
+    display: flex;
+}
+
+a {
+    text-decoration: none;
+}
+
+.home {
+    max-width: 1024px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.pager {
+    display: flex;
+    padding: 0 0 2rem 0;
+}
+
+.pagination {
+    display: flex;
+    margin: 0 auto;
+    li {
+        list-style-type: none;
+        margin: 0 8px;
+    }
+}
+
+.pager-edge {
+    color: #999;
+}
+
+.current-page {
+    color: #999;
+}
+
+.post-list {
+    padding-inline-start: 0;
+    li {        
+        list-style-type: none;
+        border-bottom: solid 1px #333;
+        margin: 8px 0;
+        padding: 16px 0;
+    }
+}
+
+.excerpt {
+    word-break: break-all;
+}

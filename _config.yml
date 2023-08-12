@@ -196,7 +196,7 @@ kramdown:
 
 # Sass/SCSS
 sass:
-  sass_dir: _sass
+  sass_dir: /assets/css/
   style: compressed # https://sass-lang.com/documentation/file.SASS_REFERENCE.html#output_style
 
 # Outputting
@@ -274,7 +274,7 @@ defaults:
         nav: "docs"
       classes: wide
 
-remote_theme: jekyll/minima
+# remote_theme: jekyll/minima
 # Disqus
 disqus_url: https://trouvaillle.disqus.com
 disqus_name: trouvaillle
