@@ -6,7 +6,7 @@ body {
   padding: 0;
   overflow: hidden;
 
-  font-size: calc(min(13vw, 13vh));
+  font-size: calc(min(10vw, 10vh));
   font-family: "PT Sans", sans-serif;
 
   background-color: #15181e;
@@ -42,8 +42,9 @@ body {
   text-align: center;
   align-items: center;
 
-  background-color: #262930;
+  background-color: black;
   box-shadow: #181a2120 0px 0px 8px;
+  backdrop-filter: blur(10px);
 }
 
 #spanTitle {
@@ -82,35 +83,6 @@ body {
   text-align: center;
 }
 
-#controller {
-  display: flex;
-  flex-direction: row;
-  flex: 0 1;
-  width: 100%;
-  min-height: min(40vw,30vh);
-  color: white;
-}
-
-.divButton {
-  display: flex;
-  flex: 1 1;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  vertical-align: middle;
-  border: 1px solid #33393f;
-
-  font-size: 0.7rem;
-}
-
-.divButton:hover {
-  background-color: #363940;
-}
-
-.divButton:active {
-  color: #25282e;
-}
-
 #line {
   position: absolute;
   left : 50%;
@@ -131,7 +103,6 @@ body {
   margin: -4vw;
   z-index: 2;
 }
-
 
 .arrow-right ::after{
   content: '>';

@@ -5,7 +5,7 @@ window.onload = () => {
 
   const url = "https://trouvaillle.github.io/app";
 
-  const buttonActionElement = document.querySelector("#buttonAction");
+  const buttonActionElement = document.querySelector("#board");
   const backElement = document.querySelector("#back");
   const soundElement = document.querySelector("#sound");
 
