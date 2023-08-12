@@ -396,7 +396,8 @@ window.onload = () => {
             randBetween(1, 5) +
             randBetween(1, 10) +
             randBetween(1, 10) +
-            randBetween(1, 170)) /
+            randBetween(1, 170) + 
+            randBetween(1, 320)) /
           5,
         element: backgroundDiv,
       });
@@ -420,7 +421,8 @@ window.onload = () => {
             randBetween(1, 10) +
             randBetween(1, 20) +
             randBetween(1, 20) +
-            randBetween(1, 290)) /
+            randBetween(1, 290) + 
+            randBetween(1, 350)) /
           5,
         element: buildingDiv,
       });
