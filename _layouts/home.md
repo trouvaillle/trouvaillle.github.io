@@ -29,9 +29,9 @@ layout: default
       {%- if post.visible == true or post.visible == "true" or post.visible == nul -%}
       {%- assign words = post.content | number_of_words -%}
       <li>
-        <span class="post-meta">{{- post.date | date: date_format }} &middot; {{ words | divided_by:180 }} min read</span>
         <a class="post-link" href="{{ post.url | relative_url }}">
           <div><h3>{{ post.title | escape }}</h3></div>
+          <span class="post-meta">{{- post.date | date: date_format }} &middot; {{ words | divided_by:180 }} min read</span>
           {%- if site.show_excerpts -%}
           <div class="excerpt">{{ post.content | strip_html | truncate: 200 }}</div>
           {%- endif -%}
