@@ -13,12 +13,12 @@
   --highlight: white;
   --background: #181818;
   --color: #ccc;
-  font-family: 'Noto Sans KR', Arial, Helvetica, sans-serif;
-  font-size: 16px;
 }
 
 html {
   color: var(--color);
+  font-family: 'Noto Sans KR', Arial, Helvetica, sans-serif;
+  font-size: 16px;
 }
 
 body {
@@ -227,9 +227,9 @@ blockquote {
 }
 
 
-@media screen and (max-width: 600px) {
-  :root {
-    font-size: 16px;
+@media (max-width: 600px) {
+  html {
+    font-size: calc(min(min(4vw, 4vh), 32px));
   }
 
   body {
