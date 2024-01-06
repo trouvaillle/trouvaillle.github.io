@@ -15,18 +15,24 @@ npx create-react-app 이름 --typescript
 ### Typescript 초기화(`tsconfig.json` 생성)
 
 ```bash
-npx typescript --init
+npx tsc --init
+# npx typescript --init # 구버전
 ```
 
+<!--
 ### Typescript 모듈 설치
 
 ```bash
-yarn add @types/react @types/react-dom
-yarn add -D typescript
+npm add @types/react @types/react-dom tsc
+# yarn add @types/react @types/react-dom
+# yarn add -D typescript
 ```
+
+-->
 
 ### eslint, prettier 모듈 설치
 
 ```bash
-yarn add -D eslint prettier
+npm i --dev eslint prettier
+# yarn add -D eslint prettier
 ```
