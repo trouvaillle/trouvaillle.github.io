@@ -104,6 +104,8 @@ ul {
 
 #hands {
     position: absolute;
+    display: flex;
+    justify-content: center;
     width: 100%;
     height: 100%;
 }
@@ -117,13 +119,10 @@ ul {
 }
 
 #hands-circle {
-    position: absolute;
     display: block;
     background: black;
     border-radius: 50%;
-    width: 2%;
-    height: 2%;
-    margin: 49%;
+    margin: auto;
     border: calc(var(--radius) * 0.003) solid black;
     z-index: 6;
 }

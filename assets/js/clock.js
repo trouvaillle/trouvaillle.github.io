@@ -103,12 +103,12 @@ window.onload = () => {
         const worker = () => {
             {
                 const now = new Date();
-    
+
                 const hours = now.getHours();
                 const minutes = now.getMinutes();
                 const seconds = now.getSeconds();
                 const millseconds = now.getMilliseconds();
-    
+
                 /*
                 hourElement.setAttribute('style',
                     `position: absolute; ` +
@@ -120,7 +120,7 @@ window.onload = () => {
                     `transform: rotateZ(${2 * Math.PI / 12 * (hours + minutes / 60 + 3)}rad);`
                 );
                 */
-    
+
                 hourElement.setAttribute('style',
                     `position: absolute; ` +
                     `width: 100%; ` +
@@ -128,7 +128,7 @@ window.onload = () => {
                     `margin: 0; ` +
                     `transform: rotateZ(${2 * Math.PI / 12 * (hours + minutes / 60 + seconds / 3600)}rad);`
                 );
-    
+
                 minuteElement.setAttribute('style',
                     `position: absolute; ` +
                     `width: 100%; ` +
@@ -136,7 +136,7 @@ window.onload = () => {
                     `margin: 0; ` +
                     `transform: rotateZ(${2 * Math.PI / 60 * (minutes + seconds / 60 + millseconds / 60000)}rad);`
                 );
-    
+
                 secondElement.setAttribute('style',
                     `position: absolute; ` +
                     `width: 100%; ` +
@@ -144,7 +144,7 @@ window.onload = () => {
                     `margin: 0; ` +
                     `transform: rotateZ(${2 * Math.PI / 60 * (seconds + millseconds / 1000)}rad);`
                 );
-    
+
                 const date = now.getDate();
                 if (dateInnerElement.innerText !== `${date}`) {
                     dateInnerElement.innerText = date;
@@ -270,7 +270,14 @@ window.onload = () => {
         dateOuterElement.setAttribute('style', 'display: none');
 
         handsCircleElement.innerHTML = '';
-        handsCircleElement.setAttribute('style', `width: calc(${radius} * 0.0076046); height: calc(${radius} * 0.0076046); background: black;`);
+        handsCircleElement.setAttribute('style',
+            `position: relative;` +
+            `display: flex;` +
+            `justify-content: center;` +
+            `margin: auto;` +
+            `width: calc(${radius} * 0.0925221799); height: calc(${radius} * 0.0925221799); background: white; z-index: 4;` +
+            `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.02) 1px;`
+        );
 
         [...Array(12 * 5 * 3).keys()].forEach(it => {
             const child = document.createElement('li');
@@ -366,7 +373,7 @@ window.onload = () => {
 
             const childWidth = `calc(${radius} * 0.006)`;
             child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
-            childInner.setAttribute('style', `position: absolute; top: 38.0618%; width: 100%; height: 61.9382%; background: ${handsColor};`);
+            childInner.setAttribute('style', `position: absolute; top: 38.0618%; width: 100%; height: 52.8127%; background: ${handsColor};`);
 
             child.appendChild(childInner);
 
@@ -381,7 +388,7 @@ window.onload = () => {
 
             const childWidth = `calc(${radius} * 0.006)`;
             child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
-            childInner.setAttribute('style', `position: absolute; top: 9.3128%; width: 100%; height: 90.6872%; background: ${handsColor};`);
+            childInner.setAttribute('style', `position: absolute; top: 8.5128%; width: 100%; height: 84.8966%; background: ${handsColor};`);
 
             child.appendChild(childInner);
 
@@ -396,12 +403,66 @@ window.onload = () => {
 
             const childWidth = `calc(${radius} * 0.006)`;
             child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
-            childInner.setAttribute('style', `position: absolute; top: 19.5460%; width: 100%; height: 80.4540%; background: ${handsColor};`);
+            childInner.setAttribute('style', `position: absolute; top: 19.5460%; width: 100%; height: 75.9913%; background: ${handsColor};`);
 
             child.appendChild(childInner);
 
             secondElement.innerHTML = '';
             secondElement.appendChild(child);
+        })();
+
+        // handsCircle
+        (() => {
+            const childMinute = document.createElement('div');
+            const childSecond = document.createElement('div');
+            const childEmboss = document.createElement('div');
+            const childDot = document.createElement('div');
+
+            childMinute.setAttribute('style',
+                `position: absolute;` +
+                `border-radius: 50%;` +
+                `width: 78.0821%; ` +
+                `height: 78.0821%; ` +
+                `margin: 10.95895%; ` +
+                `background: white;` +
+                `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.02) 1px;`
+            );
+
+            childSecond.setAttribute('style',
+                `position: absolute;` +
+                `border-radius: 50%;` +
+                `width: 49.3151%; ` +
+                `height: 49.3151%; ` +
+                `margin: 25.34245%; ` +
+                `background: white;` +
+                `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.02) 1px;`
+            );
+
+            childEmboss.setAttribute('style',
+                `position: absolute;` +
+                `border-radius: 50%;` +
+                `width: 20.5479%; ` +
+                `height: 20.5479%; ` +
+                `margin: 39.72605%; ` +
+                `background: white;` +
+                `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.02) 1px;`
+            );
+
+            childDot.setAttribute('style',
+                `position: absolute;` +
+                `border-radius: 50%;` +
+                `width: 6.8493%; ` +
+                `height: 6.8493%; ` +
+                `margin: 46.57535%; ` +
+                `background: #393939;` +
+                `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.002) 1px inset;` +
+                `z-index: 7;`
+            );
+
+            handsCircleElement.appendChild(childMinute);
+            handsCircleElement.appendChild(childSecond);
+            handsCircleElement.appendChild(childEmboss);
+            handsCircleElement.appendChild(childDot);
         })();
     }
 };
