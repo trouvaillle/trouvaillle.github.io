@@ -100,54 +100,62 @@ window.onload = () => {
     }
 
     function clockwork() {
-        const timer = setInterval(() => {
-            const now = new Date();
-
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const seconds = now.getSeconds();
-            const millseconds = now.getMilliseconds();
-
-            hourElement.setAttribute('style',
-                `position: absolute; ` +
-                `left: calc(${radius} * 0.05); ` +
-                `top: calc(${radius} * 0.5); ` +
-                `box-shadow: calc(${radius} * 0.15) 0 0 ${dialColor} inset, calc(${radius} * 0.45) 0 0 ${handsColor} inset;` +
-                `width: calc(${radius} * 0.9);` +
-                `height: calc(${radius} * 0.006);` +
-                `transform: rotateZ(${2 * Math.PI / 12 * (hours + minutes / 60 + 3)}rad);`
-            );
-
-            minuteElement.setAttribute('style',
-                `position: absolute; ` +
-                `left: calc(${radius} * 0.05); ` +
-                `top: calc(${radius} * 0.5); ` +
-                `box-shadow: calc(${radius} * 0.03) 0 0 ${dialColor} inset, calc(${radius} * 0.45) 0 0 ${handsColor} inset;` +
-                `width: calc(${radius} * 0.9);` +
-                `height: calc(${radius} * 0.006);` +
-                `transform: rotateZ(${2 * Math.PI / 60 * (minutes + seconds / 60 + 15)}rad);`
-            );
-
-            secondElement.setAttribute('style',
-                `position: absolute; ` +
-                `left: calc(${radius} * 0.05); ` +
-                `top: calc(${radius} * 0.5); ` +
-                `box-shadow: calc(${radius} * 0.03) 0 0 ${dialColor} inset, calc(${radius} * 0.45) 0 0 ${handsColor} inset;` +
-                `width: calc(${radius} * 0.9);` +
-                `height: calc(${radius} * 0.006);` +
-                `transform: rotateZ(${2 * Math.PI / 60 * (seconds + millseconds / 1000 + 15)}rad);`
-            );
-
-            const date = now.getDate();
-            if (dateInnerElement.innerText !== `${date}`) {
-                dateInnerElement.innerText = date;
+        const worker = () => {
+            {
+                const now = new Date();
+    
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+                const seconds = now.getSeconds();
+                const millseconds = now.getMilliseconds();
+    
+                /*
+                hourElement.setAttribute('style',
+                    `position: absolute; ` +
+                    `left: calc(${radius} * 0.05); ` +
+                    `top: calc(${radius} * 0.5); ` +
+                    `box-shadow: calc(${radius} * 0.15) 0 0 ${dialColor} inset, calc(${radius} * 0.45) 0 0 ${handsColor} inset;` +
+                    `width: calc(${radius} * 0.9);` +
+                    `height: calc(${radius} * 0.006);` +
+                    `transform: rotateZ(${2 * Math.PI / 12 * (hours + minutes / 60 + 3)}rad);`
+                );
+                */
+    
+                hourElement.setAttribute('style',
+                    `position: absolute; ` +
+                    `width: 100%; ` +
+                    `height: 100%; ` +
+                    `margin: 0; ` +
+                    `transform: rotateZ(${2 * Math.PI / 12 * (hours + minutes / 60 + seconds / 3600)}rad);`
+                );
+    
+                minuteElement.setAttribute('style',
+                    `position: absolute; ` +
+                    `width: 100%; ` +
+                    `height: 100%; ` +
+                    `margin: 0; ` +
+                    `transform: rotateZ(${2 * Math.PI / 60 * (minutes + seconds / 60 + millseconds / 60000)}rad);`
+                );
+    
+                secondElement.setAttribute('style',
+                    `position: absolute; ` +
+                    `width: 100%; ` +
+                    `height: 100%; ` +
+                    `margin: 0; ` +
+                    `transform: rotateZ(${2 * Math.PI / 60 * (seconds + millseconds / 1000)}rad);`
+                );
+    
+                const date = now.getDate();
+                if (dateInnerElement.innerText !== `${date}`) {
+                    dateInnerElement.innerText = date;
+                }
             }
-        }, 1000 / hz);
+        };
+        const timer = setInterval(worker, 1000 / hz);
 
+        worker();
         return timer;
     }
-
-
 
     function setDialPrague() {
         dialColor = 'white';
@@ -157,6 +165,9 @@ window.onload = () => {
         faceElement.setAttribute('style', 'background: white;');
         indexLineOuter.setAttribute('style', 'width: 94%; height: 94%; margin: 3%; border: calc(var(--radius) * 0.003) solid black; ');
         indexLineInner.setAttribute('style', 'border: calc(var(--radius) * 0.003) solid black;');
+
+        handsCircleElement.innerHTML = '';
+        handsCircleElement.setAttribute('style', `width: calc(${radius} * 0.015); height: calc(${radius} * 0.015); background: black;`);
 
         [...Array(12).keys()].forEach(it => {
             const child = document.createElement('li');
@@ -194,6 +205,51 @@ window.onload = () => {
                 child
             );
         });
+
+        // hour
+        (() => {
+            const child = document.createElement('div');
+            const childInner = document.createElement('div');
+
+            const childWidth = `calc(${radius} * 0.006)`;
+            child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
+            childInner.setAttribute('style', `position: absolute; top: 50%; width: 100%; height: 50%; background: ${handsColor};`);
+
+            child.appendChild(childInner);
+
+            hourElement.innerHTML = '';
+            hourElement.appendChild(child);
+        })();
+
+        // minute
+        (() => {
+            const child = document.createElement('div');
+            const childInner = document.createElement('div');
+
+            const childWidth = `calc(${radius} * 0.006)`;
+            child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
+            childInner.setAttribute('style', `position: absolute; top: 15%; width: 100%; height: 85%; background: ${handsColor};`);
+
+            child.appendChild(childInner);
+
+            minuteElement.innerHTML = '';
+            minuteElement.appendChild(child);
+        })();
+
+        // second
+        (() => {
+            const child = document.createElement('div');
+            const childInner = document.createElement('div');
+
+            const childWidth = `calc(${radius} * 0.006)`;
+            child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
+            childInner.setAttribute('style', `position: absolute; top: 15%; width: 100%; height: 85%; background: ${handsColor};`);
+
+            child.appendChild(childInner);
+
+            secondElement.innerHTML = '';
+            secondElement.appendChild(child);
+        })();
     }
 
     function setDialSpeedMaster() {
@@ -213,6 +269,7 @@ window.onload = () => {
         indexLineInner.setAttribute('style', 'border: none; background-image: none;');
         dateOuterElement.setAttribute('style', 'display: none');
 
+        handsCircleElement.innerHTML = '';
         handsCircleElement.setAttribute('style', `width: calc(${radius} * 0.0076046); height: calc(${radius} * 0.0076046); background: black;`);
 
         [...Array(12 * 5 * 3).keys()].forEach(it => {
@@ -301,5 +358,50 @@ window.onload = () => {
                 child
             );
         });
+
+        // hour
+        (() => {
+            const child = document.createElement('div');
+            const childInner = document.createElement('div');
+
+            const childWidth = `calc(${radius} * 0.006)`;
+            child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
+            childInner.setAttribute('style', `position: absolute; top: 38.0618%; width: 100%; height: 61.9382%; background: ${handsColor};`);
+
+            child.appendChild(childInner);
+
+            hourElement.innerHTML = '';
+            hourElement.appendChild(child);
+        })();
+
+        // minute
+        (() => {
+            const child = document.createElement('div');
+            const childInner = document.createElement('div');
+
+            const childWidth = `calc(${radius} * 0.006)`;
+            child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
+            childInner.setAttribute('style', `position: absolute; top: 9.3128%; width: 100%; height: 90.6872%; background: ${handsColor};`);
+
+            child.appendChild(childInner);
+
+            minuteElement.innerHTML = '';
+            minuteElement.appendChild(child);
+        })();
+
+        // second
+        (() => {
+            const child = document.createElement('div');
+            const childInner = document.createElement('div');
+
+            const childWidth = `calc(${radius} * 0.006)`;
+            child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
+            childInner.setAttribute('style', `position: absolute; top: 19.5460%; width: 100%; height: 80.4540%; background: ${handsColor};`);
+
+            child.appendChild(childInner);
+
+            secondElement.innerHTML = '';
+            secondElement.appendChild(child);
+        })();
     }
 };
