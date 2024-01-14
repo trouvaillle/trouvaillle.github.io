@@ -1,5 +1,7 @@
 window.onload = () => {
 
+    const radius = getComputedStyle(document.documentElement)
+        .getPropertyValue('--radius');
 
     function romanize(num) {
         if (isNaN(num))
@@ -19,10 +21,9 @@ window.onload = () => {
     [...Array(12).keys()].forEach(it => {
         const child = document.createElement('li');
         child.setAttribute('style', `position: absolute; ` +
-            `left: calc(min(90vh, 90vw) * 0.5 - 4rem); ` +
-            `top: calc(min(90vh, 90vw) * 0.1 - 1.8rem); ` +
-            `padding-bottom: calc(min(90vh, 90vw) * 0.77);` +
-            `width: 8rem;` +
+            `width: 88%;` +
+            `height: 88%;` +
+            `margin: 6%;` +
             `text-align: center;` +
             `transform: rotateZ(${2 * Math.PI / 12 * (it + 1)}rad);`);
         child.innerText = `${romanize(it + 1)}`;
@@ -35,11 +36,11 @@ window.onload = () => {
     [...Array(60).keys()].forEach(it => {
         const child = document.createElement('li');
         child.setAttribute('style', `position: absolute; ` +
-            `left: calc(min(90vh, 90vw) * 0.00); ` +
-            `top: calc(min(90vh, 90vw) * 0.47); ` +
-            `border-right: calc(min(90vh, 90vw) * 0.02) solid black;` +
-            `width: calc(min(90vh, 90vw) * 0.92);` +
-            (it % 5 == 0 ? `height: calc(min(90vh, 90vw) * 0.006);` : `height: calc(min(90vh, 90vw) * 0.003);`) +
+            `left: calc(${radius} * 0.00); ` +
+            `top: calc(${radius} * 0.47); ` +
+            `border-right: calc(${radius} * 0.02) solid black;` +
+            `width: calc(${radius} * 0.92);` +
+            (it % 5 == 0 ? `height: calc(${radius} * 0.006);` : `height: calc(${radius} * 0.003);`) +
             `transform: rotateZ(${2 * Math.PI / 60 * (it)}rad);`);
         indexLineOuterUL.appendChild(
             child
@@ -55,27 +56,27 @@ window.onload = () => {
         let now = new Date();
 
         hour.setAttribute('style', `position: absolute; ` +
-            `left: calc(min(90vh, 90vw) * 0.05); ` +
-            `top: calc(min(90vh, 90vw) * 0.5); ` +
-            `box-shadow: calc(min(90vh, 90vw) * 0.15) 0 0 white inset, calc(min(90vh, 90vw) * 0.45) 0 0 black inset;` +
-            `width: calc(min(90vh, 90vw) * 0.9);` +
-            `height: calc(min(90vh, 90vw) * 0.006);` +
+            `left: calc(${radius} * 0.05); ` +
+            `top: calc(${radius} * 0.5); ` +
+            `box-shadow: calc(${radius} * 0.15) 0 0 white inset, calc(${radius} * 0.45) 0 0 black inset;` +
+            `width: calc(${radius} * 0.9);` +
+            `height: calc(${radius} * 0.006);` +
             `transform: rotateZ(${2 * Math.PI / 12 * (now.getHours() + now.getMinutes() / 60 + 3)}rad);`);
 
         minute.setAttribute('style', `position: absolute; ` +
-            `left: calc(min(90vh, 90vw) * 0.05); ` +
-            `top: calc(min(90vh, 90vw) * 0.5); ` +
-            `box-shadow: calc(min(90vh, 90vw) * 0.03) 0 0 white inset, calc(min(90vh, 90vw) * 0.45) 0 0 black inset;` +
-            `width: calc(min(90vh, 90vw) * 0.9);` +
-            `height: calc(min(90vh, 90vw) * 0.006);` +
+            `left: calc(${radius} * 0.05); ` +
+            `top: calc(${radius} * 0.5); ` +
+            `box-shadow: calc(${radius} * 0.03) 0 0 white inset, calc(${radius} * 0.45) 0 0 black inset;` +
+            `width: calc(${radius} * 0.9);` +
+            `height: calc(${radius} * 0.006);` +
             `transform: rotateZ(${2 * Math.PI / 60 * (now.getMinutes() + now.getSeconds() / 60 + 15)}rad);`);
 
         second.setAttribute('style', `position: absolute; ` +
-            `left: calc(min(90vh, 90vw) * 0.05); ` +
-            `top: calc(min(90vh, 90vw) * 0.5); ` +
-            `box-shadow: calc(min(90vh, 90vw) * 0.03) 0 0 white inset, calc(min(90vh, 90vw) * 0.45) 0 0 black inset;` +
-            `width: calc(min(90vh, 90vw) * 0.9);` +
-            `height: calc(min(90vh, 90vw) * 0.006);` +
+            `left: calc(${radius} * 0.05); ` +
+            `top: calc(${radius} * 0.5); ` +
+            `box-shadow: calc(${radius} * 0.03) 0 0 white inset, calc(${radius} * 0.45) 0 0 black inset;` +
+            `width: calc(${radius} * 0.9);` +
+            `height: calc(${radius} * 0.006);` +
             `transform: rotateZ(${2 * Math.PI / 60 * (now.getSeconds() + now.getMilliseconds() / 1000 + 15)}rad);`);
 
         day.innerText = now.getDate();
