@@ -85,7 +85,7 @@ ul {
 }
 
 #hands>ul>li {
-    z-index: 0;
+    z-index: 5;
 }
 
 #face-inner {
@@ -111,6 +111,7 @@ ul {
     height: 2%;
     margin: 49%;
     border: calc(var(--radius) * 0.003) solid black;
+    z-index: 6;
 }
 
 #date {
