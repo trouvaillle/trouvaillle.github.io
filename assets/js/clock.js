@@ -111,18 +111,6 @@ window.onload = () => {
                 const seconds = now.getSeconds();
                 const millseconds = now.getMilliseconds();
 
-                /*
-                hourElement.setAttribute('style',
-                    `position: absolute; ` +
-                    `left: calc(${radius} * 0.05); ` +
-                    `top: calc(${radius} * 0.5); ` +
-                    `box-shadow: calc(${radius} * 0.15) 0 0 ${dialColor} inset, calc(${radius} * 0.45) 0 0 ${handsColor} inset;` +
-                    `width: calc(${radius} * 0.9);` +
-                    `height: calc(${radius} * 0.006);` +
-                    `transform: rotateZ(${2 * Math.PI / 12 * (hours + minutes / 60 + 3)}rad);`
-                );
-                */
-
                 hourElement.setAttribute('style',
                     `position: absolute; ` +
                     `width: 100%; ` +
@@ -504,6 +492,26 @@ window.onload = () => {
             handsCircleElement.appendChild(childSecond);
             handsCircleElement.appendChild(childEmboss);
             handsCircleElement.appendChild(childDot);
+        })();
+
+        // subdial(9h)
+        (() => {
+            const child = document.createElement('div');
+            const childFaceDeboss = document.createElement('div');
+            const childFace = document.createElement('div');
+
+            const childWidth = `calc(${radius} * 0.29151)`;
+            const childTop = `calc(${radius} * 0.354245)`;
+            const childLeft = `calc(${radius} * 0.13756)`;
+            child.setAttribute('style', `position: absolute; left: ${childLeft}; top: ${childTop}; width: ${childWidth}; height: ${childWidth}; z-index: 11;`);
+
+            childFaceDeboss.setAttribute('style', `position: absolute; width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #131313, #676767);  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) 0px -1px calc(${radius} * -0.002) 1px inset;`);
+            childFace.setAttribute('style', 'position: absolute; left: 11.6883%; top: 11.6883%; width: 76.6234%; height: 76.6234%; border-radius: 50%; background: #333333;');
+
+            child.appendChild(childFaceDeboss);
+            child.appendChild(childFace);
+            
+            faceElement.appendChild(child);
         })();
     }
 };
