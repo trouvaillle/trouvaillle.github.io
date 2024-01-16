@@ -577,7 +577,7 @@ window.onload = () => {
             });
 
             // number
-            const fontSize = `calc(${radius} * 0.059375)`;
+            const fontSize = `calc(${radius} * 0.039375)`;
 
             const number1 = document.createElement('div');
             const number2 = document.createElement('div');
@@ -587,9 +587,9 @@ window.onload = () => {
             number2.innerText = '20';
             number3.innerText = '40';
 
-            number1.setAttribute('style', `position: absolute; top: -4%; left: 35%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
-            number2.setAttribute('style', `position: absolute; top: 48%; left: 62%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
-            number3.setAttribute('style', `position: absolute; top: 48%; left: 10%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
+            number1.setAttribute('style', `position: absolute; top: 4%; left: 38%; color: ${handsColor}; font-family: Verdana, Geneva, Sans-Serif; font-size: ${fontSize}; transform: scaleX(135.8%);`);
+            number2.setAttribute('style', `position: absolute; top: 56%; left: 64%; color: ${handsColor}; font-family: Verdana, Geneva, Sans-Serif; font-size: ${fontSize}; transform: scaleX(135.8%);`);
+            number3.setAttribute('style', `position: absolute; top: 56%; left: 13%; color: ${handsColor}; font-family: Verdana, Geneva, Sans-Serif; font-size: ${fontSize}; transform: scaleX(135.8%);`);
 
             childFace.appendChild(number1);
             childFace.appendChild(number2);
@@ -729,7 +729,7 @@ window.onload = () => {
             });
 
             // number
-            const fontSize = `calc(${radius} * 0.059375)`;
+            const fontSize = `calc(${radius} * 0.039375)`;
 
             const number1 = document.createElement('div');
             const number2 = document.createElement('div');
@@ -739,9 +739,9 @@ window.onload = () => {
             number2.innerText = '10';
             number3.innerText = '20';
 
-            number1.setAttribute('style', `position: absolute; top: -4%; left: 35%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
-            number2.setAttribute('style', `position: absolute; top: 48%; left: 62%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
-            number3.setAttribute('style', `position: absolute; top: 48%; left: 10%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
+            number1.setAttribute('style', `position: absolute; top: 4%; left: 38%; color: ${handsColor}; font-family: Verdana, Geneva, Sans-Serif; font-size: ${fontSize}; transform: scaleX(135.8%);`);
+            number2.setAttribute('style', `position: absolute; top: 56%; left: 64%; color: ${handsColor}; font-family: Verdana, Geneva, Sans-Serif; font-size: ${fontSize}; transform: scaleX(135.8%);`);
+            number3.setAttribute('style', `position: absolute; top: 56%; left: 13%; color: ${handsColor}; font-family: Verdana, Geneva, Sans-Serif; font-size: ${fontSize}; transform: scaleX(135.8%);`);
 
             childFace.appendChild(number1);
             childFace.appendChild(number2);
@@ -881,7 +881,7 @@ window.onload = () => {
             });
 
             // number
-            const fontSize = `calc(${radius} * 0.059375)`;
+            const fontSize = `calc(${radius} * 0.039375)`;
 
             const number1 = document.createElement('div');
             const number2 = document.createElement('div');
@@ -893,10 +893,10 @@ window.onload = () => {
             number3.innerText = '6';
             number4.innerText = '9';
 
-            number1.setAttribute('style', `position: absolute; top: -4%; left: 35%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
-            number2.setAttribute('style', `position: absolute; top: 32%; left: 82%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
-            number3.setAttribute('style', `position: absolute; top: 71%; left: 43%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
-            number4.setAttribute('style', `position: absolute; top: 32%; left: 5%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
+            number1.setAttribute('style', `position: absolute; top: 4%; left: 38%; color: ${handsColor}; font-family: Verdana, Geneva, Sans-Serif; font-size: ${fontSize}; transform: scaleX(135.8%);`);
+            number2.setAttribute('style', `position: absolute; top: 38%; left: 83%; color: ${handsColor}; font-family: Verdana, Geneva, Sans-Serif; font-size: ${fontSize}; transform: scaleX(135.8%);`);
+            number3.setAttribute('style', `position: absolute; top: 78%; left: 43%; color: ${handsColor}; font-family: Verdana, Geneva, Sans-Serif; font-size: ${fontSize}; transform: scaleX(135.8%);`);
+            number4.setAttribute('style', `position: absolute; top: 38%; left: 8%; color: ${handsColor}; font-family: Verdana, Geneva, Sans-Serif; font-size: ${fontSize}; transform: scaleX(135.8%);`);
 
             childFace.appendChild(number1);
             childFace.appendChild(number2);
