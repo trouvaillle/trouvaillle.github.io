@@ -26,6 +26,13 @@ window.onload = () => {
     let glowColor = '#D7E1C3';
     let hz = 10;
 
+    let linkedHourElement = hourElement;
+    let linkedMinuteElement = minuteElement;
+    let linkedSecondElement = secondElement;
+    let linkedSubhand1Element = null;
+    let linkedSubhand2Element = null;
+    let linkedSubhand3Element = null;
+
     setDial('speedmaster');
     clockwork();
 
@@ -111,27 +118,15 @@ window.onload = () => {
                 const seconds = now.getSeconds();
                 const millseconds = now.getMilliseconds();
 
-                hourElement.setAttribute('style',
-                    `position: absolute; ` +
-                    `width: 100%; ` +
-                    `height: 100%; ` +
-                    `margin: 0; ` +
+                linkedHourElement?.setAttribute('style',
                     `transform: rotateZ(${2 * Math.PI / 12 * (hours + minutes / 60 + seconds / 3600)}rad);`
                 );
 
-                minuteElement.setAttribute('style',
-                    `position: absolute; ` +
-                    `width: 100%; ` +
-                    `height: 100%; ` +
-                    `margin: 0; ` +
+                linkedMinuteElement?.setAttribute('style',
                     `transform: rotateZ(${2 * Math.PI / 60 * (minutes + seconds / 60 + millseconds / 60000)}rad);`
                 );
 
-                secondElement.setAttribute('style',
-                    `position: absolute; ` +
-                    `width: 100%; ` +
-                    `height: 100%; ` +
-                    `margin: 0; ` +
+                linkedSecondElement?.setAttribute('style',
                     `transform: rotateZ(${2 * Math.PI / 60 * (seconds + millseconds / 1000)}rad);`
                 );
 
@@ -153,6 +148,14 @@ window.onload = () => {
         handsColor = 'black';
         glowColor = 'white';
         hz = 10;
+        
+        linkedHourElement = hourElement;
+        linkedMinuteElement = minuteElement;
+        linkedSecondElement = secondElement;
+
+        linkedSubhand1Element = null;
+        linkedSubhand2Element = null;
+        linkedSubhand3Element = null;
 
         faceElement.setAttribute('style', `background: ${dialcolor};`);
         indexLineOuter.setAttribute('style', 'width: 94%; height: 94%; margin: 3%; border: calc(var(--radius) * 0.003) solid black; ');
@@ -250,6 +253,14 @@ window.onload = () => {
         handsColor = 'rgba(245, 245, 245, 255)';
         glowColor = '#D7E1C3';
         hz = 6;
+        
+        linkedHourElement = hourElement;
+        linkedMinuteElement = minuteElement;
+        linkedSecondElement = null;
+
+        linkedSubhand1Element = null;
+        linkedSubhand2Element = null;
+        linkedSubhand3Element = null;
 
         faceElement.setAttribute('style', `background: linear-gradient(135deg, #515151, #1C1C1C);`);
         faceInnerElement.setAttribute('style',
@@ -573,6 +584,32 @@ window.onload = () => {
             childFace.appendChild(number1);
             childFace.appendChild(number2);
             childFace.appendChild(number3);
+            
+
+            // subhand
+            const subHandElement = document.createElement('div');
+            subHandElement.classList.add('hands');
+            subHandElement.setAttribute('style', `position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; z-index: 30;`);
+            child.appendChild(subHandElement);
+
+            linkedSecondElement = subHandElement; // link
+            (() => {
+                const child = document.createElement('div');
+                const childInner = document.createElement('div');
+                const childTriangle = document.createElement('div');
+
+                const childWidth = `calc(${radius} * 0.011407)`;
+                child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
+                13.4199
+                childInner.setAttribute('style', `position: absolute; top: 18.0935%; width: 100%; height: 69.2641%; background: ${handsColor};`);
+                childTriangle.setAttribute('style', `position: absolute; top: 13.4199%; width: 100%; height: 9.3472%; background: ${handsColor}; clip-path:polygon(0 50%,50% 100%,100% 50%,50% 0);`);
+
+                child.appendChild(childInner);
+                child.appendChild(childTriangle);
+
+                subHandElement.innerHTML = '';
+                subHandElement.appendChild(child);
+            })();
 
             // handsCircle
             const childHandsCircleElement = document.createElement('div');
