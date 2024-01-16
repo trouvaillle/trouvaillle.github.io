@@ -40,9 +40,24 @@ window.onload = () => {
     let chronographWork = false;
     let chronographStartTime = null;
     let chronographMillis = 0;
+    let chronographLastSaved = 0;
 
+    loadData();
     setDial('speedmaster');
     clockwork();
+
+    function loadData() {
+        chronographMillis = window.localStorage.getItem('trouvaille.github.io/clock/chronographMillis');
+        if (chronographMillis === null || chronographMillis === undefined) {
+            chronographMillis = 0;
+        } else {
+            chronographMillis = +chronographMillis;
+        }
+    }
+
+    function saveData() {
+        window.localStorage.setItem('trouvaille.github.io/clock/chronographMillis', `${chronographMillis}`);
+    }
 
     function define() {
         const radius = getComputedStyle(document.documentElement)
@@ -151,25 +166,32 @@ window.onload = () => {
                 dateInnerElement.innerText = date;
             }
 
+            let elapsedTotalMilliseconds = 0;
             if (chronographWork && chronographStartTime !== null) {
-                const elapsedTotalMilliseconds = (new Date()) - chronographStartTime;
-                const elapsedMilliseconds = Math.floor(elapsedTotalMilliseconds) % 1000;
-                const elapsedSeconds = Math.floor(elapsedTotalMilliseconds / 1000) % 60;
-                const elapsedMinutes = Math.floor(elapsedTotalMilliseconds / 60000) % 60;
-                const elapsedHours = Math.floor(elapsedTotalMilliseconds / 3600000);
-
-                chronographMillis = elapsedTotalMilliseconds;
-
-                linkedSubhand1Element?.setAttribute('style',
-                    `transform: rotateZ(${2 * Math.PI / 60 * (elapsedSeconds + elapsedMilliseconds / 1000)}rad);`
-                );
-                linkedSubhand2Element?.setAttribute('style',
-                    `transform: rotateZ(${2 * Math.PI / 30 * (elapsedMinutes + elapsedSeconds / 60 + elapsedMilliseconds / 60000)}rad);`
-                );
-                linkedSubhand3Element?.setAttribute('style',
-                    `transform: rotateZ(${2 * Math.PI / 12 * (elapsedHours + elapsedMinutes / 60 + elapsedSeconds / 3600)}rad);`
-                );
+                elapsedTotalMilliseconds = (new Date()) - chronographStartTime;
+            } else {
+                elapsedTotalMilliseconds = chronographMillis;
             }
+            const elapsedMilliseconds = Math.floor(elapsedTotalMilliseconds) % 1000;
+            const elapsedSeconds = Math.floor(elapsedTotalMilliseconds / 1000) % 60;
+            const elapsedMinutes = Math.floor(elapsedTotalMilliseconds / 60000) % 60;
+            const elapsedHours = Math.floor(elapsedTotalMilliseconds / 3600000);
+
+            chronographMillis = elapsedTotalMilliseconds;
+            if (elapsedMinutes + Math.floor(elapsedSeconds / 10) !== chronographLastSaved) {
+                chronographLastSaved = elapsedMinutes + Math.floor(elapsedSeconds / 10);
+                saveData();
+            }
+
+            linkedSubhand1Element?.setAttribute('style',
+                `transform: rotateZ(${2 * Math.PI / 60 * (elapsedSeconds + elapsedMilliseconds / 1000)}rad);`
+            );
+            linkedSubhand2Element?.setAttribute('style',
+                `transform: rotateZ(${2 * Math.PI / 30 * (elapsedMinutes + elapsedSeconds / 60 + elapsedMilliseconds / 60000)}rad);`
+            );
+            linkedSubhand3Element?.setAttribute('style',
+                `transform: rotateZ(${2 * Math.PI / 12 * (elapsedHours + elapsedMinutes / 60 + elapsedSeconds / 3600)}rad);`
+            );
         };
         const timer = setInterval(worker, 1000 / hz);
 
@@ -1145,13 +1167,14 @@ window.onload = () => {
             };
 
             createButton('66.41', null, true, () => { 
-                if (chronographStartTime !== null) {
+                if (chronographMillis !== 0) {
                     chronographStartTime = (new Date()) - chronographMillis;
                 } else {
                     chronographStartTime = new Date(); 
                     chronographMillis = 0;
                 }
                 chronographWork = !chronographWork; 
+                saveData();
             });
             createButton('90', 'stripe', false, null);
             createButton('113.59', null, true, () => { 
@@ -1161,6 +1184,7 @@ window.onload = () => {
                 linkedSubhand1Element?.removeAttribute('style'); 
                 linkedSubhand2Element?.removeAttribute('style'); 
                 linkedSubhand3Element?.removeAttribute('style'); 
+                saveData();
             });
         })();
     }
