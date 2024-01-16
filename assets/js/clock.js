@@ -37,6 +37,9 @@ window.onload = () => {
     let linkedSubhand2Element = null;
     let linkedSubhand3Element = null;
 
+    let chronographWork = false;
+    let chronographStartTime = null;
+
     setDial('speedmaster');
     clockwork();
 
@@ -123,30 +126,46 @@ window.onload = () => {
 
     function clockwork() {
         const worker = () => {
-            {
-                const now = new Date();
+            const now = new Date();
 
-                const hours = now.getHours();
-                const minutes = now.getMinutes();
-                const seconds = now.getSeconds();
-                const millseconds = now.getMilliseconds();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            const millseconds = now.getMilliseconds();
 
-                linkedHourElement?.setAttribute('style',
-                    `transform: rotateZ(${2 * Math.PI / 12 * (hours + minutes / 60 + seconds / 3600)}rad);`
+            linkedHourElement?.setAttribute('style',
+                `transform: rotateZ(${2 * Math.PI / 12 * (hours + minutes / 60 + seconds / 3600)}rad);`
+            );
+
+            linkedMinuteElement?.setAttribute('style',
+                `transform: rotateZ(${2 * Math.PI / 60 * (minutes + seconds / 60 + millseconds / 60000)}rad);`
+            );
+
+            linkedSecondElement?.setAttribute('style',
+                `transform: rotateZ(${2 * Math.PI / 60 * (seconds + millseconds / 1000)}rad);`
+            );
+
+            const date = now.getDate();
+            if (dateInnerElement.innerText !== `${date}`) {
+                dateInnerElement.innerText = date;
+            }
+
+            if (chronographWork && chronographStartTime !== null) {
+                const elapsedTotalMilliseconds = (new Date()) - chronographStartTime;
+                const elapsedMilliseconds = Math.floor(elapsedTotalMilliseconds) % 1000;
+                const elapsedSeconds = Math.floor(elapsedTotalMilliseconds / 1000) % 60;
+                const elapsedMinutes = Math.floor(elapsedTotalMilliseconds / 60000) % 60;
+                const elapsedHours = Math.floor(elapsedTotalMilliseconds / 3600000);
+
+                linkedSubhand1Element?.setAttribute('style',
+                    `transform: rotateZ(${2 * Math.PI / 60 * (elapsedSeconds + elapsedMilliseconds / 1000)}rad);`
                 );
-
-                linkedMinuteElement?.setAttribute('style',
-                    `transform: rotateZ(${2 * Math.PI / 60 * (minutes + seconds / 60 + millseconds / 60000)}rad);`
+                linkedSubhand2Element?.setAttribute('style',
+                    `transform: rotateZ(${2 * Math.PI / 30 * (elapsedMinutes + elapsedSeconds / 60 + elapsedMilliseconds / 60000)}rad);`
                 );
-
-                linkedSecondElement?.setAttribute('style',
-                    `transform: rotateZ(${2 * Math.PI / 60 * (seconds + millseconds / 1000)}rad);`
+                linkedSubhand3Element?.setAttribute('style',
+                    `transform: rotateZ(${2 * Math.PI / 12 * (elapsedHours + elapsedMinutes / 60 + elapsedSeconds / 3600)}rad);`
                 );
-
-                const date = now.getDate();
-                if (dateInnerElement.innerText !== `${date}`) {
-                    dateInnerElement.innerText = date;
-                }
             }
         };
         const timer = setInterval(worker, 1000 / hz);
@@ -1050,20 +1069,20 @@ window.onload = () => {
         })();
 
         // button
-        (() => {            
+        (() => {
             const createButton = (theta, pattern, clickable, callback) => {
                 const button1Outer = document.createElement('div');
                 const button1 = document.createElement('div');
                 const button1Inner1 = document.createElement('div');
                 const button1Inner2 = document.createElement('div');
                 const button1Inner3 = document.createElement('div');
-    
+
                 button1Outer.setAttribute('style', `position: absolute; width: 100%; height: 100%; transform: rotateZ(${theta}deg); pointer-events: none;`);
-    
+
                 const button1Width = `calc(${radius} *0.1566131751)`;
                 const button1Height = `calc(${radius} * 0.1125086997271)`;
                 const button1Top = `calc(${radius} * -0.1025086997271)`;
-    
+
                 button1.setAttribute('style',
                     `position: relative; top: ${button1Top}; width: ${button1Width}; height: ${button1Height}; margin: 0 auto; background: #C9C9C9; pointer-events: auto;`
                 );
@@ -1096,33 +1115,21 @@ window.onload = () => {
                     );
 
                 }
-    
+
                 button1.appendChild(button1Inner1);
                 button1.appendChild(button1Inner2);
                 button1.appendChild(button1Inner3);
-    
+
                 button1Outer.appendChild(button1);
-    
+
                 extrudeElement.appendChild(button1Outer);
 
                 // event
                 if (clickable) {
-                    button1.addEventListener('mousedown', () => {
-                        button1.classList.add('mousedown');
-                        if (callback) {
-                            callback();
-                        }
-                    }, true);
-                    button1.addEventListener('mouseup', () => {
-                        button1.classList.remove('mousedown');
-                    }, true);
-                    button1.addEventListener('mouseleave', () => {
-                        button1.classList.remove('mousedown');
-                    }, true);
 
                     button1.addEventListener('pointerdown', () => {
                         button1.classList.add('mousedown');
-                        if (callback) {
+                        if (callback !== null && callback !== undefined) {
                             callback();
                         }
                     }, true);
@@ -1134,10 +1141,10 @@ window.onload = () => {
                     }, true);
                 }
             };
-            
-            createButton('66.41', null, true, () => {});
+
+            createButton('66.41', null, true, () => { chronographWork = !chronographWork; chronographStartTime = new Date(); });
             createButton('90', 'stripe', false, null);
-            createButton('113.59', null, true, () => {});
+            createButton('113.59', null, true, () => { chronographWork = false; chronographStartTime = null; linkedSubhand1Element?.removeAttribute('style'); });
         })();
     }
 };
