@@ -395,11 +395,20 @@ window.onload = () => {
             const child = document.createElement('div');
             const childInner = document.createElement('div');
 
-            const childWidth = `calc(${radius} * 0.006)`;
+            const childTriangle = document.createElement('div');
+            const childGlow = document.createElement('div');
+
+            const childWidth = `calc(${radius} * 0.027796)`;
             child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
-            childInner.setAttribute('style', `position: absolute; top: 8.5128%; width: 100%; height: 84.8966%; background: ${handsColor};`);
+            childInner.setAttribute('style', `position: absolute; top: 14.1541%; width: 100%; height: 79.36159%; background: ${handsColor};`);
+
+            childTriangle.setAttribute('style', `position: absolute; top: 9.4805%; width: 100%; height: 9.3472%; background: ${handsColor}; clip-path:polygon(0 50%, 50% 100%,100% 50%,50% 0);`);
+            childGlow.setAttribute('style', `position: relative; top: 17.5642%; width: 45.1378%; height: 69.6573%; margin: 0 auto; background: ${glowColor}; box-shadow: rgba(0, 0, 0, 0.06) 0px 1px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.06) 0px 1px calc(${radius} * 0.002) 1px inset;`);
 
             child.appendChild(childInner);
+
+            child.appendChild(childTriangle);
+            child.appendChild(childGlow);
 
             minuteElement.innerHTML = '';
             minuteElement.appendChild(child);
