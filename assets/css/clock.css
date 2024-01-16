@@ -1,8 +1,8 @@
 :root {
     --radius: min(min(76vh, 76vw), 720px);
-    --glassRadius: min(min(80.0456vh, 80.0456vw), 720px);
-    --bezelRadius: min(min(85.4398vh, 85.4398vw), 720px);
-    --caseRadius: min(min(88.3295vh, 88.3295vw), 720px);
+    --glassRadius: calc(min(min(76vh, 76vw), 720px) + min(4.0456vh, 4.0456vw));
+    --bezelRadius: calc(min(min(76vh, 76vw), 720px) + min(9.4398vh, 9.4398vw));
+    --caseRadius: calc(min(min(76vh, 76vw), 720px) + min(12.3295vh, 12.3295vw));
 }
 
 html {
@@ -170,7 +170,7 @@ ul {
     width: var(--glassRadius);
     height: var(--glassRadius);
     margin: auto;
-    z-index: 10;
+    z-index: 9;
 }
 
 #bezel {
@@ -183,10 +183,23 @@ ul {
     width: var(--bezelRadius);
     height: var(--bezelRadius);
     margin: auto;
-    z-index: 10;
+    z-index: 8;
 }
 
 #case {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: transparent;
+    border-radius: 50%;
+    width: var(--caseRadius);
+    height: var(--caseRadius);
+    margin: auto;
+    z-index: 7;
+}
+
+#extrude {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -196,5 +209,5 @@ ul {
     width: var(--caseRadius);
     height: var(--caseRadius);
     margin: auto;
-    z-index: 10;
+    z-index: 6;
 }

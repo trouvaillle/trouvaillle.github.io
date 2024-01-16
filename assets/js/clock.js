@@ -21,6 +21,7 @@ window.onload = () => {
         caseElement,
         bezelElement,
         glassElement,
+        extrudeElement
     } = getElements();
 
     let dialColor = 'white';
@@ -84,6 +85,7 @@ window.onload = () => {
         const caseElement = document.querySelector('#case');
         const bezelElement = document.querySelector('#bezel');
         const glassElement = document.querySelector('#glass');
+        const extrudeElement = document.querySelector('#extrude');
 
         return {
             faceElement,
@@ -101,6 +103,7 @@ window.onload = () => {
             caseElement,
             bezelElement,
             glassElement,
+            extrudeElement
         };
     }
 
@@ -1044,6 +1047,109 @@ window.onload = () => {
                 `background: linear-gradient(135deg, #FEFEFE, #D7D7D7, #C9C9C9);` +
                 `box-shadow: rgba(0,0,0,0.5) 0.05rem 0.05rem 0.1rem 0.1rem inset, rgba(255,255,255,0.7) -0.15rem -0.15rem 0.4rem 0.4rem inset`
             );
+        })();
+
+        // button
+        (() => {
+            (() => {
+                const button1Outer = document.createElement('div');
+                const button1 = document.createElement('div');
+                const button1Inner1 = document.createElement('div');
+                const button1Inner2 = document.createElement('div');
+                const button1Inner3 = document.createElement('div');
+    
+                button1Outer.setAttribute('style', 'position: relative; width: 100%; height: 100%; transform: rotateZ(66.41deg);');
+    
+                const button1Width = `calc(${radius} *0.1566131751)`;
+                const button1Height = `calc(${radius} * 0.1125086997271)`;
+                const button1Top = `calc(${radius} * -0.1025086997271)`;
+    
+                button1.setAttribute('style',
+                    `position: relative; top: ${button1Top}; width: ${button1Width}; height: ${button1Height}; margin: 0 auto; background: #C9C9C9;`
+                );
+    
+                button1Inner1.setAttribute('style',
+                    `position: absolute; top: 0; width: 100%; height: 70.4558%; margin: 0 auto; ` +
+                    `background: linear-gradient(90deg, #0D0D0D, #D0D0D0 5% 10%, #FFFFFF 45% 48%, #CECECE 50%, #010101 51% 68%,#B3B3B3 69%, #F4F4F4 80%, #B1B1B1 90% 95%, #000000 96% 97%, #C9C9C9 98% 99%, #000000);`
+                );
+                button1Inner2.setAttribute('style',
+                    `position: absolute; top: 70.4558%; width: 100%; height: 16.9355%; margin: 0 auto; ` +
+                    `background: linear-gradient(0deg, #94949480 25%, #FFFFFF80 50%, #00000080 55% 60%, #94949480), linear-gradient(90deg, #94949480 25%, #FFFFFF80 50%, #00000080 55% 60%, #94949480);`
+                );
+                button1Inner3.setAttribute('style',
+                    `position: absolute; top: 87.3913%; width: 100%; height: 12.6087%; margin: 0 auto; ` +
+                    `background: linear-gradient(90deg, #8D8D8D 20%, #0D0D0D 22% 32%, #D0D0D0 33% 45%, #FFFFFF 45% 48%, #CECECE 50%, #010101 51% 68%,#B3B3B3 69%, #F4F4F4 76%, #010101 77% 93%, #B1B1B1 94% 95%, #000000 96% 97%, #C9C9C9 98% 99%, #000000);`
+                );
+    
+                button1.appendChild(button1Inner1);
+                button1.appendChild(button1Inner2);
+                button1.appendChild(button1Inner3);
+    
+                button1Outer.appendChild(button1);
+    
+                extrudeElement.appendChild(button1Outer);
+            })();
+
+            
+            const createButton = (theta, pattern) => {
+                const button1Outer = document.createElement('div');
+                const button1 = document.createElement('div');
+                const button1Inner1 = document.createElement('div');
+                const button1Inner2 = document.createElement('div');
+                const button1Inner3 = document.createElement('div');
+    
+                button1Outer.setAttribute('style', `position: absolute; width: 100%; height: 100%; transform: rotateZ(${theta}deg);`);
+    
+                const button1Width = `calc(${radius} *0.1566131751)`;
+                const button1Height = `calc(${radius} * 0.1125086997271)`;
+                const button1Top = `calc(${radius} * -0.1025086997271)`;
+    
+                button1.setAttribute('style',
+                    `position: relative; top: ${button1Top}; width: ${button1Width}; height: ${button1Height}; margin: 0 auto; background: #C9C9C9;`
+                );
+
+                let additionalPattern = '';
+                if (pattern === 'stripe') {
+                    button1Inner1.setAttribute('style',
+                        `position: absolute; top: 0; width: 100%; height: 70.4558%; margin: 0 auto; ` +
+                        `background: repeating-linear-gradient(90deg,#FFFFFF 0.5rem,#0D0D0D 1.5rem,#FFFFFF 1.5rem,#949494 0.5rem,#0D0D0D 0.5rem);`
+                    );
+                    button1Inner2.setAttribute('style',
+                        `position: absolute; top: 70.4558%; width: 100%; height: 16.9355%; margin: 0 auto; ` +
+                        `background: repeating-linear-gradient(90deg,#FFFFFF 0.5rem,#0D0D0D 1.5rem,#FFFFFF 1.5rem,#949494 0.5rem,#0D0D0D 0.5rem);`
+                    );
+                    button1Inner3.setAttribute('style',
+                        `position: absolute; top: 87.3913%; width: 100%; height: 12.6087%; margin: 0 auto; ` +
+                        `background: repeating-linear-gradient(90deg,#FFFFFF 0.5rem,#0D0D0D 1.5rem,#FFFFFF 1.5rem,#949494 0.5rem,#0D0D0D 0.5rem);`
+                    );
+                } else {
+                    button1Inner1.setAttribute('style',
+                        `position: absolute; top: 0; width: 100%; height: 70.4558%; margin: 0 auto; ` +
+                        `background: linear-gradient(90deg, #0D0D0D, #D0D0D0 5% 10%, #FFFFFF 45% 48%, #CECECE 50%, #010101 51% 68%,#B3B3B3 69%, #F4F4F4 80%, #B1B1B1 90% 95%, #000000 96% 97%, #C9C9C9 98% 99%, #000000);`
+                    );
+                    button1Inner2.setAttribute('style',
+                        `position: absolute; top: 70.4558%; width: 100%; height: 16.9355%; margin: 0 auto; ` +
+                        `background: linear-gradient(0deg, #94949480 25%, #FFFFFF80 50%, #00000080 55% 60%, #94949480), linear-gradient(90deg, #94949480 25%, #FFFFFF80 50%, #00000080 55% 60%, #94949480);`
+                    );
+                    button1Inner3.setAttribute('style',
+                        `position: absolute; top: 87.3913%; width: 100%; height: 12.6087%; margin: 0 auto; ` +
+                        `background: linear-gradient(90deg, #8D8D8D 20%, #0D0D0D 22% 32%, #D0D0D0 33% 45%, #FFFFFF 45% 48%, #CECECE 50%, #010101 51% 68%,#B3B3B3 69%, #F4F4F4 76%, #010101 77% 93%, #B1B1B1 94% 95%, #000000 96% 97%, #C9C9C9 98% 99%, #000000);`
+                    );
+
+                }
+    
+                button1.appendChild(button1Inner1);
+                button1.appendChild(button1Inner2);
+                button1.appendChild(button1Inner3);
+    
+                button1Outer.appendChild(button1);
+    
+                extrudeElement.appendChild(button1Outer);
+            };
+            
+            createButton('66.41');
+            createButton('90', 'stripe');
+            createButton('113.59');
         })();
     }
 };
