@@ -398,19 +398,17 @@ window.onload = () => {
         (() => {
             const child = document.createElement('div');
             const childInner = document.createElement('div');
-
             const childTriangle = document.createElement('div');
             const childGlow = document.createElement('div');
 
             const childWidth = `calc(${radius} * 0.027796)`;
             child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
-            childInner.setAttribute('style', `position: absolute; top: 14.1541%; width: 100%; height: 79.36159%; background: ${handsColor};`);
 
-            childTriangle.setAttribute('style', `position: absolute; top: 9.4805%; width: 100%; height: 9.3472%; background: ${handsColor}; clip-path:polygon(0 50%, 50% 100%,100% 50%,50% 0);`);
+            childInner.setAttribute('style', `position: absolute; top: 14.1541%; width: 100%; height: 79.36159%; background: ${handsColor};`);
+            childTriangle.setAttribute('style', `position: absolute; top: 9.4805%; width: 100%; height: 9.3472%; background: ${handsColor}; clip-path:polygon(0 50%,50% 100%,100% 50%,50% 0);`);
             childGlow.setAttribute('style', `position: relative; top: 17.5642%; width: 45.1378%; height: 69.6573%; margin: 0 auto; background: ${glowColor}; box-shadow: rgba(0, 0, 0, 0.06) 0px 1px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.06) 0px 1px calc(${radius} * 0.002) 1px inset;`);
 
             child.appendChild(childInner);
-
             child.appendChild(childTriangle);
             child.appendChild(childGlow);
 
@@ -422,12 +420,19 @@ window.onload = () => {
         (() => {
             const child = document.createElement('div');
             const childInner = document.createElement('div');
+            const childRhombus = document.createElement('div');
+            const childGlow = document.createElement('div');
 
-            const childWidth = `calc(${radius} * 0.006)`;
+            const childWidth = `calc(${radius} * 0.017051)`;
             child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
-            childInner.setAttribute('style', `position: absolute; top: 19.5460%; width: 100%; height: 75.9913%; background: ${handsColor};`);
+            
+            childInner.setAttribute('style', `position: absolute; top: 44.6995%; width: 100%; height: 50.9694%; background: ${handsColor}; clip-path:polygon(10.4934% 0,0 100%,100% 100%,89.5066% 0);`);
+            childRhombus.setAttribute('style', `position: absolute; left: -84.2567%; top: 19.5648%; width: 268.5134%; height: 27.4713%; background: ${handsColor}; clip-path:polygon(0 80.3833%,50% 100%,100% 80.3833%,50% 0);`);
+            childGlow.setAttribute('style', `position: relative; top: 28.7219%; left: -36.7619%; width: 173.5238%; height: 15.6197%; margin: 0 auto; background: ${glowColor}; clip-path:polygon(0 80.3833%,50% 100%,100% 80.3833%,50% 0); box-shadow: rgba(0, 0, 0, 0.06) 0px 1px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.06) 0px 1px calc(${radius} * 0.002) 1px inset;`);
 
             child.appendChild(childInner);
+            child.appendChild(childRhombus);
+            child.appendChild(childGlow);
 
             secondElement.innerHTML = '';
             secondElement.appendChild(child);
