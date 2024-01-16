@@ -60,6 +60,7 @@ ul {
     margin: 3%;
     z-index: 12;
     background-image: linear-gradient(to right, #fff 5px, transparent 1px), linear-gradient(#ccc 1px, transparent 1px);
+    pointer-events: none;
 }
 
 #index-line-inner {
@@ -72,6 +73,7 @@ ul {
     margin: 5%;
     z-index: 13;
     background-image: linear-gradient(to right, #fff 5px, transparent 1px), linear-gradient(#ccc 1px, transparent 1px);
+    pointer-events: none;
 }
 
 #index-number {
@@ -83,10 +85,12 @@ ul {
     z-index: 14;
     width: 100%;
     height: 100%;
+    pointer-events: none;
 }
 
 #hands>ul>li {
     z-index: 15;
+    pointer-events: none;
 }
 
 #face-inner {
@@ -118,6 +122,7 @@ ul {
     display: flex;
     justify-content: center;
     z-index: 50;
+    pointer-events: none;
 }
 
 #hands-circle {
@@ -210,4 +215,9 @@ ul {
     height: var(--caseRadius);
     margin: auto;
     z-index: 6;
+    pointer-events: none;
+}
+
+.mousedown {
+    transform: translateY(calc(var(--radius)*0.01418588));
 }
