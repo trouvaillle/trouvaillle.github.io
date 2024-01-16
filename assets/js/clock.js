@@ -19,7 +19,7 @@ window.onload = () => {
         dateInnerElement,
         handsCircleElement,
         caseElement,
-        bazelElemnt,
+        bezelElement,
         glassElement,
     } = getElements();
 
@@ -82,8 +82,8 @@ window.onload = () => {
         const handsCircleElement = document.querySelector('#hands-circle');
 
         const caseElement = document.querySelector('#case');
-        const bazelElemnt = document.querySelector('#bazel');
-        const glassElement = document.querySelector('#glass-circle');
+        const bezelElement = document.querySelector('#bezel');
+        const glassElement = document.querySelector('#glass');
 
         return {
             faceElement,
@@ -99,7 +99,7 @@ window.onload = () => {
             dateInnerElement,
             handsCircleElement,
             caseElement,
-            bazelElemnt,
+            bezelElement,
             glassElement,
         };
     }
@@ -1020,7 +1020,30 @@ window.onload = () => {
 
         // glass
         (() => {
+            faceElement.setAttribute('style',
+                faceElement.getAttribute('style') +
+                `box-shadow: rgba(0,0,0,0.2) 0.1rem 0.1rem 0.2rem 0.2rem, rgba(255,255,255,0.6) -0.1rem -0.1rem 0.2rem 0.2rem`
+            );
+            glassElement.setAttribute('style',
+                `background: linear-gradient(135deg, #B9B9B9, #232323, #B8B8B8);` +
+                `box-shadow: rgba(0,0,0,0.5) 0.1rem 0.1rem 0.2rem 0.2rem inset, rgba(255,255,255,0.7) -0.1rem -0.1rem 0.2rem 0.2rem inset`
+            );
+        })();
 
+        // bezel
+        (() => {
+            bezelElement.setAttribute('style',
+                `background: #2A2A2A` +
+                `` // `box-shadow: rgba(0,0,0,0.5) 0.15rem 0.15rem 0.4rem 0.4rem inset, rgba(255,255,255,0.7) -0.15rem -0.15rem 0.4rem 0.4rem inset`
+            );
+        })();
+
+        // case
+        (() => {
+            caseElement.setAttribute('style',
+                `background: linear-gradient(135deg, #FEFEFE, #D7D7D7, #C9C9C9);` +
+                `box-shadow: rgba(0,0,0,0.5) 0.05rem 0.05rem 0.1rem 0.1rem inset, rgba(255,255,255,0.7) -0.15rem -0.15rem 0.4rem 0.4rem inset`
+            );
         })();
     }
 };
