@@ -21,6 +21,7 @@ window.onload = () => {
     } = getElements();
 
     let dialColor = 'white';
+    let indexColor = 'black';
     let handsColor = 'black';
     let glowColor = '#D7E1C3';
     let hz = 10;
@@ -160,7 +161,9 @@ window.onload = () => {
 
     function setDialPrague() {
         dialColor = 'white';
+        indexColor = 'black';
         handsColor = 'black';
+        glowColor = 'white';
         hz = 10;
 
         faceElement.setAttribute('style', `background: ${dialcolor};`);
@@ -255,7 +258,8 @@ window.onload = () => {
 
     function setDialSpeedMaster() {
         dialColor = '#282828';
-        handsColor = 'white';
+        indexColor = 'rgba(230, 230, 230, 255)';
+        handsColor = 'rgba(245, 245, 245, 255)';
         glowColor = '#D7E1C3';
         hz = 6;
 
@@ -323,8 +327,8 @@ window.onload = () => {
             }
             const indexMarginTop = `calc(${radius} * ${indexMarginTopRatio})`;
 
-            childInner.setAttribute('style', `width: ${indexWidth}; height: ${indexHeight}; background: white;`);
-            childInnerInner.setAttribute('style', `width: ${indexWidth2}; height: ${indexHeight}; margin-top: ${indexMarginTop}; background: white;`);
+            childInner.setAttribute('style', `width: ${indexWidth}; height: ${indexHeight}; background: ${indexColor};`);
+            childInnerInner.setAttribute('style', `width: ${indexWidth2}; height: ${indexHeight}; margin-top: ${indexMarginTop}; background: ${indexColor};`);
 
             child.appendChild(childInner);
             indexLineOuterUL.appendChild(
