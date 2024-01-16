@@ -148,7 +148,7 @@ window.onload = () => {
         handsColor = 'black';
         glowColor = 'white';
         hz = 10;
-        
+
         linkedHourElement = hourElement;
         linkedMinuteElement = minuteElement;
         linkedSecondElement = secondElement;
@@ -253,7 +253,7 @@ window.onload = () => {
         handsColor = 'rgba(245, 245, 245, 255)';
         glowColor = '#D7E1C3';
         hz = 6;
-        
+
         linkedHourElement = hourElement;
         linkedMinuteElement = minuteElement;
         linkedSecondElement = null;
@@ -380,7 +380,7 @@ window.onload = () => {
 
             const childWidth = `calc(${radius} * 0.032708)`;
             child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
-            
+
             childInner.setAttribute('style', `position: absolute; top: 43.0520%; width: 100%; height: 48.8186%; background: ${handsColor};`);
             childTriangle.setAttribute('style', `position: absolute; top: 37.3583%; width: 100%; height: 11.2874%; background: ${handsColor}; clip-path:polygon(0 50%, 50% 100%,100% 50%,50% 0);`);
             childGlow.setAttribute('style', `position: relative; top: 45.7938%; width: 37.8777%; height: 41.1280%; margin: 0 auto; background: ${glowColor}; box-shadow: rgba(0, 0, 0, 0.06) 0px 1px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.06) 0px 1px calc(${radius} * 0.002) 1px inset;`);
@@ -388,9 +388,9 @@ window.onload = () => {
             child.appendChild(childInner);
             child.appendChild(childTriangle);
             child.appendChild(childGlow);
-            
+
             hourElement.innerHTML = '';
-            hourElement.appendChild(child);            
+            hourElement.appendChild(child);
         })();
 
         // minute
@@ -522,7 +522,7 @@ window.onload = () => {
 
             child.appendChild(childFaceDeboss);
             child.appendChild(childFace);
-            
+
             faceElement.appendChild(child);
 
             // index
@@ -541,7 +541,7 @@ window.onload = () => {
                     `justify-content: center; ` +
                     `transform: rotateZ(${2 * Math.PI / (12) * (it)}rad);`
                 );
-    
+
                 let indexWidthRatio;
                 if (it % 4 === 0) {
                     indexWidthRatio = 0.0038;
@@ -549,7 +549,7 @@ window.onload = () => {
                     indexWidthRatio = 0.0026;
                 }
                 const indexWidth = `calc(${radius} * ${indexWidthRatio})`;
-    
+
                 let indexHeightRatio;
                 if (it % 4 !== 0) {
                     indexHeightRatio = 0.031686;
@@ -557,7 +557,7 @@ window.onload = () => {
                     indexHeightRatio = 0.020040;
                 }
                 const indexHeight = `calc(${radius} * ${indexHeightRatio})`;
-    
+
                 childInner.setAttribute('style', `width: ${indexWidth}; height: ${indexHeight}; background: ${indexColor};`);
 
                 child.appendChild(childInner);
@@ -572,11 +572,11 @@ window.onload = () => {
             const number1 = document.createElement('div');
             const number2 = document.createElement('div');
             const number3 = document.createElement('div');
-            
+
             number1.innerText = '60';
             number2.innerText = '20';
             number3.innerText = '40';
-            
+
             number1.setAttribute('style', `position: absolute; top: -4%; left: 35%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
             number2.setAttribute('style', `position: absolute; top: 48%; left: 62%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
             number3.setAttribute('style', `position: absolute; top: 48%; left: 10%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
@@ -584,7 +584,7 @@ window.onload = () => {
             childFace.appendChild(number1);
             childFace.appendChild(number2);
             childFace.appendChild(number3);
-            
+
 
             // subhand
             const subHandElement = document.createElement('div');
@@ -674,7 +674,7 @@ window.onload = () => {
 
             child.appendChild(childFaceDeboss);
             child.appendChild(childFace);
-            
+
             faceElement.appendChild(child);
 
             // index
@@ -693,7 +693,7 @@ window.onload = () => {
                     `justify-content: center; ` +
                     `transform: rotateZ(${2 * Math.PI / (5 * 6) * (it)}rad);`
                 );
-    
+
                 let indexWidthRatio;
                 if (it % 5 === 0) {
                     indexWidthRatio = 0.0038;
@@ -701,7 +701,7 @@ window.onload = () => {
                     indexWidthRatio = 0.0026;
                 }
                 const indexWidth = `calc(${radius} * ${indexWidthRatio})`;
-    
+
                 let indexHeightRatio;
                 if (it % 5 !== 0 || it % 10 === 0) {
                     indexHeightRatio = 0.031686;
@@ -709,7 +709,7 @@ window.onload = () => {
                     indexHeightRatio = 0.045627;
                 }
                 const indexHeight = `calc(${radius} * ${indexHeightRatio})`;
-    
+
                 childInner.setAttribute('style', `width: ${indexWidth}; height: ${indexHeight}; background: ${indexColor};`);
 
                 child.appendChild(childInner);
@@ -724,11 +724,11 @@ window.onload = () => {
             const number1 = document.createElement('div');
             const number2 = document.createElement('div');
             const number3 = document.createElement('div');
-            
+
             number1.innerText = '30';
             number2.innerText = '10';
             number3.innerText = '20';
-            
+
             number1.setAttribute('style', `position: absolute; top: -4%; left: 35%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
             number2.setAttribute('style', `position: absolute; top: 48%; left: 62%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
             number3.setAttribute('style', `position: absolute; top: 48%; left: 10%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
@@ -736,7 +736,7 @@ window.onload = () => {
             childFace.appendChild(number1);
             childFace.appendChild(number2);
             childFace.appendChild(number3);
-            
+
 
             // subhand
             const subHandElement = document.createElement('div');
@@ -826,7 +826,7 @@ window.onload = () => {
 
             child.appendChild(childFaceDeboss);
             child.appendChild(childFace);
-            
+
             faceElement.appendChild(child);
 
             // index
@@ -845,7 +845,7 @@ window.onload = () => {
                     `justify-content: center; ` +
                     `transform: rotateZ(${2 * Math.PI / (12) * (it)}rad);`
                 );
-    
+
                 let indexWidthRatio;
                 if (it % 3 === 0) {
                     indexWidthRatio = 0.0038;
@@ -853,7 +853,7 @@ window.onload = () => {
                     indexWidthRatio = 0.0026;
                 }
                 const indexWidth = `calc(${radius} * ${indexWidthRatio})`;
-    
+
                 let indexHeightRatio;
                 if (it % 3 !== 0) {
                     indexHeightRatio = 0.031686;
@@ -861,7 +861,7 @@ window.onload = () => {
                     indexHeightRatio = 0.016477;
                 }
                 const indexHeight = `calc(${radius} * ${indexHeightRatio})`;
-    
+
                 childInner.setAttribute('style', `width: ${indexWidth}; height: ${indexHeight}; background: ${indexColor};`);
 
                 child.appendChild(childInner);
@@ -877,12 +877,12 @@ window.onload = () => {
             const number2 = document.createElement('div');
             const number3 = document.createElement('div');
             const number4 = document.createElement('div');
-            
+
             number1.innerText = '12';
             number2.innerText = '3';
             number3.innerText = '6';
             number4.innerText = '9';
-            
+
             number1.setAttribute('style', `position: absolute; top: -4%; left: 35%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
             number2.setAttribute('style', `position: absolute; top: 32%; left: 82%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
             number3.setAttribute('style', `position: absolute; top: 71%; left: 43%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
@@ -962,6 +962,50 @@ window.onload = () => {
                 childHandsCircleElement.appendChild(childEmboss);
                 childHandsCircleElement.appendChild(childDot);
             })();
+        })();
+
+        // dial pringting
+        (() => {
+            const child = document.createElement('div');
+            const childLogo = document.createElement('div');
+            const childCI = document.createElement('div');
+            const childBrand = document.createElement('div');
+            const childProduct = document.createElement('div');
+
+            const fontSizeLogo = `calc(${radius} * 0.0776600)`;
+            const fontSizeCI = `calc(${radius} * 0.0476600)`;
+            const fontSizeBrand = `calc(${radius} * 0.0346600)`;
+            const fontSizeProduct = `calc(${radius} * 0.0276600)`;
+
+            child.setAttribute('style', `position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; z-index: 11;`);
+
+            childLogo.setAttribute('style',
+                `position: absolute; top: 15.3019%; width: 100%; height: 100%; text-align: center; color: ${handsColor}; font-size: ${fontSizeLogo}; font-family: arial san-serif; font-weight: 600; transform: scaleX(109.285%);` +
+                `text-shadow: rgba(0, 0, 0, 0.4) calc(${radius} * 0.004) calc(${radius} * 0.004);` +
+                `background: linear-gradient(135deg, #eee 80%, #ccc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;`);
+            childLogo.innerHTML = "&Omega;";
+
+            childCI.setAttribute('style',
+                `position: absolute; top: 24.1019%; width: 100%; height: 100%; text-align: center; color: ${handsColor}; font-size: ${fontSizeCI}; font-family: arial san-serif; font-weight: 500; ` +
+                `text-shadow: rgba(0, 0, 0, 0.1) calc(${radius} * 0.004) calc(${radius} * 0.004);`);
+            childCI.innerText = "OMEGA";
+
+            childBrand.setAttribute('style',
+                `position: absolute; top: 30.2019%; width: 100%; height: 100%; text-align: center; color: ${handsColor}; font-size: ${fontSizeBrand}; font-family: serif; font-weight: 300; font-style: italic; ` +
+                `text-shadow: rgba(0, 0, 0, 0.1) calc(${radius} * 0.004) calc(${radius} * 0.004);`);
+            childBrand.innerText = "Speedmaster";
+
+            childProduct.setAttribute('style',
+                `position: absolute; top: 33.9019%; width: 100%; height: 100%; text-align: center; color: ${handsColor}; font-size: ${fontSizeProduct}; font-family: arial san-serif; font-weight: 300; transform: scaleX(116%);` +
+                `text-shadow: rgba(0, 0, 0, 0.1) calc(${radius} * 0.004) calc(${radius} * 0.004);`);
+            childProduct.innerText = "PROFESSIONAL";
+
+            child.appendChild(childLogo);
+            child.appendChild(childCI);
+            child.appendChild(childBrand);
+            child.appendChild(childProduct);
+
+            faceElement.appendChild(child);
         })();
     }
 };
