@@ -17,7 +17,10 @@ window.onload = () => {
         secondElement,
         dateOuterElement,
         dateInnerElement,
-        handsCircleElement
+        handsCircleElement,
+        caseElement,
+        bazelElemnt,
+        glassElement,
     } = getElements();
 
     let dialColor = 'white';
@@ -78,6 +81,10 @@ window.onload = () => {
 
         const handsCircleElement = document.querySelector('#hands-circle');
 
+        const caseElement = document.querySelector('#case');
+        const bazelElemnt = document.querySelector('#bazel');
+        const glassElement = document.querySelector('#glass-circle');
+
         return {
             faceElement,
             faceInnerElement,
@@ -90,7 +97,10 @@ window.onload = () => {
             secondElement,
             dateOuterElement,
             dateInnerElement,
-            handsCircleElement
+            handsCircleElement,
+            caseElement,
+            bazelElemnt,
+            glassElement,
         };
     }
 
@@ -157,7 +167,7 @@ window.onload = () => {
         linkedSubhand2Element = null;
         linkedSubhand3Element = null;
 
-        faceElement.setAttribute('style', `background: ${dialcolor};`);
+        faceElement.setAttribute('style', `background: ${dialColor};`);
         indexLineOuter.setAttribute('style', 'width: 94%; height: 94%; margin: 3%; border: calc(var(--radius) * 0.003) solid black; ');
         indexLineInner.setAttribute('style', 'border: calc(var(--radius) * 0.003) solid black;');
 
@@ -1006,6 +1016,11 @@ window.onload = () => {
             child.appendChild(childProduct);
 
             faceElement.appendChild(child);
+        })();
+
+        // glass
+        (() => {
+
         })();
     }
 };

@@ -1,11 +1,14 @@
 :root {
-    --radius: min(min(90vh, 90vw), 720px);
+    --radius: min(min(76vh, 76vw), 720px);
+    --glassRadius: min(min(80.0456vh, 80.0456vw), 720px);
+    --bezelRadius: min(min(85.4398vh, 85.4398vw), 720px);
+    --caseRadius: min(min(88.3295vh, 88.3295vw), 720px);
 }
 
 html {
     width: 100%;
     height: 100%;
-    font-size: calc(min(90vh, 90vw) * 0.02);
+    font-size: calc(var(--radius) * 0.02);
     margin: 0;
     padding: 0;
 }
@@ -43,9 +46,7 @@ ul {
     width: var(--radius);
     height: var(--radius);
     margin: auto;
-    /* border: 0.5rem solid black; */
-    /* box-shadow: 0 0 3rem rgba(210,165,75,255); */
-    box-shadow: 0 0 3rem rgba(96, 96, 96, 255);
+    /* box-shadow: 0 0 3rem rgba(96, 96, 96, 255); */
     z-index: 10;
 }
 
@@ -157,4 +158,43 @@ ul {
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     font-weight: 600;
     font-size: calc(var(--radius) * 0.06);
+}
+
+#glass {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: transparent;
+    border-radius: 50%;
+    width: var(--glassRadius);
+    height: var(--glassRadius);
+    margin: auto;
+    z-index: 10;
+}
+
+#bezel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: transparent;
+    border-radius: 50%;
+    width: var(--bezelRadius);
+    height: var(--bezelRadius);
+    margin: auto;
+    z-index: 10;
+}
+
+#case {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: transparent;
+    border-radius: 50%;
+    width: var(--caseRadius);
+    height: var(--caseRadius);
+    margin: auto;
+    z-index: 10;
 }
