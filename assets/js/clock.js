@@ -263,11 +263,11 @@ window.onload = () => {
         glowColor = '#D7E1C3';
         hz = 6;
 
-        faceElement.setAttribute('style', `background: linear-gradient(135deg, #414141, #0C0C0C);`);
+        faceElement.setAttribute('style', `background: linear-gradient(135deg, #515151, #1C1C1C);`);
         faceInnerElement.setAttribute('style',
             `width: 79.2142%; ` +
             `height: 79.2142%; margin: 10.3929%; ` +
-            `background: background: linear-gradient(135deg, #252525, #171717);` +
+            `background: background: linear-gradient(135deg, #353535, #272727);` +
             `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.02) 1px;`
         );
 
