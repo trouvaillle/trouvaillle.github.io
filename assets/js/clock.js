@@ -418,24 +418,38 @@ window.onload = () => {
 
         // second
         (() => {
-            const child = document.createElement('div');
-            const childInner = document.createElement('div');
+            const childUpper = document.createElement('div');
+            const childInnerUpper = document.createElement('div');
             const childRhombus = document.createElement('div');
             const childGlow = document.createElement('div');
 
-            const childWidth = `calc(${radius} * 0.017051)`;
-            child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
-            
-            childInner.setAttribute('style', `position: absolute; top: 44.6995%; width: 100%; height: 50.9694%; background: ${handsColor}; clip-path:polygon(10.4934% 0,0 100%,100% 100%,89.5066% 0);`);
+            const childLower = document.createElement('div');
+            const childInnerLower = document.createElement('div');
+            const childTriangle = document.createElement('div');
+
+            const childWidthUpper = `calc(${radius} * 0.017051)`;
+            childUpper.setAttribute('style', `position: absolute; width: ${childWidthUpper}; height: 50%;`);
+
+            childInnerUpper.setAttribute('style', `position: absolute; top: 44.6995%; width: 100%; height: 50.9694%; background: ${handsColor}; clip-path:polygon(10.4934% 0,0 100%,100% 100%,89.5066% 0);`);
             childRhombus.setAttribute('style', `position: absolute; left: -84.2567%; top: 19.5648%; width: 268.5134%; height: 27.4713%; background: ${handsColor}; clip-path:polygon(0 80.3833%,50% 100%,100% 80.3833%,50% 0);`);
             childGlow.setAttribute('style', `position: relative; top: 28.7219%; left: -36.7619%; width: 173.5238%; height: 15.6197%; margin: 0 auto; background: ${glowColor}; clip-path:polygon(0 80.3833%,50% 100%,100% 80.3833%,50% 0); box-shadow: rgba(0, 0, 0, 0.06) 0px 1px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.06) 0px 1px calc(${radius} * 0.002) 1px inset;`);
 
-            child.appendChild(childInner);
-            child.appendChild(childRhombus);
-            child.appendChild(childGlow);
+            childUpper.appendChild(childInnerUpper);
+            childUpper.appendChild(childRhombus);
+            childUpper.appendChild(childGlow);
+
+            const childWidthLower = `calc(${radius} * 0.017051)`;
+            childLower.setAttribute('style', `position: absolute; top:50%; width: ${childWidthLower}; height: 50%;`);
+
+            childInnerLower.setAttribute('style', `position: absolute; top: 4.2740%; left: -34.2582%; width: 168.5164%; height: 18.6445%; background: ${handsColor}; clip-path:polygon(20.3293% 0,0 100%,100% 100%,79.6707% 0);`);
+            childTriangle.setAttribute('style', `position: absolute; top: 20.1002%; left: -34.2582%; width: 168.5164%; height: 5.7357%; background: ${handsColor}; clip-path:polygon(0 50%,50% 100%,100% 50%,50% 0);`);
+
+            childLower.appendChild(childInnerLower);
+            childLower.appendChild(childTriangle);
 
             secondElement.innerHTML = '';
-            secondElement.appendChild(child);
+            secondElement.appendChild(childUpper);
+            secondElement.appendChild(childLower);
         })();
 
         // handsCircle
