@@ -39,6 +39,7 @@ window.onload = () => {
 
     let chronographWork = false;
     let chronographStartTime = null;
+    let chronographMillis = 0;
 
     setDial('speedmaster');
     clockwork();
@@ -156,6 +157,8 @@ window.onload = () => {
                 const elapsedSeconds = Math.floor(elapsedTotalMilliseconds / 1000) % 60;
                 const elapsedMinutes = Math.floor(elapsedTotalMilliseconds / 60000) % 60;
                 const elapsedHours = Math.floor(elapsedTotalMilliseconds / 3600000);
+
+                chronographMillis = elapsedTotalMilliseconds;
 
                 linkedSubhand1Element?.setAttribute('style',
                     `transform: rotateZ(${2 * Math.PI / 60 * (elapsedSeconds + elapsedMilliseconds / 1000)}rad);`
@@ -1126,7 +1129,6 @@ window.onload = () => {
 
                 // event
                 if (clickable) {
-
                     button1.addEventListener('pointerdown', () => {
                         button1.classList.add('mousedown');
                         if (callback !== null && callback !== undefined) {
@@ -1142,9 +1144,24 @@ window.onload = () => {
                 }
             };
 
-            createButton('66.41', null, true, () => { chronographWork = !chronographWork; chronographStartTime = new Date(); });
+            createButton('66.41', null, true, () => { 
+                if (chronographStartTime !== null) {
+                    chronographStartTime = (new Date()) - chronographMillis;
+                } else {
+                    chronographStartTime = new Date(); 
+                    chronographMillis = 0;
+                }
+                chronographWork = !chronographWork; 
+            });
             createButton('90', 'stripe', false, null);
-            createButton('113.59', null, true, () => { chronographWork = false; chronographStartTime = null; linkedSubhand1Element?.removeAttribute('style'); });
+            createButton('113.59', null, true, () => { 
+                chronographWork = false; 
+                chronographStartTime = null;
+                chronographMillis = 0;
+                linkedSubhand1Element?.removeAttribute('style'); 
+                linkedSubhand2Element?.removeAttribute('style'); 
+                linkedSubhand3Element?.removeAttribute('style'); 
+            });
         })();
     }
 };
