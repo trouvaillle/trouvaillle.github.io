@@ -975,28 +975,28 @@ window.onload = () => {
             const fontSizeLogo = `calc(${radius} * 0.0776600)`;
             const fontSizeCI = `calc(${radius} * 0.0476600)`;
             const fontSizeBrand = `calc(${radius} * 0.0346600)`;
-            const fontSizeProduct = `calc(${radius} * 0.0276600)`;
+            const fontSizeProduct = `calc(${radius} * 0.0226600)`;
 
             child.setAttribute('style', `position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; z-index: 11;`);
 
             childLogo.setAttribute('style',
-                `position: absolute; top: 15.3019%; width: 100%; height: 100%; text-align: center; color: ${handsColor}; font-size: ${fontSizeLogo}; font-family: arial san-serif; font-weight: 600; transform: scaleX(109.285%);` +
+                `position: absolute; top: 15.3019%; width: 100%; height: 100%; text-align: center; color: ${handsColor}; font-size: ${fontSizeLogo}; font-family: Arial, Helvetica, Sans-Serif; font-weight: 600; transform: scaleX(109.285%);` +
                 `text-shadow: rgba(0, 0, 0, 0.4) calc(${radius} * 0.004) calc(${radius} * 0.004);` +
                 `background: linear-gradient(135deg, #eee 80%, #ccc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;`);
             childLogo.innerHTML = "&Omega;";
 
             childCI.setAttribute('style',
-                `position: absolute; top: 24.1019%; width: 100%; height: 100%; text-align: center; color: ${handsColor}; font-size: ${fontSizeCI}; font-family: arial san-serif; font-weight: 500; ` +
+                `position: absolute; top: 23.8019%; width: 100%; height: 100%; text-align: center; color: ${handsColor}; font-size: ${fontSizeCI}; font-family: Arial, Helvetica, Sans-Serif; font-weight: 500; ` +
                 `text-shadow: rgba(0, 0, 0, 0.1) calc(${radius} * 0.004) calc(${radius} * 0.004);`);
             childCI.innerText = "OMEGA";
 
             childBrand.setAttribute('style',
-                `position: absolute; top: 30.2019%; width: 100%; height: 100%; text-align: center; color: ${handsColor}; font-size: ${fontSizeBrand}; font-family: serif; font-weight: 300; font-style: italic; ` +
+                `position: absolute; top: 29.1019%; width: 100%; height: 100%; text-align: center; color: ${handsColor}; font-size: ${fontSizeBrand}; font-family: Georgia, Times New Roman, Times, Serif; font-weight: 300; font-style: italic; transform: scaleX(105%);` +
                 `text-shadow: rgba(0, 0, 0, 0.1) calc(${radius} * 0.004) calc(${radius} * 0.004);`);
             childBrand.innerText = "Speedmaster";
 
             childProduct.setAttribute('style',
-                `position: absolute; top: 33.9019%; width: 100%; height: 100%; text-align: center; color: ${handsColor}; font-size: ${fontSizeProduct}; font-family: arial san-serif; font-weight: 300; transform: scaleX(116%);` +
+                `position: absolute; top: 33.4019%; width: 100%; height: 100%; text-align: center; color: ${handsColor}; font-size: ${fontSizeProduct}; font-family: Verdana, Geneva, Sans-Serif; font-weight: 100; transform: scaleX(109%); letter-spacing: 1px;` +
                 `text-shadow: rgba(0, 0, 0, 0.1) calc(${radius} * 0.004) calc(${radius} * 0.004);`);
             childProduct.innerText = "PROFESSIONAL";
 
