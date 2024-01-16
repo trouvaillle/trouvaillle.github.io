@@ -22,6 +22,7 @@ window.onload = () => {
 
     let dialColor = 'white';
     let handsColor = 'black';
+    let glowColor = '#D7E1C3';
     let hz = 10;
 
     setDial('speedmaster');
@@ -162,7 +163,7 @@ window.onload = () => {
         handsColor = 'black';
         hz = 10;
 
-        faceElement.setAttribute('style', 'background: white;');
+        faceElement.setAttribute('style', `background: ${dialcolor};`);
         indexLineOuter.setAttribute('style', 'width: 94%; height: 94%; margin: 3%; border: calc(var(--radius) * 0.003) solid black; ');
         indexLineInner.setAttribute('style', 'border: calc(var(--radius) * 0.003) solid black;');
 
@@ -255,6 +256,7 @@ window.onload = () => {
     function setDialSpeedMaster() {
         dialColor = '#282828';
         handsColor = 'white';
+        glowColor = '#D7E1C3';
         hz = 6;
 
         faceElement.setAttribute('style', `background: linear-gradient(135deg, #414141, #0C0C0C);`);
@@ -358,7 +360,7 @@ window.onload = () => {
             const indexBorderRadiusRatio = 0.005;
             const indexBorderRadius = `calc(${radius} * ${indexBorderRadiusRatio})`;
 
-            childInner.setAttribute('style', `width: ${indexWidth}; height: ${indexHeight}; margin-top: ${indexMarginTop}; background: #D7E1C3; border-radius: ${indexBorderRadius};`);
+            childInner.setAttribute('style', `width: ${indexWidth}; height: ${indexHeight}; margin-top: ${indexMarginTop}; background: ${glowColor}; border-radius: ${indexBorderRadius};`);
 
             child.appendChild(childInner);
             indexLineOuterUL.appendChild(
@@ -370,15 +372,22 @@ window.onload = () => {
         (() => {
             const child = document.createElement('div');
             const childInner = document.createElement('div');
+            const childTriangle = document.createElement('div');
+            const childGlow = document.createElement('div');
 
-            const childWidth = `calc(${radius} * 0.006)`;
+            const childWidth = `calc(${radius} * 0.032708)`;
             child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
-            childInner.setAttribute('style', `position: absolute; top: 38.0618%; width: 100%; height: 52.8127%; background: ${handsColor};`);
+            
+            childInner.setAttribute('style', `position: absolute; top: 43.0520%; width: 100%; height: 48.8186%; background: ${handsColor};`);
+            childTriangle.setAttribute('style', `position: absolute; top: 37.3583%; width: 100%; height: 11.2874%; background: ${handsColor}; clip-path:polygon(0 50%, 50% 100%,100% 50%,50% 0);`);
+            childGlow.setAttribute('style', `position: relative; top: 45.7938%; width: 37.8777%; height: 41.1280%; margin: 0 auto; background: ${glowColor}; box-shadow: rgba(0, 0, 0, 0.06) 0px 1px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.06) 0px 1px calc(${radius} * 0.002) 1px inset;`);
 
             child.appendChild(childInner);
-
+            child.appendChild(childTriangle);
+            child.appendChild(childGlow);
+            
             hourElement.innerHTML = '';
-            hourElement.appendChild(child);
+            hourElement.appendChild(child);            
         })();
 
         // minute
