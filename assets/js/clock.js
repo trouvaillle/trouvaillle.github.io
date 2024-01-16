@@ -556,7 +556,7 @@ window.onload = () => {
             });
 
             // number
-            const fontSize = `calc(${radius} * 0.038)`;
+            const fontSize = `calc(${radius} * 0.059375)`;
 
             const number1 = document.createElement('div');
             const number2 = document.createElement('div');
@@ -566,9 +566,9 @@ window.onload = () => {
             number2.innerText = '20';
             number3.innerText = '40';
             
-            number1.setAttribute('style', `position: absolute; top: 1%; left: 41%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize};`);
-            number2.setAttribute('style', `position: absolute; top: 54%; left: 72%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize};`);
-            number3.setAttribute('style', `position: absolute; top: 54%; left: 11%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize};`);
+            number1.setAttribute('style', `position: absolute; top: -4%; left: 35%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
+            number2.setAttribute('style', `position: absolute; top: 48%; left: 62%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
+            number3.setAttribute('style', `position: absolute; top: 48%; left: 10%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
 
             childFace.appendChild(number1);
             childFace.appendChild(number2);
@@ -576,8 +576,8 @@ window.onload = () => {
 
             // handsCircle
             const childHandsCircleElement = document.createElement('div');
-            childHandsCircleElement.setAttribute('style', `position: absolute; left: 35%; top: 35%; width: 30%; height: 30%;`);
-            childFace.appendChild(childHandsCircleElement);
+            childHandsCircleElement.setAttribute('style', `position: absolute; left: 42.42425%; top: 42.42425%; width: 15.1515%; height: 15.1515%;`);
+            child.appendChild(childHandsCircleElement);
             (() => {
                 const childSecond = document.createElement('div');
                 const childEmboss = document.createElement('div');
@@ -586,9 +586,9 @@ window.onload = () => {
                 childSecond.setAttribute('style',
                     `position: absolute;` +
                     `border-radius: 50%;` +
-                    `width: 49.3151%; ` +
-                    `height: 49.3151%; ` +
-                    `margin: 25.34245%; ` +
+                    `width: 100%; ` +
+                    `height: 100%; ` +
+                    `margin: 0%; ` +
                     `background: white;` +
                     `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.02) 1px;`
                 );
@@ -596,21 +596,21 @@ window.onload = () => {
                 childEmboss.setAttribute('style',
                     `position: absolute;` +
                     `border-radius: 50%;` +
-                    `width: 20.5479%; ` +
-                    `height: 20.5479%; ` +
-                    `margin: 39.72605%; ` +
-                    `background: rgba(192,192,192,255);` +
-                    `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.02) 1px;`
+                    `width: 45.7143%; ` +
+                    `height: 45.7143%; ` +
+                    `margin: 27.14285%; ` +
+                    `background: #E5E5E5;` +
+                    `box-shadow: rgba(0, 0, 0, 0.4) 1px 0px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) -1px 0px calc(${radius} * 0.002) 1px inset;`
                 );
 
                 childDot.setAttribute('style',
                     `position: absolute;` +
                     `border-radius: 50%;` +
-                    `width: 6.8493%; ` +
-                    `height: 6.8493%; ` +
-                    `margin: 46.57535%; ` +
-                    `background: #393939;` +
-                    `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.002) 1px inset;` +
+                    `width: 20%; ` +
+                    `height: 20%; ` +
+                    `margin: 40%; ` +
+                    `background: #D9D9D9;` +
+                    `box-shadow: rgba(0, 0, 0, 0.4) 1px 0px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) -1px 0px calc(${radius} * 0.002) 1px inset;` +
                     `z-index: 7;`
                 );
 
