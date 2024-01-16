@@ -258,7 +258,7 @@ window.onload = () => {
         linkedMinuteElement = minuteElement;
         linkedSecondElement = null;
 
-        linkedSubhand1Element = null;
+        linkedSubhand1Element = secondElement;
         linkedSubhand2Element = null;
         linkedSubhand3Element = null;
 
@@ -593,6 +593,313 @@ window.onload = () => {
             child.appendChild(subHandElement);
 
             linkedSecondElement = subHandElement; // link
+            (() => {
+                const child = document.createElement('div');
+                const childInner = document.createElement('div');
+                const childTriangle = document.createElement('div');
+
+                const childWidth = `calc(${radius} * 0.011407)`;
+                child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
+                13.4199
+                childInner.setAttribute('style', `position: absolute; top: 18.0935%; width: 100%; height: 69.2641%; background: ${handsColor};`);
+                childTriangle.setAttribute('style', `position: absolute; top: 13.4199%; width: 100%; height: 9.3472%; background: ${handsColor}; clip-path:polygon(0 50%,50% 100%,100% 50%,50% 0);`);
+
+                child.appendChild(childInner);
+                child.appendChild(childTriangle);
+
+                subHandElement.innerHTML = '';
+                subHandElement.appendChild(child);
+            })();
+
+            // handsCircle
+            const childHandsCircleElement = document.createElement('div');
+            childHandsCircleElement.setAttribute('style', `position: absolute; left: 42.42425%; top: 42.42425%; width: 15.1515%; height: 15.1515%;`);
+            child.appendChild(childHandsCircleElement);
+            (() => {
+                const childSecond = document.createElement('div');
+                const childEmboss = document.createElement('div');
+                const childDot = document.createElement('div');
+
+                childSecond.setAttribute('style',
+                    `position: absolute;` +
+                    `border-radius: 50%;` +
+                    `width: 100%; ` +
+                    `height: 100%; ` +
+                    `margin: 0%; ` +
+                    `background: white;` +
+                    `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.02) 1px;`
+                );
+
+                childEmboss.setAttribute('style',
+                    `position: absolute;` +
+                    `border-radius: 50%;` +
+                    `width: 45.7143%; ` +
+                    `height: 45.7143%; ` +
+                    `margin: 27.14285%; ` +
+                    `background: #E5E5E5;` +
+                    `box-shadow: rgba(0, 0, 0, 0.4) 1px 0px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) -1px 0px calc(${radius} * 0.002) 1px inset;`
+                );
+
+                childDot.setAttribute('style',
+                    `position: absolute;` +
+                    `border-radius: 50%;` +
+                    `width: 20%; ` +
+                    `height: 20%; ` +
+                    `margin: 40%; ` +
+                    `background: #D9D9D9;` +
+                    `box-shadow: rgba(0, 0, 0, 0.4) 1px 0px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) -1px 0px calc(${radius} * 0.002) 1px inset;` +
+                    `z-index: 7;`
+                );
+
+                childHandsCircleElement.appendChild(childSecond);
+                childHandsCircleElement.appendChild(childEmboss);
+                childHandsCircleElement.appendChild(childDot);
+            })();
+        })();
+
+        // subdial(3h)
+        (() => {
+            // face
+            const child = document.createElement('div');
+            const childFaceDeboss = document.createElement('div');
+            const childFace = document.createElement('div');
+
+            const childWidth = `calc(${radius} * 0.29151)`;
+            const childTop = `calc(${radius} * 0.354245)`;
+            const childLeft = `calc(${radius} * 0.57093)`;
+            child.setAttribute('style', `position: absolute; left: ${childLeft}; top: ${childTop}; width: ${childWidth}; height: ${childWidth}; z-index: 11;`);
+
+            childFaceDeboss.setAttribute('style', `position: absolute; width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #131313, #676767);  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) 0px -1px calc(${radius} * -0.002) 1px inset;`);
+            childFace.setAttribute('style', 'position: absolute; left: 11.6883%; top: 11.6883%; width: 76.6234%; height: 76.6234%; border-radius: 50%; background: #333333;');
+
+            child.appendChild(childFaceDeboss);
+            child.appendChild(childFace);
+            
+            faceElement.appendChild(child);
+
+            // index
+            const childUL = document.createElement('ul');
+            child.appendChild(childUL);
+            [...Array(5 * 6).keys()].forEach(it => {
+                const child = document.createElement('li');
+                const childInner = document.createElement('div');
+                child.setAttribute(
+                    'style',
+                    `position: absolute; ` +
+                    `display: flex; ` +
+                    `width: 93.0736%; ` +
+                    `height: 93.0736%; ` +
+                    `margin: 3.4632%; ` +
+                    `justify-content: center; ` +
+                    `transform: rotateZ(${2 * Math.PI / (5 * 6) * (it)}rad);`
+                );
+    
+                let indexWidthRatio;
+                if (it % 5 === 0) {
+                    indexWidthRatio = 0.0038;
+                } else {
+                    indexWidthRatio = 0.0026;
+                }
+                const indexWidth = `calc(${radius} * ${indexWidthRatio})`;
+    
+                let indexHeightRatio;
+                if (it % 5 !== 0 || it % 10 === 0) {
+                    indexHeightRatio = 0.031686;
+                } else {
+                    indexHeightRatio = 0.045627;
+                }
+                const indexHeight = `calc(${radius} * ${indexHeightRatio})`;
+    
+                childInner.setAttribute('style', `width: ${indexWidth}; height: ${indexHeight}; background: ${indexColor};`);
+
+                child.appendChild(childInner);
+                childUL.appendChild(
+                    child
+                );
+            });
+
+            // number
+            const fontSize = `calc(${radius} * 0.059375)`;
+
+            const number1 = document.createElement('div');
+            const number2 = document.createElement('div');
+            const number3 = document.createElement('div');
+            
+            number1.innerText = '30';
+            number2.innerText = '10';
+            number3.innerText = '20';
+            
+            number1.setAttribute('style', `position: absolute; top: -4%; left: 35%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
+            number2.setAttribute('style', `position: absolute; top: 48%; left: 62%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
+            number3.setAttribute('style', `position: absolute; top: 48%; left: 10%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
+
+            childFace.appendChild(number1);
+            childFace.appendChild(number2);
+            childFace.appendChild(number3);
+            
+
+            // subhand
+            const subHandElement = document.createElement('div');
+            subHandElement.classList.add('hands');
+            subHandElement.setAttribute('style', `position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; z-index: 30;`);
+            child.appendChild(subHandElement);
+
+            linkedSubhand2Element = subHandElement; // link
+            (() => {
+                const child = document.createElement('div');
+                const childInner = document.createElement('div');
+                const childTriangle = document.createElement('div');
+
+                const childWidth = `calc(${radius} * 0.011407)`;
+                child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
+                13.4199
+                childInner.setAttribute('style', `position: absolute; top: 18.0935%; width: 100%; height: 69.2641%; background: ${handsColor};`);
+                childTriangle.setAttribute('style', `position: absolute; top: 13.4199%; width: 100%; height: 9.3472%; background: ${handsColor}; clip-path:polygon(0 50%,50% 100%,100% 50%,50% 0);`);
+
+                child.appendChild(childInner);
+                child.appendChild(childTriangle);
+
+                subHandElement.innerHTML = '';
+                subHandElement.appendChild(child);
+            })();
+
+            // handsCircle
+            const childHandsCircleElement = document.createElement('div');
+            childHandsCircleElement.setAttribute('style', `position: absolute; left: 42.42425%; top: 42.42425%; width: 15.1515%; height: 15.1515%;`);
+            child.appendChild(childHandsCircleElement);
+            (() => {
+                const childSecond = document.createElement('div');
+                const childEmboss = document.createElement('div');
+                const childDot = document.createElement('div');
+
+                childSecond.setAttribute('style',
+                    `position: absolute;` +
+                    `border-radius: 50%;` +
+                    `width: 100%; ` +
+                    `height: 100%; ` +
+                    `margin: 0%; ` +
+                    `background: white;` +
+                    `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.02) 1px;`
+                );
+
+                childEmboss.setAttribute('style',
+                    `position: absolute;` +
+                    `border-radius: 50%;` +
+                    `width: 45.7143%; ` +
+                    `height: 45.7143%; ` +
+                    `margin: 27.14285%; ` +
+                    `background: #E5E5E5;` +
+                    `box-shadow: rgba(0, 0, 0, 0.4) 1px 0px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) -1px 0px calc(${radius} * 0.002) 1px inset;`
+                );
+
+                childDot.setAttribute('style',
+                    `position: absolute;` +
+                    `border-radius: 50%;` +
+                    `width: 20%; ` +
+                    `height: 20%; ` +
+                    `margin: 40%; ` +
+                    `background: #D9D9D9;` +
+                    `box-shadow: rgba(0, 0, 0, 0.4) 1px 0px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) -1px 0px calc(${radius} * 0.002) 1px inset;` +
+                    `z-index: 7;`
+                );
+
+                childHandsCircleElement.appendChild(childSecond);
+                childHandsCircleElement.appendChild(childEmboss);
+                childHandsCircleElement.appendChild(childDot);
+            })();
+        })();
+
+        // subdial(6h)
+        (() => {
+            // face
+            const child = document.createElement('div');
+            const childFaceDeboss = document.createElement('div');
+            const childFace = document.createElement('div');
+
+            const childWidth = `calc(${radius} * 0.29151)`;
+            const childTop = `calc(${radius} * 0.57093)`;
+            const childLeft = `calc(${radius} * 0.354245)`;
+            child.setAttribute('style', `position: absolute; left: ${childLeft}; top: ${childTop}; width: ${childWidth}; height: ${childWidth}; z-index: 11;`);
+
+            childFaceDeboss.setAttribute('style', `position: absolute; width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #131313, #676767);  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) 0px -1px calc(${radius} * -0.002) 1px inset;`);
+            childFace.setAttribute('style', 'position: absolute; left: 11.6883%; top: 11.6883%; width: 76.6234%; height: 76.6234%; border-radius: 50%; background: #333333;');
+
+            child.appendChild(childFaceDeboss);
+            child.appendChild(childFace);
+            
+            faceElement.appendChild(child);
+
+            // index
+            const childUL = document.createElement('ul');
+            child.appendChild(childUL);
+            [...Array(12).keys()].forEach(it => {
+                const child = document.createElement('li');
+                const childInner = document.createElement('div');
+                child.setAttribute(
+                    'style',
+                    `position: absolute; ` +
+                    `display: flex; ` +
+                    `width: 93.0736%; ` +
+                    `height: 93.0736%; ` +
+                    `margin: 3.4632%; ` +
+                    `justify-content: center; ` +
+                    `transform: rotateZ(${2 * Math.PI / (12) * (it)}rad);`
+                );
+    
+                let indexWidthRatio;
+                if (it % 3 === 0) {
+                    indexWidthRatio = 0.0038;
+                } else {
+                    indexWidthRatio = 0.0026;
+                }
+                const indexWidth = `calc(${radius} * ${indexWidthRatio})`;
+    
+                let indexHeightRatio;
+                if (it % 3 !== 0) {
+                    indexHeightRatio = 0.031686;
+                } else {
+                    indexHeightRatio = 0.016477;
+                }
+                const indexHeight = `calc(${radius} * ${indexHeightRatio})`;
+    
+                childInner.setAttribute('style', `width: ${indexWidth}; height: ${indexHeight}; background: ${indexColor};`);
+
+                child.appendChild(childInner);
+                childUL.appendChild(
+                    child
+                );
+            });
+
+            // number
+            const fontSize = `calc(${radius} * 0.059375)`;
+
+            const number1 = document.createElement('div');
+            const number2 = document.createElement('div');
+            const number3 = document.createElement('div');
+            const number4 = document.createElement('div');
+            
+            number1.innerText = '12';
+            number2.innerText = '3';
+            number3.innerText = '6';
+            number4.innerText = '9';
+            
+            number1.setAttribute('style', `position: absolute; top: -4%; left: 35%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
+            number2.setAttribute('style', `position: absolute; top: 32%; left: 82%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
+            number3.setAttribute('style', `position: absolute; top: 71%; left: 43%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
+            number4.setAttribute('style', `position: absolute; top: 32%; left: 5%; color: ${handsColor}; font-family: arial san-serif; font-size: ${fontSize}; transform: scaleY(67.5675%);`);
+
+            childFace.appendChild(number1);
+            childFace.appendChild(number2);
+            childFace.appendChild(number3);
+            childFace.appendChild(number4);
+
+            // subhand
+            const subHandElement = document.createElement('div');
+            subHandElement.classList.add('hands');
+            subHandElement.setAttribute('style', `position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; z-index: 30;`);
+            child.appendChild(subHandElement);
+
+            linkedSubhand3Element = subHandElement; // link
             (() => {
                 const child = document.createElement('div');
                 const childInner = document.createElement('div');
