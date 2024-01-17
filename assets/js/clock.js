@@ -1154,7 +1154,7 @@ window.onload = () => {
                     childText.innerHTML = `
                         <svg viewBox="0 0 500 500" preserveAspectRatio="slice">
                         <path id="curve" fill="transparent" d="M73.2,148.6c4-6.1,65.5-96.8,178.6-95.6c111.3,1.2,170.8,90.3,175.1,97" />
-                        <text width="500" style="fill: ${handsColor}; transform: rotateZ(-2deg);">
+                        <text width="500" style="fill: ${handsColor}; font-size: ${childFontSize}; transform: rotateZ(-2deg);">
                             <textPath xlink:href="#curve">
                             TACHYM&Egrave;TRE
                             </textPath>
