@@ -220,7 +220,7 @@ ul {
     border-radius: 50%;
     width: var(--caseWidth);
     height: var(--caseWidth);
-    margin: 0 0 0 calc(var(--faceWidth)*.042);
+    margin: 0 auto;
     z-index: 6;
     pointer-events: none;
 }

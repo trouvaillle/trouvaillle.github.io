@@ -1100,7 +1100,7 @@ window.onload = () => {
                     (it > 21 ? (it - 21) * 25 : 0);
                 let time = 3600 / speed;
                 if (it === 26) {
-                    time = 11.0;
+                    time = 10.9;
                     childText.innerHTML = "TACHYM&Egrave;TRE";
                 } else {
                     if (it !== 24) {
@@ -1150,11 +1150,11 @@ window.onload = () => {
                          `transform: rotateZ(-${theta}rad) scaleX(78.6597%) translateX(${childTranslateX}) translateY(${childTranslateY}); font-size: ${childFontSize};`);
                     child.appendChild(childInner);
                 } else {
-                    const childFontSize = `calc(var(--faceWidth) * 0.035)`;
+                    const childFontSize = `11.2px`;
                     childText.innerHTML = `
-                        <svg viewBox="0 0 500 500" preserveAspectRatio="slice">
+                        <svg viewBox="0 0 500 500" preserveAspectRatio="none">
                         <path id="curve" fill="transparent" d="M73.2,148.6c4-6.1,65.5-96.8,178.6-95.6c111.3,1.2,170.8,90.3,175.1,97" />
-                        <text width="500" style="fill: ${handsColor}; font-size: ${childFontSize}; transform: rotateZ(-2deg);">
+                        <text width="500" style="fill: ${handsColor}; transform: rotateZ(-2deg);">
                             <textPath xlink:href="#curve">
                             TACHYM&Egrave;TRE
                             </textPath>
@@ -1172,7 +1172,7 @@ window.onload = () => {
                         `transform: rotateZ(${theta}rad);`
                     );
                     childText.setAttribute('style', 
-                    `position: absolute; letter-spacing: calc(var(--faceWidth) * 0.005); ` +
+                    `position: absolute; letter-spacing: 2px; ` +
                     `width: 100%; height: 100%; ` + 
                     `font-family: Verdana, Geneva, Sans-Serif; font-size: ${childFontSize};`);
                 }
