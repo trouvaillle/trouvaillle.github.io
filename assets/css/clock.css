@@ -1,25 +1,32 @@
 :root {
-    --radius: min(min(76vh, 76vw), 720px);
-    --glassRadius: calc(min(min(76vh, 76vw), 720px) + min(4.0456vh, 4.0456vw));
-    --bezelRadius: calc(min(min(76vh, 76vw), 720px) + min(9.4398vh, 9.4398vw));
-    --caseRadius: calc(min(min(76vh, 76vw), 720px) + min(12.3295vh, 12.3295vw));
+    --ratio: 66;
+    --faceWidth: min(min(1vh, 1vw) * var(--ratio), 720px);
+    --glassWidth: calc(var(--faceWidth) * (1 + 0.053232 * 2));
+    --bezelWidth: calc(var(--faceWidth) * (1 + 0.053232 * 2 + 0.067174 * 2));
+    --caseWidth: calc(var(--faceWidth) * (1 + 0.053232 * 2 + 0.067174 * 2 + 0.035488 * 2));
 }
 
 html {
-    width: 100%;
-    height: 100%;
-    font-size: calc(var(--radius) * 0.02);
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    font-size: calc(var(--faceWidth) * 0.02);
     margin: 0;
     padding: 0;
+    overflow: hidden;
 }
 
 body {
+    position: absolute;
     display: flex;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
     background-color: black;
+    overflow: hidden;
 }
 
 ul {
@@ -34,8 +41,8 @@ ul {
     flex-direction: column;
     left: 0;
     top: 0;
-    width: 100%;
-    height: 100%;
+    right: 0;
+    bottom: 0;
     justify-content: center;
 }
 
@@ -43,8 +50,8 @@ ul {
     position: relative;
     background-color: white;
     border-radius: 50%;
-    width: var(--radius);
-    height: var(--radius);
+    width: var(--faceWidth);
+    height: var(--faceWidth);
     margin: auto;
     /* box-shadow: 0 0 3rem rgba(96, 96, 96, 255); */
     z-index: 10;
@@ -56,7 +63,7 @@ ul {
     border-radius: 50%;
     width: 94%;
     height: 94%;
-    border: calc(var(--radius) * 0.003) solid black;
+    border: calc(var(--faceWidth) * 0.003) solid black;
     margin: 3%;
     z-index: 12;
     background-image: linear-gradient(to right, #fff 5px, transparent 1px), linear-gradient(#ccc 1px, transparent 1px);
@@ -69,7 +76,7 @@ ul {
     border-radius: 50%;
     width: 90%;
     height: 90%;
-    border: calc(var(--radius) * 0.003) solid black;
+    border: calc(var(--faceWidth) * 0.003) solid black;
     margin: 5%;
     z-index: 13;
     background-image: linear-gradient(to right, #fff 5px, transparent 1px), linear-gradient(#ccc 1px, transparent 1px);
@@ -81,7 +88,7 @@ ul {
     display: block;
     font-family: 'Times New Roman', Courier, monospace;
     font-weight: 400;
-    font-size: calc(var(--radius) * 0.08);
+    font-size: calc(var(--faceWidth) * 0.08);
     z-index: 14;
     width: 100%;
     height: 100%;
@@ -130,7 +137,7 @@ ul {
     background: black;
     border-radius: 50%;
     margin: auto;
-    border: calc(var(--radius) * 0.003) solid black;
+    border: calc(var(--faceWidth) * 0.003) solid black;
     z-index: 40;
 }
 
@@ -149,7 +156,7 @@ ul {
     width: 12%;
     height: 8%;
     margin: 46% 18% 46% 70%;
-    box-shadow: 0 0 calc(var(--radius) * 0.016) rgba(0, 0, 0, 0.4) inset;
+    box-shadow: 0 0 calc(var(--faceWidth) * 0.016) rgba(0, 0, 0, 0.4) inset;
 }
 
 #day-inner {
@@ -162,7 +169,7 @@ ul {
     color: rgb(0, 0, 0, 0.8);
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     font-weight: 600;
-    font-size: calc(var(--radius) * 0.06);
+    font-size: calc(var(--faceWidth) * 0.06);
 }
 
 #glass {
@@ -172,9 +179,9 @@ ul {
     justify-content: center;
     background-color: transparent;
     border-radius: 50%;
-    width: var(--glassRadius);
-    height: var(--glassRadius);
-    margin: auto;
+    width: var(--glassWidth);
+    height: var(--glassWidth);
+    margin: 0 auto;
     z-index: 9;
 }
 
@@ -185,9 +192,9 @@ ul {
     justify-content: center;
     background-color: transparent;
     border-radius: 50%;
-    width: var(--bezelRadius);
-    height: var(--bezelRadius);
-    margin: auto;
+    width: var(--bezelWidth);
+    height: var(--bezelWidth);
+    margin: 0 auto;
     z-index: 8;
 }
 
@@ -198,9 +205,9 @@ ul {
     justify-content: center;
     background-color: transparent;
     border-radius: 50%;
-    width: var(--caseRadius);
-    height: var(--caseRadius);
-    margin: auto;
+    width: var(--caseWidth);
+    height: var(--caseWidth);
+    margin: 0 auto;
     z-index: 7;
 }
 
@@ -211,13 +218,13 @@ ul {
     justify-content: center;
     background-color: transparent;
     border-radius: 50%;
-    width: var(--caseRadius);
-    height: var(--caseRadius);
-    margin: auto;
+    width: var(--caseWidth);
+    height: var(--caseWidth);
+    margin: 0 0 0 calc(var(--faceWidth)*.042);
     z-index: 6;
     pointer-events: none;
 }
 
 .mousedown {
-    transform: translateY(calc(var(--radius)*0.01418588));
+    transform: translateY(calc(var(--faceWidth)*0.01418588));
 }

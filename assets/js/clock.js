@@ -1,7 +1,7 @@
 window.onload = () => {
 
     const {
-        radius,
+        faceWidth,
         romanize
     } = define();
 
@@ -60,8 +60,8 @@ window.onload = () => {
     }
 
     function define() {
-        const radius = getComputedStyle(document.documentElement)
-            .getPropertyValue('--radius');
+        const faceWidth = getComputedStyle(document.documentElement)
+            .getPropertyValue('--faceWidth');
 
         const romanize = (num) => {
             if (isNaN(num))
@@ -78,7 +78,7 @@ window.onload = () => {
         }
 
         return {
-            radius,
+            faceWidth,
             romanize
         };
     }
@@ -215,11 +215,11 @@ window.onload = () => {
         linkedSubhand3Element = null;
 
         faceElement.setAttribute('style', `background: ${dialColor};`);
-        indexLineOuter.setAttribute('style', 'width: 94%; height: 94%; margin: 3%; border: calc(var(--radius) * 0.003) solid black; ');
-        indexLineInner.setAttribute('style', 'border: calc(var(--radius) * 0.003) solid black;');
+        indexLineOuter.setAttribute('style', 'width: 94%; height: 94%; margin: 3%; border: calc(var(--faceWidth) * 0.003) solid black; ');
+        indexLineInner.setAttribute('style', 'border: calc(var(--faceWidth) * 0.003) solid black;');
 
         handsCircleElement.innerHTML = '';
-        handsCircleElement.setAttribute('style', `width: calc(${radius} * 0.015); height: calc(${radius} * 0.015); background: black;`);
+        handsCircleElement.setAttribute('style', `width: calc(${faceWidth} * 0.015); height: calc(${faceWidth} * 0.015); background: black;`);
 
         [...Array(12).keys()].forEach(it => {
             const child = document.createElement('li');
@@ -249,8 +249,8 @@ window.onload = () => {
                 `justify-content: center; ` +
                 `transform: rotateZ(${2 * Math.PI / 60 * (it)}rad);`
             );
-            const childInnerWidth = (it % 5 == 0 ? `calc(${radius} * 0.006)` : `calc(${radius} * 0.003)`);
-            childInner.setAttribute('style', `width: ${childInnerWidth}; height: calc(${radius} * 0.02); background: black;`);
+            const childInnerWidth = (it % 5 == 0 ? `calc(${faceWidth} * 0.006)` : `calc(${faceWidth} * 0.003)`);
+            childInner.setAttribute('style', `width: ${childInnerWidth}; height: calc(${faceWidth} * 0.02); background: black;`);
 
             child.appendChild(childInner);
             indexLineOuterUL.appendChild(
@@ -263,7 +263,7 @@ window.onload = () => {
             const child = document.createElement('div');
             const childInner = document.createElement('div');
 
-            const childWidth = `calc(${radius} * 0.006)`;
+            const childWidth = `calc(${faceWidth} * 0.006)`;
             child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
             childInner.setAttribute('style', `position: absolute; top: 50%; width: 100%; height: 50%; background: ${handsColor};`);
 
@@ -278,7 +278,7 @@ window.onload = () => {
             const child = document.createElement('div');
             const childInner = document.createElement('div');
 
-            const childWidth = `calc(${radius} * 0.006)`;
+            const childWidth = `calc(${faceWidth} * 0.006)`;
             child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
             childInner.setAttribute('style', `position: absolute; top: 15%; width: 100%; height: 85%; background: ${handsColor};`);
 
@@ -293,7 +293,7 @@ window.onload = () => {
             const child = document.createElement('div');
             const childInner = document.createElement('div');
 
-            const childWidth = `calc(${radius} * 0.006)`;
+            const childWidth = `calc(${faceWidth} * 0.006)`;
             child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
             childInner.setAttribute('style', `position: absolute; top: 15%; width: 100%; height: 85%; background: ${handsColor};`);
 
@@ -324,7 +324,7 @@ window.onload = () => {
             `width: 79.2142%; ` +
             `height: 79.2142%; margin: 10.3929%; ` +
             `background: background: linear-gradient(135deg, #353535, #272727);` +
-            `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.02) 1px;`
+            `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${faceWidth} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${faceWidth} * 0.02) 1px;`
         );
 
         indexLineOuter.setAttribute('style', 'width: 100%; height: 100%; margin: 0%; border: none; background-image: none;');
@@ -337,8 +337,8 @@ window.onload = () => {
             `display: flex;` +
             `justify-content: center;` +
             `margin: auto;` +
-            `width: calc(${radius} * 0.0925221799); height: calc(${radius} * 0.0925221799); background: white; z-index: 4;` +
-            `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.02) 1px;`
+            `width: calc(${faceWidth} * 0.0925221799); height: calc(${faceWidth} * 0.0925221799); background: white; z-index: 4;` +
+            `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${faceWidth} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${faceWidth} * 0.02) 1px;`
         );
 
         [...Array(12 * 5 * 3).keys()].forEach(it => {
@@ -363,8 +363,8 @@ window.onload = () => {
             } else {
                 indexWidthRatio = 0.003;
             }
-            const indexWidth = `calc(${radius} * ${indexWidthRatio})`;
-            const indexWidth2 = `calc(${radius} * ${indexWidthRatio * 2})`;
+            const indexWidth = `calc(${faceWidth} * ${indexWidthRatio})`;
+            const indexWidth2 = `calc(${faceWidth} * ${indexWidthRatio * 2})`;
 
             let indexHeightRatio;
             if (it % (3) === 0 && it % (3 * 5) !== 0) {
@@ -372,7 +372,7 @@ window.onload = () => {
             } else {
                 indexHeightRatio = 0.016477;
             }
-            const indexHeight = `calc(${radius} * ${indexHeightRatio})`;
+            const indexHeight = `calc(${faceWidth} * ${indexHeightRatio})`;
 
             let indexMarginTopRatio;
             if (it % (3 * 5) === 0) {
@@ -381,7 +381,7 @@ window.onload = () => {
             } else {
                 indexMarginTopRatio = 0;
             }
-            const indexMarginTop = `calc(${radius} * ${indexMarginTopRatio})`;
+            const indexMarginTop = `calc(${faceWidth} * ${indexMarginTopRatio})`;
 
             childInner.setAttribute('style', `width: ${indexWidth}; height: ${indexHeight}; background: ${indexColor};`);
             childInnerInner.setAttribute('style', `width: ${indexWidth2}; height: ${indexHeight}; margin-top: ${indexMarginTop}; background: ${indexColor};`);
@@ -409,16 +409,16 @@ window.onload = () => {
             );
 
             const indexWidthRatio = 0.021546;
-            const indexWidth = `calc(${radius} * ${indexWidthRatio})`;
+            const indexWidth = `calc(${faceWidth} * ${indexWidthRatio})`;
 
             const indexHeightRatio = 0.086185;
-            const indexHeight = `calc(${radius} * ${indexHeightRatio})`;
+            const indexHeight = `calc(${faceWidth} * ${indexHeightRatio})`;
 
             const indexMarginTopRatio = 0.021546;
-            const indexMarginTop = `calc(${radius} * ${indexMarginTopRatio})`;
+            const indexMarginTop = `calc(${faceWidth} * ${indexMarginTopRatio})`;
 
             const indexBorderRadiusRatio = 0.005;
-            const indexBorderRadius = `calc(${radius} * ${indexBorderRadiusRatio})`;
+            const indexBorderRadius = `calc(${faceWidth} * ${indexBorderRadiusRatio})`;
 
             childInner.setAttribute('style', `width: ${indexWidth}; height: ${indexHeight}; margin-top: ${indexMarginTop}; background: ${glowColor}; border-radius: ${indexBorderRadius};`);
 
@@ -435,12 +435,12 @@ window.onload = () => {
             const childTriangle = document.createElement('div');
             const childGlow = document.createElement('div');
 
-            const childWidth = `calc(${radius} * 0.032708)`;
+            const childWidth = `calc(${faceWidth} * 0.032708)`;
             child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
 
             childInner.setAttribute('style', `position: absolute; top: 43.0520%; width: 100%; height: 48.8186%; background: ${handsColor};`);
             childTriangle.setAttribute('style', `position: absolute; top: 37.3583%; width: 100%; height: 11.2874%; background: ${handsColor}; clip-path:polygon(0 50%, 50% 100%,100% 50%,50% 0);`);
-            childGlow.setAttribute('style', `position: relative; top: 45.7938%; width: 37.8777%; height: 41.1280%; margin: 0 auto; background: ${glowColor}; box-shadow: rgba(0, 0, 0, 0.06) 0px 1px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.06) 0px 1px calc(${radius} * 0.002) 1px inset;`);
+            childGlow.setAttribute('style', `position: relative; top: 45.7938%; width: 37.8777%; height: 41.1280%; margin: 0 auto; background: ${glowColor}; box-shadow: rgba(0, 0, 0, 0.06) 0px 1px calc(${faceWidth} * 0.004) 0px inset, rgba(0, 0, 0, 0.06) 0px 1px calc(${faceWidth} * 0.002) 1px inset;`);
 
             child.appendChild(childInner);
             child.appendChild(childTriangle);
@@ -457,12 +457,12 @@ window.onload = () => {
             const childTriangle = document.createElement('div');
             const childGlow = document.createElement('div');
 
-            const childWidth = `calc(${radius} * 0.027796)`;
+            const childWidth = `calc(${faceWidth} * 0.027796)`;
             child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
 
             childInner.setAttribute('style', `position: absolute; top: 14.1541%; width: 100%; height: 79.36159%; background: ${handsColor};`);
             childTriangle.setAttribute('style', `position: absolute; top: 9.4805%; width: 100%; height: 9.3472%; background: ${handsColor}; clip-path:polygon(0 50%,50% 100%,100% 50%,50% 0);`);
-            childGlow.setAttribute('style', `position: relative; top: 17.5642%; width: 45.1378%; height: 69.6573%; margin: 0 auto; background: ${glowColor}; box-shadow: rgba(0, 0, 0, 0.06) 0px 1px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.06) 0px 1px calc(${radius} * 0.002) 1px inset;`);
+            childGlow.setAttribute('style', `position: relative; top: 17.5642%; width: 45.1378%; height: 69.6573%; margin: 0 auto; background: ${glowColor}; box-shadow: rgba(0, 0, 0, 0.06) 0px 1px calc(${faceWidth} * 0.004) 0px inset, rgba(0, 0, 0, 0.06) 0px 1px calc(${faceWidth} * 0.002) 1px inset;`);
 
             child.appendChild(childInner);
             child.appendChild(childTriangle);
@@ -483,18 +483,18 @@ window.onload = () => {
             const childInnerLower = document.createElement('div');
             const childTriangle = document.createElement('div');
 
-            const childWidthUpper = `calc(${radius} * 0.017051)`;
+            const childWidthUpper = `calc(${faceWidth} * 0.017051)`;
             childUpper.setAttribute('style', `position: absolute; width: ${childWidthUpper}; height: 50%;`);
 
             childInnerUpper.setAttribute('style', `position: absolute; top: 44.6995%; width: 100%; height: 50.9694%; background: ${handsColor}; clip-path:polygon(10.4934% 0,0 100%,100% 100%,89.5066% 0);`);
             childRhombus.setAttribute('style', `position: absolute; left: -84.2567%; top: 19.5648%; width: 268.5134%; height: 27.4713%; background: ${handsColor}; clip-path:polygon(0 80.3833%,50% 100%,100% 80.3833%,50% 0);`);
-            childGlow.setAttribute('style', `position: relative; top: 28.7219%; left: -36.7619%; width: 173.5238%; height: 15.6197%; margin: 0 auto; background: ${glowColor}; clip-path:polygon(0 80.3833%,50% 100%,100% 80.3833%,50% 0); box-shadow: rgba(0, 0, 0, 0.06) 0px 1px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.06) 0px 1px calc(${radius} * 0.002) 1px inset;`);
+            childGlow.setAttribute('style', `position: relative; top: 28.7219%; left: -36.7619%; width: 173.5238%; height: 15.6197%; margin: 0 auto; background: ${glowColor}; clip-path:polygon(0 80.3833%,50% 100%,100% 80.3833%,50% 0); box-shadow: rgba(0, 0, 0, 0.06) 0px 1px calc(${faceWidth} * 0.004) 0px inset, rgba(0, 0, 0, 0.06) 0px 1px calc(${faceWidth} * 0.002) 1px inset;`);
 
             childUpper.appendChild(childInnerUpper);
             childUpper.appendChild(childRhombus);
             childUpper.appendChild(childGlow);
 
-            const childWidthLower = `calc(${radius} * 0.017051)`;
+            const childWidthLower = `calc(${faceWidth} * 0.017051)`;
             childLower.setAttribute('style', `position: absolute; top:50%; width: ${childWidthLower}; height: 50%;`);
 
             childInnerLower.setAttribute('style', `position: absolute; top: 4.2740%; left: -34.2582%; width: 168.5164%; height: 18.6445%; background: ${handsColor}; clip-path:polygon(20.3293% 0,0 100%,100% 100%,79.6707% 0);`);
@@ -522,7 +522,7 @@ window.onload = () => {
                 `height: 78.0821%; ` +
                 `margin: 10.95895%; ` +
                 `background: white;` +
-                `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.02) 1px;`
+                `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${faceWidth} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${faceWidth} * 0.02) 1px;`
             );
 
             childSecond.setAttribute('style',
@@ -532,7 +532,7 @@ window.onload = () => {
                 `height: 49.3151%; ` +
                 `margin: 25.34245%; ` +
                 `background: white;` +
-                `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.02) 1px;`
+                `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${faceWidth} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${faceWidth} * 0.02) 1px;`
             );
 
             childEmboss.setAttribute('style',
@@ -542,7 +542,7 @@ window.onload = () => {
                 `height: 20.5479%; ` +
                 `margin: 39.72605%; ` +
                 `background: white;` +
-                `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.02) 1px;`
+                `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${faceWidth} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${faceWidth} * 0.02) 1px;`
             );
 
             childDot.setAttribute('style',
@@ -552,7 +552,7 @@ window.onload = () => {
                 `height: 6.8493%; ` +
                 `margin: 46.57535%; ` +
                 `background: #393939;` +
-                `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.002) 1px inset;` +
+                `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${faceWidth} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) 0px 1px calc(${faceWidth} * 0.002) 1px inset;` +
                 `z-index: 7;`
             );
 
@@ -569,12 +569,12 @@ window.onload = () => {
             const childFaceDeboss = document.createElement('div');
             const childFace = document.createElement('div');
 
-            const childWidth = `calc(${radius} * 0.29151)`;
-            const childTop = `calc(${radius} * 0.354245)`;
-            const childLeft = `calc(${radius} * 0.13756)`;
+            const childWidth = `calc(${faceWidth} * 0.29151)`;
+            const childTop = `calc(${faceWidth} * 0.354245)`;
+            const childLeft = `calc(${faceWidth} * 0.13756)`;
             child.setAttribute('style', `position: absolute; left: ${childLeft}; top: ${childTop}; width: ${childWidth}; height: ${childWidth}; z-index: 11;`);
 
-            childFaceDeboss.setAttribute('style', `position: absolute; width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #131313, #676767);  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) 0px -1px calc(${radius} * -0.002) 1px inset;`);
+            childFaceDeboss.setAttribute('style', `position: absolute; width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #131313, #676767);  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px calc(${faceWidth} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) 0px -1px calc(${faceWidth} * -0.002) 1px inset;`);
             childFace.setAttribute('style', 'position: absolute; left: 11.6883%; top: 11.6883%; width: 76.6234%; height: 76.6234%; border-radius: 50%; background: #333333;');
 
             child.appendChild(childFaceDeboss);
@@ -605,7 +605,7 @@ window.onload = () => {
                 } else {
                     indexWidthRatio = 0.0026;
                 }
-                const indexWidth = `calc(${radius} * ${indexWidthRatio})`;
+                const indexWidth = `calc(${faceWidth} * ${indexWidthRatio})`;
 
                 let indexHeightRatio;
                 if (it % 4 !== 0) {
@@ -613,7 +613,7 @@ window.onload = () => {
                 } else {
                     indexHeightRatio = 0.020040;
                 }
-                const indexHeight = `calc(${radius} * ${indexHeightRatio})`;
+                const indexHeight = `calc(${faceWidth} * ${indexHeightRatio})`;
 
                 childInner.setAttribute('style', `width: ${indexWidth}; height: ${indexHeight}; background: ${indexColor};`);
 
@@ -624,7 +624,7 @@ window.onload = () => {
             });
 
             // number
-            const fontSize = `calc(${radius} * 0.039375)`;
+            const fontSize = `calc(${faceWidth} * 0.039375)`;
 
             const number1 = document.createElement('div');
             const number2 = document.createElement('div');
@@ -655,7 +655,7 @@ window.onload = () => {
                 const childInner = document.createElement('div');
                 const childTriangle = document.createElement('div');
 
-                const childWidth = `calc(${radius} * 0.011407)`;
+                const childWidth = `calc(${faceWidth} * 0.011407)`;
                 child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
                 13.4199
                 childInner.setAttribute('style', `position: absolute; top: 18.0935%; width: 100%; height: 69.2641%; background: ${handsColor};`);
@@ -684,7 +684,7 @@ window.onload = () => {
                     `height: 100%; ` +
                     `margin: 0%; ` +
                     `background: white;` +
-                    `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.02) 1px;`
+                    `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${faceWidth} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${faceWidth} * 0.02) 1px;`
                 );
 
                 childEmboss.setAttribute('style',
@@ -694,7 +694,7 @@ window.onload = () => {
                     `height: 45.7143%; ` +
                     `margin: 27.14285%; ` +
                     `background: #E5E5E5;` +
-                    `box-shadow: rgba(0, 0, 0, 0.4) 1px 0px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) -1px 0px calc(${radius} * 0.002) 1px inset;`
+                    `box-shadow: rgba(0, 0, 0, 0.4) 1px 0px calc(${faceWidth} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) -1px 0px calc(${faceWidth} * 0.002) 1px inset;`
                 );
 
                 childDot.setAttribute('style',
@@ -704,7 +704,7 @@ window.onload = () => {
                     `height: 20%; ` +
                     `margin: 40%; ` +
                     `background: #D9D9D9;` +
-                    `box-shadow: rgba(0, 0, 0, 0.4) 1px 0px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) -1px 0px calc(${radius} * 0.002) 1px inset;` +
+                    `box-shadow: rgba(0, 0, 0, 0.4) 1px 0px calc(${faceWidth} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) -1px 0px calc(${faceWidth} * 0.002) 1px inset;` +
                     `z-index: 7;`
                 );
 
@@ -721,12 +721,12 @@ window.onload = () => {
             const childFaceDeboss = document.createElement('div');
             const childFace = document.createElement('div');
 
-            const childWidth = `calc(${radius} * 0.29151)`;
-            const childTop = `calc(${radius} * 0.354245)`;
-            const childLeft = `calc(${radius} * 0.57093)`;
+            const childWidth = `calc(${faceWidth} * 0.29151)`;
+            const childTop = `calc(${faceWidth} * 0.354245)`;
+            const childLeft = `calc(${faceWidth} * 0.57093)`;
             child.setAttribute('style', `position: absolute; left: ${childLeft}; top: ${childTop}; width: ${childWidth}; height: ${childWidth}; z-index: 11;`);
 
-            childFaceDeboss.setAttribute('style', `position: absolute; width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #131313, #676767);  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) 0px -1px calc(${radius} * -0.002) 1px inset;`);
+            childFaceDeboss.setAttribute('style', `position: absolute; width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #131313, #676767);  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px calc(${faceWidth} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) 0px -1px calc(${faceWidth} * -0.002) 1px inset;`);
             childFace.setAttribute('style', 'position: absolute; left: 11.6883%; top: 11.6883%; width: 76.6234%; height: 76.6234%; border-radius: 50%; background: #333333;');
 
             child.appendChild(childFaceDeboss);
@@ -757,7 +757,7 @@ window.onload = () => {
                 } else {
                     indexWidthRatio = 0.0026;
                 }
-                const indexWidth = `calc(${radius} * ${indexWidthRatio})`;
+                const indexWidth = `calc(${faceWidth} * ${indexWidthRatio})`;
 
                 let indexHeightRatio;
                 if (it % 5 !== 0 || it % 10 === 0) {
@@ -765,7 +765,7 @@ window.onload = () => {
                 } else {
                     indexHeightRatio = 0.045627;
                 }
-                const indexHeight = `calc(${radius} * ${indexHeightRatio})`;
+                const indexHeight = `calc(${faceWidth} * ${indexHeightRatio})`;
 
                 childInner.setAttribute('style', `width: ${indexWidth}; height: ${indexHeight}; background: ${indexColor};`);
 
@@ -776,7 +776,7 @@ window.onload = () => {
             });
 
             // number
-            const fontSize = `calc(${radius} * 0.039375)`;
+            const fontSize = `calc(${faceWidth} * 0.039375)`;
 
             const number1 = document.createElement('div');
             const number2 = document.createElement('div');
@@ -807,7 +807,7 @@ window.onload = () => {
                 const childInner = document.createElement('div');
                 const childTriangle = document.createElement('div');
 
-                const childWidth = `calc(${radius} * 0.011407)`;
+                const childWidth = `calc(${faceWidth} * 0.011407)`;
                 child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
                 13.4199
                 childInner.setAttribute('style', `position: absolute; top: 18.0935%; width: 100%; height: 69.2641%; background: ${handsColor};`);
@@ -836,7 +836,7 @@ window.onload = () => {
                     `height: 100%; ` +
                     `margin: 0%; ` +
                     `background: white;` +
-                    `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.02) 1px;`
+                    `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${faceWidth} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${faceWidth} * 0.02) 1px;`
                 );
 
                 childEmboss.setAttribute('style',
@@ -846,7 +846,7 @@ window.onload = () => {
                     `height: 45.7143%; ` +
                     `margin: 27.14285%; ` +
                     `background: #E5E5E5;` +
-                    `box-shadow: rgba(0, 0, 0, 0.4) 1px 0px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) -1px 0px calc(${radius} * 0.002) 1px inset;`
+                    `box-shadow: rgba(0, 0, 0, 0.4) 1px 0px calc(${faceWidth} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) -1px 0px calc(${faceWidth} * 0.002) 1px inset;`
                 );
 
                 childDot.setAttribute('style',
@@ -856,7 +856,7 @@ window.onload = () => {
                     `height: 20%; ` +
                     `margin: 40%; ` +
                     `background: #D9D9D9;` +
-                    `box-shadow: rgba(0, 0, 0, 0.4) 1px 0px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) -1px 0px calc(${radius} * 0.002) 1px inset;` +
+                    `box-shadow: rgba(0, 0, 0, 0.4) 1px 0px calc(${faceWidth} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) -1px 0px calc(${faceWidth} * 0.002) 1px inset;` +
                     `z-index: 7;`
                 );
 
@@ -873,12 +873,12 @@ window.onload = () => {
             const childFaceDeboss = document.createElement('div');
             const childFace = document.createElement('div');
 
-            const childWidth = `calc(${radius} * 0.29151)`;
-            const childTop = `calc(${radius} * 0.57093)`;
-            const childLeft = `calc(${radius} * 0.354245)`;
+            const childWidth = `calc(${faceWidth} * 0.29151)`;
+            const childTop = `calc(${faceWidth} * 0.57093)`;
+            const childLeft = `calc(${faceWidth} * 0.354245)`;
             child.setAttribute('style', `position: absolute; left: ${childLeft}; top: ${childTop}; width: ${childWidth}; height: ${childWidth}; z-index: 11;`);
 
-            childFaceDeboss.setAttribute('style', `position: absolute; width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #131313, #676767);  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) 0px -1px calc(${radius} * -0.002) 1px inset;`);
+            childFaceDeboss.setAttribute('style', `position: absolute; width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #131313, #676767);  box-shadow: rgba(0, 0, 0, 0.1) 0px 1px calc(${faceWidth} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) 0px -1px calc(${faceWidth} * -0.002) 1px inset;`);
             childFace.setAttribute('style', 'position: absolute; left: 11.6883%; top: 11.6883%; width: 76.6234%; height: 76.6234%; border-radius: 50%; background: #333333;');
 
             child.appendChild(childFaceDeboss);
@@ -909,7 +909,7 @@ window.onload = () => {
                 } else {
                     indexWidthRatio = 0.0026;
                 }
-                const indexWidth = `calc(${radius} * ${indexWidthRatio})`;
+                const indexWidth = `calc(${faceWidth} * ${indexWidthRatio})`;
 
                 let indexHeightRatio;
                 if (it % 3 !== 0) {
@@ -917,7 +917,7 @@ window.onload = () => {
                 } else {
                     indexHeightRatio = 0.016477;
                 }
-                const indexHeight = `calc(${radius} * ${indexHeightRatio})`;
+                const indexHeight = `calc(${faceWidth} * ${indexHeightRatio})`;
 
                 childInner.setAttribute('style', `width: ${indexWidth}; height: ${indexHeight}; background: ${indexColor};`);
 
@@ -928,7 +928,7 @@ window.onload = () => {
             });
 
             // number
-            const fontSize = `calc(${radius} * 0.039375)`;
+            const fontSize = `calc(${faceWidth} * 0.039375)`;
 
             const number1 = document.createElement('div');
             const number2 = document.createElement('div');
@@ -962,7 +962,7 @@ window.onload = () => {
                 const childInner = document.createElement('div');
                 const childTriangle = document.createElement('div');
 
-                const childWidth = `calc(${radius} * 0.011407)`;
+                const childWidth = `calc(${faceWidth} * 0.011407)`;
                 child.setAttribute('style', `position: relative; width: ${childWidth}; height: 50%;`);
                 13.4199
                 childInner.setAttribute('style', `position: absolute; top: 18.0935%; width: 100%; height: 69.2641%; background: ${handsColor};`);
@@ -991,7 +991,7 @@ window.onload = () => {
                     `height: 100%; ` +
                     `margin: 0%; ` +
                     `background: white;` +
-                    `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${radius} * 0.02) 1px;`
+                    `box-shadow: rgba(0, 0, 0, 0.4) 0px 1px calc(${faceWidth} * 0.004) 0px, rgba(0, 0, 0, 0.4) 0px 1px calc(${faceWidth} * 0.02) 1px;`
                 );
 
                 childEmboss.setAttribute('style',
@@ -1001,7 +1001,7 @@ window.onload = () => {
                     `height: 45.7143%; ` +
                     `margin: 27.14285%; ` +
                     `background: #E5E5E5;` +
-                    `box-shadow: rgba(0, 0, 0, 0.4) 1px 0px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) -1px 0px calc(${radius} * 0.002) 1px inset;`
+                    `box-shadow: rgba(0, 0, 0, 0.4) 1px 0px calc(${faceWidth} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) -1px 0px calc(${faceWidth} * 0.002) 1px inset;`
                 );
 
                 childDot.setAttribute('style',
@@ -1011,7 +1011,7 @@ window.onload = () => {
                     `height: 20%; ` +
                     `margin: 40%; ` +
                     `background: #D9D9D9;` +
-                    `box-shadow: rgba(0, 0, 0, 0.4) 1px 0px calc(${radius} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) -1px 0px calc(${radius} * 0.002) 1px inset;` +
+                    `box-shadow: rgba(0, 0, 0, 0.4) 1px 0px calc(${faceWidth} * 0.004) 0px inset, rgba(0, 0, 0, 0.4) -1px 0px calc(${faceWidth} * 0.002) 1px inset;` +
                     `z-index: 7;`
                 );
 
@@ -1021,7 +1021,7 @@ window.onload = () => {
             })();
         })();
 
-        // dial pringting
+        // dial printing
         (() => {
             const child = document.createElement('div');
             const childLogo = document.createElement('div');
@@ -1029,32 +1029,32 @@ window.onload = () => {
             const childBrand = document.createElement('div');
             const childProduct = document.createElement('div');
 
-            const fontSizeLogo = `calc(${radius} * 0.0776600)`;
-            const fontSizeCI = `calc(${radius} * 0.0476600)`;
-            const fontSizeBrand = `calc(${radius} * 0.0346600)`;
-            const fontSizeProduct = `calc(${radius} * 0.0226600)`;
+            const fontSizeLogo = `calc(${faceWidth} * 0.0776600)`;
+            const fontSizeCI = `calc(${faceWidth} * 0.0476600)`;
+            const fontSizeBrand = `calc(${faceWidth} * 0.0346600)`;
+            const fontSizeProduct = `calc(${faceWidth} * 0.0226600)`;
 
             child.setAttribute('style', `position: absolute; width: 100%; height: 100%; display: flex; justify-content: center; z-index: 11;`);
 
             childLogo.setAttribute('style',
                 `position: absolute; top: 15.3019%; width: 100%; height: 100%; text-align: center; color: ${handsColor}; font-size: ${fontSizeLogo}; font-family: Arial, Helvetica, Sans-Serif; font-weight: 600; transform: scaleX(109.285%);` +
-                `text-shadow: rgba(0, 0, 0, 0.4) calc(${radius} * 0.004) calc(${radius} * 0.004);` +
+                `text-shadow: rgba(0, 0, 0, 0.4) calc(${faceWidth} * 0.004) calc(${faceWidth} * 0.004);` +
                 `background: linear-gradient(135deg, #eee 80%, #ccc); -webkit-background-clip: text; -webkit-text-fill-color: transparent;`);
             childLogo.innerHTML = "&Omega;";
 
             childCI.setAttribute('style',
                 `position: absolute; top: 23.8019%; width: 100%; height: 100%; text-align: center; color: ${handsColor}; font-size: ${fontSizeCI}; font-family: Arial, Helvetica, Sans-Serif; font-weight: 500; ` +
-                `text-shadow: rgba(0, 0, 0, 0.1) calc(${radius} * 0.004) calc(${radius} * 0.004);`);
+                `text-shadow: rgba(0, 0, 0, 0.1) calc(${faceWidth} * 0.004) calc(${faceWidth} * 0.004);`);
             childCI.innerText = "OMEGA";
 
             childBrand.setAttribute('style',
                 `position: absolute; top: 29.1019%; width: 100%; height: 100%; text-align: center; color: ${handsColor}; font-size: ${fontSizeBrand}; font-family: Georgia, Times New Roman, Times, Serif; font-weight: 300; font-style: italic; transform: scaleX(105%);` +
-                `text-shadow: rgba(0, 0, 0, 0.1) calc(${radius} * 0.004) calc(${radius} * 0.004);`);
+                `text-shadow: rgba(0, 0, 0, 0.1) calc(${faceWidth} * 0.004) calc(${faceWidth} * 0.004);`);
             childBrand.innerText = "Speedmaster";
 
             childProduct.setAttribute('style',
                 `position: absolute; top: 33.4019%; width: 100%; height: 100%; text-align: center; color: ${handsColor}; font-size: ${fontSizeProduct}; font-family: Verdana, Geneva, Sans-Serif; font-weight: 100; transform: scaleX(109%); letter-spacing: 1px;` +
-                `text-shadow: rgba(0, 0, 0, 0.1) calc(${radius} * 0.004) calc(${radius} * 0.004);`);
+                `text-shadow: rgba(0, 0, 0, 0.1) calc(${faceWidth} * 0.004) calc(${faceWidth} * 0.004);`);
             childProduct.innerText = "PROFESSIONAL";
 
             child.appendChild(childLogo);
@@ -1072,8 +1072,9 @@ window.onload = () => {
                 `box-shadow: rgba(0,0,0,0.2) 0.1rem 0.1rem 0.2rem 0.2rem, rgba(255,255,255,0.6) -0.1rem -0.1rem 0.2rem 0.2rem`
             );
             glassElement.setAttribute('style',
-                `background: linear-gradient(135deg, #B9B9B9, #232323, #B8B8B8);` +
-                `box-shadow: rgba(0,0,0,0.5) 0.1rem 0.1rem 0.2rem 0.2rem inset, rgba(255,255,255,0.7) -0.1rem -0.1rem 0.2rem 0.2rem inset`
+                // `background: linear-gradient(135deg, #B9B9B9, #232323, #B8B8B8);` +
+                `background: linear-gradient(135deg, #515151 12%, #C5C5C5 20%, #B9B9B9 24%, #232323 50%, #E9E9E9 95%, #B8B8B8);` +
+                `box-shadow: rgba(0,0,0,0.5) 0.2rem 0.2rem 0.4rem 0.4rem inset, rgba(255,255,255,0.7) -0.2rem -0.2rem 0.4rem 0.4rem inset`
             );
         })();
 
@@ -1083,6 +1084,150 @@ window.onload = () => {
                 `background: #2A2A2A` +
                 `` // `box-shadow: rgba(0,0,0,0.5) 0.15rem 0.15rem 0.4rem 0.4rem inset, rgba(255,255,255,0.7) -0.15rem -0.15rem 0.4rem 0.4rem inset`
             );
+
+            const childUL = document.createElement('ul');
+            childUL.setAttribute('style', 'position: absolute; left:0; right: 0; top: 0; bottom: 0; z-index: 11;');
+            bezelElement.appendChild(childUL);
+
+            // dots and texts
+            [...Array(27).keys()].forEach(it => {
+                const child = document.createElement('li');
+                const childInner = document.createElement('div');
+                const childText = document.createElement('div');
+                const speed = 60 + it * 5 +
+                    (it > 6 ? (it - 6) * 5 : 0) +
+                    (it > 17 ? (it - 17) * 15 : 0) +
+                    (it > 21 ? (it - 21) * 25 : 0);
+                let time = 3600 / speed;
+                if (it === 26) {
+                    time = 11.0;
+                    childText.innerHTML = "TACHYM&Egrave;TRE";
+                } else {
+                    if (it !== 24) {
+                        childText.innerText = speed;
+                    }
+                }
+                const theta = 2 * Math.PI / (60) * (time);
+
+                child.setAttribute(
+                    'style',
+                    `position: absolute; ` +
+                    `display: flex; ` +
+                    `width: 91.6752%; ` +
+                    `height: 91.6752%; ` +
+                    `margin: 4.1624%; ` +
+                    `justify-content: center; ` +
+                    `color: ${handsColor}; ` +
+                    `transform: rotateZ(${theta}rad);`
+                );
+
+                let indexWidthRatio;
+                indexWidthRatio = 0.008871989;
+                const indexWidth = `calc(${faceWidth} * ${indexWidthRatio})`;
+
+                childInner.setAttribute('style', `position: absolute; width: ${indexWidth}; height: ${indexWidth}; background: ${indexColor}; border-radius: 50%;`);
+                if (it < 26) {
+                    const childTextTopRatio = -0.049;
+                    const childTextTop = `calc(${faceWidth} * ${childTextTopRatio})`;
+                    const childFontSize = `calc(var(--faceWidth) * 0.040127)`;
+                    let childTranslateX = `0`;
+                    let childTranslateY = `0`;
+                    if (it > 21) {
+                        childTranslateX = `calc(var(--faceWidth) * -0.0150127)`;
+                        childTranslateY = `calc(var(--faceWidth) * -0.015127 * (1 - (${it} - 21) * 0.1))`;
+                    } else if (it > 19) {
+                        childTranslateX = `calc(var(--faceWidth) * -0.0100127)`;
+                        childTranslateY = `calc(var(--faceWidth) * -0.023127)`;
+                    } else if (it > 17) {
+                        childTranslateX = `calc(var(--faceWidth) * -0.0100127)`;
+                        childTranslateY = `calc(var(--faceWidth) * 0.023127)`;
+                    } else if (it > 13) {
+                        childTranslateX = `calc(var(--faceWidth) * -0.0200127)`;
+                        childTranslateY = `calc(var(--faceWidth) * 0.013127)`;
+                    }
+                    childText.setAttribute('style',
+                         `position: absolute; top: ${childTextTop}; ` +
+                         `transform: rotateZ(-${theta}rad) scaleX(78.6597%) translateX(${childTranslateX}) translateY(${childTranslateY}); font-size: ${childFontSize};`);
+                    child.appendChild(childInner);
+                } else {
+                    const childFontSize = `calc(var(--faceWidth) * 0.035)`;
+                    childText.innerHTML = `
+                        <svg viewBox="0 0 500 500" preserveAspectRatio="slice">
+                        <path id="curve" fill="transparent" d="M73.2,148.6c4-6.1,65.5-96.8,178.6-95.6c111.3,1.2,170.8,90.3,175.1,97" />
+                        <text width="500" style="fill: ${handsColor}; transform: rotateZ(-2deg);">
+                            <textPath xlink:href="#curve">
+                            TACHYM&Egrave;TRE
+                            </textPath>
+                        </text>
+                        </svg>`;
+                    child.setAttribute(
+                        'style',
+                        `position: absolute; ` +
+                        `display: flex; ` +
+                        `width: 116%; ` +
+                        `height: 116%; ` +
+                        `margin: -8%; ` +
+                        `justify-content: center; ` +
+                        `color: ${handsColor}; ` +
+                        `transform: rotateZ(${theta}rad);`
+                    );
+                    childText.setAttribute('style', 
+                    `position: absolute; letter-spacing: calc(var(--faceWidth) * 0.005); ` +
+                    `width: 100%; height: 100%; ` + 
+                    `font-family: Verdana, Geneva, Sans-Serif; font-size: ${childFontSize};`);
+                }
+                child.appendChild(childText);
+
+                childUL.appendChild(
+                    child
+                );
+            });
+
+            // index
+            [...Array(48).keys()].forEach(it => {
+                if ((it <= 30 && it % 5 === 0) || (it > 39 && it % 2 === 0)) {
+                    return;
+                }
+                const child = document.createElement('li');
+                const childInner = document.createElement('div');
+                const speed = 60 + it * 1 +
+                    (it > 40 ? (it - 40) * 4 : 0);
+                let time = 3600 / speed;
+                const theta = 2 * Math.PI / (60) * (time);
+                child.setAttribute(
+                    'style',
+                    `position: absolute; ` +
+                    `display: flex; ` +
+                    `width: 100%; ` +
+                    `height: 100%; ` +
+                    `margin: 0; ` +
+                    `justify-content: center; ` +
+                    `transform: rotateZ(${theta}rad);`
+                );
+
+                let indexWidthRatio;
+                indexWidthRatio = 0.0026;
+                const indexWidth = `calc(${faceWidth} * ${indexWidthRatio})`;
+
+                let indexHeightRatio;
+                let indexTopRatio;
+                if (it % 5 === 0 || it > 39) {
+                    indexHeightRatio = 0.025313;
+                    indexTopRatio = 0.0385472;
+                } else {
+                    indexTopRatio = 0.0470998;
+                    indexHeightRatio = 0.0167604;
+                }
+                const indexHeight = `calc(${faceWidth} * ${indexHeightRatio})`;
+                const indexTop = `calc(${faceWidth} * ${indexTopRatio})`;
+
+                childInner.setAttribute('style', `position: relative; top: ${indexTop}; width: ${indexWidth}; height: ${indexHeight}; background: ${indexColor};`);
+
+                child.appendChild(childInner);
+                childUL.appendChild(
+                    child
+                );
+            });
         })();
 
         // case
@@ -1104,9 +1249,9 @@ window.onload = () => {
 
                 button1Outer.setAttribute('style', `position: absolute; width: 100%; height: 100%; transform: rotateZ(${theta}deg); pointer-events: none;`);
 
-                const button1Width = `calc(${radius} *0.1566131751)`;
-                const button1Height = `calc(${radius} * 0.1125086997271)`;
-                const button1Top = `calc(${radius} * -0.1025086997271)`;
+                const button1Width = `calc(${faceWidth} *0.1566131751)`;
+                const button1Height = `calc(${faceWidth} * 0.1125086997271)`;
+                const button1Top = `calc(${faceWidth} * -0.1025086997271)`;
 
                 button1.setAttribute('style',
                     `position: relative; top: ${button1Top}; width: ${button1Width}; height: ${button1Height}; margin: 0 auto; background: #C9C9C9; pointer-events: auto;`
@@ -1166,24 +1311,24 @@ window.onload = () => {
                 }
             };
 
-            createButton('66.41', null, true, () => { 
+            createButton('66.41', null, true, () => {
                 if (chronographMillis !== 0) {
                     chronographStartTime = (new Date()) - chronographMillis;
                 } else {
-                    chronographStartTime = new Date(); 
+                    chronographStartTime = new Date();
                     chronographMillis = 0;
                 }
-                chronographWork = !chronographWork; 
+                chronographWork = !chronographWork;
                 saveData();
             });
             createButton('90', 'stripe', false, null);
-            createButton('113.59', null, true, () => { 
-                chronographWork = false; 
+            createButton('113.59', null, true, () => {
+                chronographWork = false;
                 chronographStartTime = null;
                 chronographMillis = 0;
-                linkedSubhand1Element?.removeAttribute('style'); 
-                linkedSubhand2Element?.removeAttribute('style'); 
-                linkedSubhand3Element?.removeAttribute('style'); 
+                linkedSubhand1Element?.removeAttribute('style');
+                linkedSubhand2Element?.removeAttribute('style');
+                linkedSubhand3Element?.removeAttribute('style');
                 saveData();
             });
         })();
