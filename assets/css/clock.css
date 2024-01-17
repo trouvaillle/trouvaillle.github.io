@@ -1,5 +1,5 @@
 :root {
-    --ratio: 66;
+    --ratio: 65;
     --faceWidth: min(min(1vh, 1vw) * var(--ratio), 720px);
     --glassWidth: calc(var(--faceWidth) * (1 + 0.053232 * 2));
     --bezelWidth: calc(var(--faceWidth) * (1 + 0.053232 * 2 + 0.067174 * 2));
