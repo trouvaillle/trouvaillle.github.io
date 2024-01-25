@@ -16,10 +16,14 @@ html {
 }
 
 body {
-  margin: 1rem 3rem 0 3rem;
+  margin: 1rem 2rem 0 2rem;
 }
 
 @media screen and (max-width: 760px) {
+  html {
+    font-size: 12px;
+  }
+  
   .post-title, .post-content, h1 {
     font-size: 1.525rem;
     letter-spacing: -1px;
