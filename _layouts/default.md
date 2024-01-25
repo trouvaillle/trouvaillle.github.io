@@ -4,6 +4,7 @@ layout: default
 <head>
   <meta name="google-site-verification" content="Up4NMaytjs0u212Seq63B4_XdJdBWrvUOVROrWpg5cc" />
   <meta name="naver-site-verification" content="ca101c91aa6dd3f888eefb8a4894a628c9c75ff4" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="/assets/css/style.css"/>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-3VSF418X77"></script>

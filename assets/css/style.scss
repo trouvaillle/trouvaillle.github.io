@@ -9,12 +9,6 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap');
 @import url('https://fonts.googleapis.com/css?family=JetBrains+Mono&display=swap');
 
-:root {
-  --highlight: white;
-  --background: #181818;
-  --color: #ccc;
-}
-
 html {
   color: var(--color);
   font-family: 'Noto Sans KR', Arial, Helvetica, sans-serif;
@@ -22,8 +16,61 @@ html {
 }
 
 body {
-  margin: 1rem 1rem 0 1rem;
+  margin: 1rem 3rem 0 3rem;
 }
+
+@media screen and (max-width: 760px) {
+  .post-title, .post-content, h1 {
+    font-size: 1.525rem;
+    letter-spacing: -1px;
+    line-height: 1.15;
+  }
+
+  .post-content h2 {
+    font-size: 1.313rem;
+  }
+
+  .post-content h3 {
+    font-size: 1.2rem;
+  }
+
+  .post-content h4 {
+      font-size: 1.15rem;
+  }
+
+  .post-content h5 {
+      font-size: 1.1rem;
+  }
+
+  .post-content h6 {
+      font-size: 1.05rem;
+  }
+
+  .post-link {
+      font-size: 1.1rem;
+  }
+
+  .post-list > li {
+      margin-bottom: 16px;
+  }
+
+  .excerpt {
+    color: #999;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+  }
+
+  blockquote {
+    font-size: 1rem;
+  }
+}
+
+:root {
+  --highlight: white;
+  --background: #181818;
+  --color: #ccc;
+}
+
 
 .site-title, .site-title:visited {
   color: var(--highlight);
@@ -223,60 +270,5 @@ blockquote {
   padding: 1.5rem 0.5rem 1.5rem 1rem;
   p {
     margin: 0;
-  }
-}
-
-
-@media screen and (max-width: 760px) {
-  html {
-    font-size: calc(min(min(4vw, 4vh), 32px));
-  }
-
-  body {
-    margin: 1rem 1rem 0 1rem;
-  }
-
-  .post-title, .post-content, h1 {
-    font-size: 1.525rem;
-    letter-spacing: -1px;
-    line-height: 1.15;
-  }
-
-  .post-content h2 {
-    font-size: 1.313rem;
-  }
-
-  .post-content h3 {
-    font-size: 1.2rem;
-  }
-
-  .post-content h4 {
-      font-size: 1.15rem;
-  }
-
-  .post-content h5 {
-      font-size: 1.1rem;
-  }
-
-  .post-content h6 {
-      font-size: 1.05rem;
-  }
-
-  .post-link {
-      font-size: 1.1rem;
-  }
-
-  .post-list > li {
-      margin-bottom: 16px;
-  }
-
-  .excerpt {
-    color: #999;
-    font-size: 0.9rem;
-    margin-top: 1rem;
-  }
-
-  blockquote {
-    font-size: 1rem;
   }
 }
