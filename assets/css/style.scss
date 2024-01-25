@@ -227,7 +227,7 @@ blockquote {
 }
 
 
-@media (max-width: 600px) {
+@media screen and (max-width: 760px) {
   html {
     font-size: calc(min(min(4vw, 4vh), 32px));
   }
