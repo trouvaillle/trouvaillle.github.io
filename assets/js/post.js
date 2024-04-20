@@ -10,7 +10,7 @@ window.onload = () => {
 
     let progressIndicatorOuter = document.querySelector('#progress-indicator-outer');
     if (progressIndicatorOuter == null) {
-        let contentElement = document.querySelector('body > main > div > article > div.post-content.e-content');
+        let contentElement = document.querySelector('body');
         if (contentElement != null) {
             let div = document.createElement('div');
             div.id = "progress-indicator-outer";
