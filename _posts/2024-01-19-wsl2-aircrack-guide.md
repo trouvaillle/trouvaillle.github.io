@@ -4,7 +4,7 @@ title: "WSL2 aircrack guide"
 date: 2024-01-18 01:38:00 +0900
 categories: tip
 comments: true
-visible: true
+visible: false
 ---
 ### WSL2 aircrack guide
 1. get version of wsl

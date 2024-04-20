@@ -21,9 +21,19 @@ a {
 .pagination {
     display: flex;
     margin: 0 auto;
+
     li {
         list-style-type: none;
-        margin: 0 8px;
+
+        a, div {
+            padding: 0 4px;
+            margin: 0 4px;
+            border-radius: 4px;
+        }
+
+        div.current-page {
+            color: var(--background);
+        }
     }
 }
 
