@@ -9,6 +9,12 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap');
 @import url('https://fonts.googleapis.com/css?family=JetBrains+Mono&display=swap');
 
+:root {
+  --highlight: white;
+  --background: #181818;
+  --color: #ccc;
+}
+
 html {
   color: var(--color);
   font-family: 'Noto Sans KR', Arial, Helvetica, sans-serif;
@@ -33,12 +39,6 @@ body {
   blockquote {
     font-size: 1rem;
   }
-}
-
-:root {
-  --highlight: white;
-  --background: #181818;
-  --color: #ccc;
 }
 
 h1, h2, h3, h4, h5, h6 {
