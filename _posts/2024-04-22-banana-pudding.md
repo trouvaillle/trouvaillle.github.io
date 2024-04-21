@@ -17,6 +17,7 @@ visible: true
 ## Recipe
 ### Custard cream
 > 1 hours before make a banana pudding
+
 1. 노른자와 설탕을 넣고 섞은 후 밀가루를 넣어 덩어리가 지지 않도록 섞어준다. 
 2. 우유가 끓지 않을 정도로만 데운 후에 버터를 넣어 녹인다. 
 3. 버터를 녹인 우유에 1번에서 만든 것을 넣고 약불에 올려 천천히 저어준다. 
