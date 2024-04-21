@@ -26,7 +26,7 @@ header_pages:
 <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
     <div class="prev">
-        <a class="prev" href="{{ base_url }}">&laquo; back</a>
+        <a class="prev" href="https://trouvaillle.github.io">&laquo; back</a>
     </div>
     <header class="post-header">
         <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
