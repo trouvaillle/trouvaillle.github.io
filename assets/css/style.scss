@@ -44,6 +44,10 @@ body {
   border-bottom: 1px solid var(--header-border)
 }
 
+.header a {
+  border: none;
+}
+
 .container {
   left: 0;
   right: 0;
@@ -110,6 +114,7 @@ img {
 
 a, a:visited {
   color: var(--highlight);
+  border-bottom: 1px solid var(--highlight);
 }
 
 a:hover {
@@ -169,6 +174,7 @@ td, th {
 
 .post-page-navigation a {
   color: var(--point);
+  border: none;
 }
 
 .post-page-navigation .prev {
@@ -195,6 +201,7 @@ td, th {
 
 .post .prev a {
   color: var(--point);
+  border: none;
 }
 
 
