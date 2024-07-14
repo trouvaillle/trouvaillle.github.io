@@ -302,3 +302,5 @@ google_analytics: G-3VSF418X77
 
 show_excerpts: true
 github_url: https://github.com/trouvaillle
+
+date_format: "%Y-%m-%d"

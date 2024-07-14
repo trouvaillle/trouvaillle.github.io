@@ -13,32 +13,40 @@
   --highlight: white;
   --background: #181818;
   --color: #ccc;
+  --excerpt: #ccc;
+  --header-border: #333;
 }
 
 html {
+  background: var(--background);
   color: var(--color);
   font-family: 'Noto Sans KR', Arial, Helvetica, sans-serif;
   font-size: 16px;
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 3rem;
+  position: absolute;
+  left: 0;
+  right: 0;;
+  margin: 0;
+  padding: 0;
 }
 
-@media screen and (max-width: 760px) {
-  html {
-    font-size: 14px;
-  }
+.header {
+  left: 0;
+  right: 0;
+  padding: 1rem 3rem;
+  border-bottom: 1px solid var(--header-border)
+}
 
-  .excerpt {
-    color: #999;
-    font-size: 0.9rem;
-    margin-top: 1rem;
-  }
-
-  blockquote {
-    font-size: 1rem;
-  }
+.container {
+  left: 0;
+  right: 0;
+  padding: 3rem;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -61,19 +69,23 @@ h3 {
 }
 
 h4 {
-    font-size: 1.15rem;
+  font-size: 1.15rem;
 }
 
 h5 {
-    font-size: 1.1rem;
+  font-size: 1.1rem;
 }
 
 h6 {
-    font-size: 1.05rem;
+  font-size: 1.05rem;
+}
+
+img {
+  width: 100%;
 }
 
 .post-link {
-    font-size: 1.1rem;
+  font-size: 1.1rem;
 }
 
 .site-title, .site-title:visited {
@@ -106,9 +118,10 @@ table {
 }
 
 .excerpt {
-  color: #999;
+  color: var(--excerpt);
   font-size: 1rem;
-  margin-top: 1rem;
+  margin-top: 2rem;
+  line-height: 1.5rem;
 }
 
 #progress-indicator-outer {
@@ -275,6 +288,16 @@ blockquote {
   padding: 1.5rem 0.5rem 1.5rem 1rem;
   margin-inline-start: 1rem;
   p {
-    margin: 0;
+  margin: 0;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  html {
+  font-size: 14px;
+  }
+
+  blockquote {
+  font-size: 1rem;
   }
 }

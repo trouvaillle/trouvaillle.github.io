@@ -5,10 +5,6 @@ layout: default
   <script src="/assets/js/post.js"></script>
 </head>
 <div class="home">
-  {%- if page.title -%}
-    <h1 class="page-heading">{{ page.title }}</h1>
-  {%- endif -%}
-
   {{ content }}
 
 
@@ -24,7 +20,7 @@ layout: default
       <h2 class="post-list-heading">{{ page.list_title }}</h2>
     {%- endif -%}
     <ul class="post-list">
-      {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+      {%- assign date_format = site.date_format | default: "%b %-d, %Y" -%}
       {%- for post in posts -%}
       {%- if post.visible == true or post.visible == "true" or post.visible == nul -%}
       {%- assign words = post.content | number_of_words -%}
