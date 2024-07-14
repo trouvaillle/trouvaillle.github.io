@@ -22,7 +22,11 @@ layout: default
     crossorigin="anonymous"></script>
 </head>
 <div class="header">
-  <h1 class="page-heading">{{ site.title }}</h1>
+  <h1 class="page-heading">
+    <a href="{{ site.url }}">
+      {{ site.title }}
+    </a>
+  </h1>
 </div>
 <div class="container">
 {{ content }}
