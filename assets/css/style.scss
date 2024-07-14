@@ -164,6 +164,7 @@ td, th {
 .post-page-navigation {
   display: flex;
   margin: 0 0 3rem 0;
+  font-size: 1.5rem;
 }
 
 .post-page-navigation a {
@@ -172,7 +173,7 @@ td, th {
 
 .post-page-navigation .prev {
   flex: 1 1;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: 400;
   justify-content: left;
   text-align: left;
@@ -180,7 +181,7 @@ td, th {
 
 .post-page-navigation .next {
   flex: 1 1;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-weight: 400;
   justify-content: right;
   text-align: right;
@@ -328,10 +329,22 @@ blockquote {
 
 @media screen and (max-width: 760px) {
   html {
-  font-size: 14px;
+    font-size: 14px;
+  }
+  
+  .header {
+    padding: 1rem;
+  }
+
+  .container {
+    padding: 1rem;
   }
 
   blockquote {
-  font-size: 1rem;
+    font-size: 1rem;
+  }
+
+  .pager {
+    font-size: 1.5rem;
   }
 }
