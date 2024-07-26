@@ -10,14 +10,26 @@
 @import url('https://fonts.googleapis.com/css?family=JetBrains+Mono&display=swap');
 
 :root {
-  --highlight: white;
-  --background: #181818;
-  --color: #ccc;
-  --excerpt: #ccc;
-  --header-border: #333;
+  --highlight: black;
+  --background: white;
+  --color: black;
+  --excerpt: black;
+  --header-border: #ddd;
   --point: #75a590;
+  --code-background: #334; /* #bbb; */
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --highlight: white;
+    --background: #181818;
+    --color: #ccc;
+    --excerpt: #ccc;
+    --header-border: #333;
+    --point: #75a590;
+    --code-background: #334;
+  }
+}
 html {
   background: var(--background);
   color: var(--color);
@@ -224,14 +236,6 @@ td, th {
   background: transparent;
 }
 
-code, code.highlight, pre, pre.highlight {
-  background: rgba(110,118,129,0.16) !important;
-}
-
-pre > code { 
-  background: transparent !important;
-}
-
 header.site-header {
   z-index: 10;
 }
@@ -297,13 +301,22 @@ header.site-header.attached.fixed {
   font-size: 1.2rem;
 }
 
+code, code.highlight, pre, pre.highlight {
+  background: var(--code-background) !important;
+}
+
+pre > code { 
+  background: transparent !important;
+}
+
 pre, code {
   border: none;
   border-radius: 6px;
 }
 
 pre {
-  padding: 0.5rem 1rem;
+  tab-size: 4;
+  padding: 1rem 1rem;
   overflow-y: hidden;
   overflow-x: scroll;
   -ms-overflow-style: none;

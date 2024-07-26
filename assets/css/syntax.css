@@ -1,3 +1,19 @@
+/*
+:root {
+  --code-text: #080808;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --code-text: #f8f8f2;
+  }
+}
+*/
+
+:root {
+  --code-text: #f8f8f2;
+}
+
 .highlight table td { padding: 5px !important; }
 .highlight table pre { margin: 0 !important; }
 .highlight .c, .highlight .ch, .highlight .cd, .highlight .cpf {
@@ -23,7 +39,7 @@
   font-style: italic !important;
 }
 .highlight .err {
-  color: #f8f8f2 !important;
+  color: var(--code-text) !important;
   background-color: #403d3d !important;
 }
 .highlight .gi {
@@ -170,40 +186,40 @@
   color: #66d9ef !important;
 }
 .highlight .bp {
-  color: #f8f8f2 !important;
+  color: var(--code-text) !important;
 }
 .highlight .nb {
-  color: #f8f8f2 !important;
+  color: #1ea9ea !important;
 }
 .highlight .ni {
-  color: #f8f8f2 !important;
+  color: var(--code-text) !important;
 }
 .highlight .nn {
-  color: #f8f8f2 !important;
+  color: var(--code-text) !important;
 }
 .highlight .vc {
-  color: #f8f8f2 !important;
+  color: var(--code-text) !important;
 }
 .highlight .vg {
-  color: #f8f8f2 !important;
+  color: var(--code-text) !important;
 }
 .highlight .vi {
-  color: #f8f8f2 !important;
+  color: var(--code-text) !important;
 }
 .highlight .nv, .highlight .vm {
-  color: #f8f8f2 !important;
+  color: var(--code-text) !important;
 }
 .highlight .w {
-  color: #f8f8f2 !important;
+  color: var(--code-text) !important;
 }
 .highlight .nl {
-  color: #f8f8f2 !important;
+  color: var(--code-text) !important;
   font-weight: bold !important;
 }
 .highlight .nt {
   color: #f92672 !important;
 }
 .highlight {
-  color: #f8f8f2 !important;
+  color: var(--code-text) !important;
   background-color: #1b1d1e;
 }
