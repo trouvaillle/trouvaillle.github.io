@@ -68,6 +68,7 @@ body {
   left: 0;
   right: 0;
   padding: 3rem;
+  overflow: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -184,6 +185,12 @@ td, th {
   transition: 0.1s;
 }
 
+.post .prev {
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+}
+
 .post-page-navigation {
   display: flex;
   margin: 0 0 3rem 0;
@@ -209,12 +216,6 @@ td, th {
   font-weight: 400;
   justify-content: right;
   text-align: right;
-}
-
-.post .prev {
-  font-size: 1.2rem;
-  font-weight: 400;
-  margin-bottom: 1rem;
 }
 
 .post .prev a {
