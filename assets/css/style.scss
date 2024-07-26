@@ -241,11 +241,11 @@ header.site-header.attached.fixed {
   left: 0; 
   top: 0;
   width: 100%;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  -moz-backdrop-filter: blur(16px);
-  -ms-backdrop-filter: blur(16px);
-  -o-backdrop-filter: blur(16px);
+  backdrop-filter: blur(1rem);
+  -webkit-backdrop-filter: blur(1rem);
+  -moz-backdrop-filter: blur(1rem);
+  -ms-backdrop-filter: blur(1rem);
+  -o-backdrop-filter: blur(1rem);
 }
 
 .post-title {
