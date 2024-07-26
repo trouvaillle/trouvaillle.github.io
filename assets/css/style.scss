@@ -15,6 +15,8 @@
   --color: black;
   --excerpt: black;
   --header-border: #ddd;
+  --kbd-background: #bbb2;
+  --kbd-border: #bbb;
   --point: #75a590;
   --code-background: #334; /* #bbb; */
 }
@@ -26,6 +28,8 @@
     --color: #ccc;
     --excerpt: #ccc;
     --header-border: #333;
+    --kbd-background: #5552;
+    --kbd-border: #555;
     --point: #75a590;
     --code-background: #262636;
   }
@@ -355,6 +359,20 @@ blockquote {
   p {
     margin: 0;
   }
+}
+
+kbd {
+  display: inline-block;
+  padding: 0.5rem;
+  font: 0.875rem ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+  line-height: 0.7rem;
+  color: var(--highlight);
+  vertical-align: middle;
+  background-color: var(--kbd-background);
+  border: solid 0.07rem var(--kbd-border);
+  border-bottom-color: var(--kbd-border);
+  border-radius: 0.45rem;
+  box-shadow: inset 0 -1px 0 var(--header-border);
 }
 
 @media screen and (max-width: 760px) {
