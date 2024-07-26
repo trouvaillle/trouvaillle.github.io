@@ -25,9 +25,9 @@ layout: default
       {%- assign words = post.content | number_of_words -%}
       <li>
         <a class="post-link" href="{{ post.url | relative_url }}">
-          <div><h3>{{ post.title | escape }}</h3></div>
+          <div><h1>{{ post.title | escape }}</h1></div>
           <div class="post-meta-wrapper">
-            <span class="post-meta">{{- post.date | date: date_format }} &middot; {{ words | divided_by:180 }} min read</span>
+            <span class="post-meta">{{ post.categories }} &middot; {{ post.date | date: date_format }} &middot; {{ words | divided_by:180 }} min read</span>
           </div>
           {%- if site.show_excerpts -%}
           <div class="excerpt">{{ post.content | strip_html | truncate: 200 }}</div>
