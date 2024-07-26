@@ -377,6 +377,10 @@ kbd {
   box-shadow: inset 0 -1px 0 var(--header-border);
 }
 
+table tr:nth-child(2n) {
+  background: var(--kbd-background);
+}
+
 @media screen and (max-width: 760px) {
   html {
     font-size: 14px;
@@ -396,5 +400,9 @@ kbd {
 
   .pager {
     font-size: 1.5rem;
+  }
+
+  a:hover {
+    text-shadow: none;
   }
 }
