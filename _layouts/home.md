@@ -5,6 +5,9 @@ layout: default
   <script src="/assets/js/post.js"></script>
 </head>
 <div class="home">
+  <!--
+  <input type="text" name="query" placeholder="search..." value={{ query }}></input>
+  -->
   {{ content }}
 
   {% if site.paginate %}
