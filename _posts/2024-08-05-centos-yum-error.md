@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "CentOS yum error"
-date: 2024-07-27 02:18:00 +0900
+date: 2024-08-05 11:40:00 +0900
 categories: tip
 comments: true
 visible: true
