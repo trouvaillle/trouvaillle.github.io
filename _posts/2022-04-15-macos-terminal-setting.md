@@ -116,17 +116,21 @@ set softtabstop=4
 set tabstop=4
 set ruler
 set incsearch
-set statusline=\ %<%l:%v\ [%P]%=%a\ %h%m%r\ %F\
-:hi CursorLine   cterm=NONE ctermbg=yellow ctermfg=white guibg=yellow guifg=white
+"" set statusline=\ %<%l:%v\ [%P]%=%a\ %h%m%r\ %F\
+"" :hi CursorLine   cterm=NONE ctermbg=yellow ctermfg=white guibg=yellow guifg=white
 :hi CursorColumn cterm=NONE ctermbg=yellow ctermfg=white guibg=yellow guifg=white
-augroup CursorLine
-  au!
-  au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
-  au WinLeave * setlocal nocursorline
-augroup END
+"" augroup CursorLine
+""   au!
+""   au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+""   au WinLeave * setlocal nocursorline
+"" augroup END
 EOF
 ```
 
+```
+vi ~/.zshrc
+alias vi=vim
+```
 
 ### 참고. iTerm 기능
 * Split view
