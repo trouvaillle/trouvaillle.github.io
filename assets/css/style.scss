@@ -136,9 +136,10 @@ a, a:visited {
 }
 
 a:hover {
-  font-weight: bold;
+  /* font-weight: bold; */
   text-decoration: none;
-  text-shadow: 0 0 0.1rem var(--highlight);
+  /* text-shadow: 0 0 0.1rem var(--highlight); */
+  color: var(--point);
 }
 
 ul {
