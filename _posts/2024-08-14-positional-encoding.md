@@ -7,7 +7,7 @@ comments: true
 visible: true
 ---
 
-Positional Embedding 중 [Attention is all you need](https://arxiv.org/pdf/1706.03762)에 사용된 sinusoid 함수는 특별하다.
+Positional Encoding 중 [Attention is all you need](https://arxiv.org/pdf/1706.03762)에 사용된 sinusoid 함수는 특별하다.
 
 <img src="{{ "/assets/img/posts/2024-08-14-positional-encoding/sinusoid.png" | relative_url }}" width="480px"/>
 
