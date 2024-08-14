@@ -1,4 +1,4 @@
 ---
 layout: category
-title: career
+title: ai
 ---
