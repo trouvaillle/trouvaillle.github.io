@@ -14,7 +14,7 @@ Positional Embedding 중 [Attention is all you need](https://arxiv.org/pdf/1706.
 핵심은 모든 position에서 같은 positional encoding을 보이는 패턴은 없다는 것이다.
 
 위 함수는 아래처럼 엑셀에서 시각화해볼 수 있다.
-경향성을 보기위해 상수 10000은 5로 대체했다.
+경향성을 보기위해 상수 10000은 300으로 대체했다.
 
 각 row의 값(목록)은 모두 unique하다.
 position은 정수이기 때문이다.
