@@ -53,7 +53,7 @@ header_pages:
             {%- if forloop.last == false %}, {% endif -%}
             {%- endfor -%}
             {%- endif -%}
-            &middot; {{ words | divided_by:180 }} min read &middot; written by <a href="https://github.com/trouvaillle">trouvaillle</a>
+            &middot; {{ words | divided_by:180 }} min &middot; written by <a href="https://github.com/trouvaillle">trouvaillle</a>
         </p>
     </header>
 

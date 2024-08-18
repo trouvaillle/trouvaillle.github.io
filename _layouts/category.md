@@ -11,7 +11,7 @@ sidebar_main: true
   {%- if post.visible == true or post.visible == "true" or post.visible == nul -%}
   {%- assign words = post.content | number_of_words -%}
   <li>
-    <span class="post-meta">{{- post.date | date: date_format }} &middot; {{ words | divided_by:180 }} min read</span>
+    <span class="post-meta">{{- post.date | date: date_format }} &middot; {{ words | divided_by:180 }} min</span>
     <h3>
       <a class="post-link" href="{{ post.url | relative_url }}">
         <div>{{ post.title | escape }}</div>

@@ -19,6 +19,7 @@
   --kbd-border: #bbb;
   --point: #75a590;
   --code-background: #334; /* #bbb; */
+  --aside: rgb(241, 241, 239);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -32,8 +33,10 @@
     --kbd-border: #555;
     --point: #75a590;
     --code-background: #262636;
+    --aside: #242424;
   }
 }
+
 html {
   background: var(--background);
   color: var(--color);
@@ -380,6 +383,25 @@ kbd {
 
 table tr:nth-child(2n) {
   background: var(--kbd-background);
+}
+
+dt {
+  font-weight: bold;
+}
+
+aside {
+  position: relative;
+  border-radius: 0.25rem;
+  background: var(--aside);
+  padding: 1rem 1rem 1rem 2.5rem;
+  margin: 0 0 1rem 0;
+}
+
+aside::before {
+  content: attr(mark);
+  position: absolute;
+  left: 1rem;
+  display: inline;
 }
 
 @media screen and (max-width: 760px) {
