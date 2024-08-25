@@ -17,7 +17,7 @@ podman machine start
 
 ```sh
 export KIND_EXPERIMENTAL_PROVIDER=podman
-kind create cluster
+kind create cluster --wait 5m
 ```
 
 ```sh
