@@ -7,7 +7,7 @@ layout: default
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="/assets/css/style.css"/>
   <link rel="icon" type="image/png" href="/favicon.png" />
-
+  <script src="/assets/js/post.js"></script>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-3VSF418X77"></script>
   <script>
@@ -29,16 +29,26 @@ layout: default
         {{ site.title }}
       </a>
     </h1>
+    <div id="menu" class="menu">
+    </div>
+  </div>
+  <div class="floating-sidebar">
+    <div class="floating-transparent">
+    </div>
+    <div class="floating-categories">
+    {%- include category-list-sidebar.html -%}
+    {%- include app-list.html -%}
+    </div>
   </div>
   <div class="wrapper">
     <div class="sidebar">
       <div class="header">
-        <h1 class="page-heading">
-          <a href="{{ site.url }}">
-            {{ site.title }}
-          </a>
-        </h1>
-      </div>
+          <h1 class="page-heading">
+            <a href="{{ site.url }}">
+              {{ site.title }}
+            </a>
+          </h1>
+        </div>
       {%- include category-list-sidebar.html -%}
     </div>
     <div class="container">

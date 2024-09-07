@@ -13,6 +13,7 @@
   --highlight: black;
   --background: white;
   --background-brigther:#eee;
+  --background-brigther-transparent: #0001;
   --color: black;
   --excerpt: black;
   --header-border: #ddd;
@@ -27,9 +28,10 @@
   :root {
     --highlight: white;
     --background: #181818;
+    --background-brigther: #222;
+    --background-brigther-transparent: #ffffff10;
     --color: #ccc;
     --excerpt: #ccc;
-    --background-brigther: #222;
     --header-border: #333;
     --kbd-background: #5552;
     --kbd-border: #555;
@@ -58,6 +60,10 @@ body, #root {
   bottom: 0;
   margin: 0;
   padding: 0;
+}
+
+#root[data-floating-open] {
+  overflow: hidden;
 }
 
 .header {
@@ -152,6 +158,10 @@ a:hover {
 
 ul {
   padding-left: 2rem;
+}
+
+ul.app-list {
+  padding-left: 0;
 }
 
 .site-header {
@@ -489,13 +499,40 @@ article *::selection {
   background: var(--point);
 }
 
+#root > .floating-sidebar {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  
+}
+
+#root > .floating-sidebar[data-open] {
+  display: flex;
+}
+
+#root > .floating-sidebar > .floating-transparent {
+  flex: 1 1;
+  background: var(--background-brigther-transparent);
+  backdrop-filter: blur(0.5rem);
+  -webkit-backdrop-filter: blur(0.5rem);
+  -moz-backdrop-filter: blur(0.5rem);
+  -ms-backdrop-filter: blur(0.5rem);
+  -o-backdrop-filter: blur(0.5rem);
+}
+
+#root > .floating-sidebar > .floating-categories {
+  flex: 3 1;
+  background: var(--background);
+  padding: 2rem;
+  overflow: scroll;
+}
+
 @media screen and (max-width: 760px) {
   html {
     font-size: 14px;
-  }
-  
-  .header {
-    padding: 1rem;
   }
 
   .container {
@@ -514,16 +551,34 @@ article *::selection {
     text-shadow: none;
   }
 
-  .header {
+  #root > .header {
+    display: flex;
     padding: 1rem 1rem;
     border-bottom: 1px solid var(--header-border);
   }
 
-  #root > .header {
-    display: block;
+  #root > .wrapper .sidebar {
+    display: none;
   }
 
-  .wrapper .sidebar {
-    display: none;
+  #root > .header .page-heading {
+    flex: 1 1;
+  }
+
+  #root > .header .menu {
+    position: absolute;
+    right: 1rem;
+    width: 2.8rem;
+    background: var(--background-brigther);
+    height: 2.8rem;
+    border-radius: 0.5rem;
+    color: var(--color);
+    border: 1px solid var(--kbd-border);
+    text-align: center;
+    z-index: 10;
+  }
+
+  #root > .header .menu:hover, #root > .header .menu:active {
+    background: var(--kbd-border);
   }
 }
