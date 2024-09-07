@@ -2,7 +2,7 @@
 layout: post
 title: "1장. 쿠버네티스 소개"
 date: 2024-08-18 17:44:00 +0900
-categories: study kubernetes-up-and-running
+categories: study kuar
 comments: true
 visible: true
 ---

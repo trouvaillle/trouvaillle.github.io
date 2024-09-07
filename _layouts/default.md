@@ -22,13 +22,27 @@ layout: default
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7824775648651112"
     crossorigin="anonymous"></script>
 </head>
-<div class="header">
-  <h1 class="page-heading">
-    <a href="{{ site.url }}">
-      {{ site.title }}
-    </a>
-  </h1>
-</div>
-<div class="container">
-{{ content }}
+<div id="root">
+  <div class="header">
+    <h1 class="page-heading">
+      <a href="{{ site.url }}">
+        {{ site.title }}
+      </a>
+    </h1>
+  </div>
+  <div class="wrapper">
+    <div class="sidebar">
+      <div class="header">
+        <h1 class="page-heading">
+          <a href="{{ site.url }}">
+            {{ site.title }}
+          </a>
+        </h1>
+      </div>
+      {%- include category-list-sidebar.html -%}
+    </div>
+    <div class="container">
+      {{ content }}
+    </div>
+  </div>
 </div>

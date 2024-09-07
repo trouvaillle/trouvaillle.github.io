@@ -12,6 +12,7 @@
 :root {
   --highlight: black;
   --background: white;
+  --background-brigther:#eee;
   --color: black;
   --excerpt: black;
   --header-border: #ddd;
@@ -28,6 +29,7 @@
     --background: #181818;
     --color: #ccc;
     --excerpt: #ccc;
+    --background-brigther: #222;
     --header-border: #333;
     --kbd-background: #5552;
     --kbd-border: #555;
@@ -48,10 +50,12 @@ html {
   padding: 0;
 }
 
-body {
+body, #root {
   position: absolute;
   left: 0;
   right: 0;;
+  top: 0;
+  bottom: 0;
   margin: 0;
   padding: 0;
 }
@@ -59,8 +63,8 @@ body {
 .header {
   left: 0;
   right: 0;
-  padding: 1rem 3rem;
-  border-bottom: 1px solid var(--header-border)
+  padding: 0;
+  margin-bottom: 2rem;
 }
 
 .header a {
@@ -70,7 +74,7 @@ body {
 .container {
   left: 0;
   right: 0;
-  padding: 3rem;
+  padding: 1rem 3rem;
   overflow: hidden;
 }
 
@@ -405,6 +409,86 @@ aside::before {
   display: inline;
 }
 
+#root > .header {
+  display: none;
+}
+
+.wrapper {
+  display: flex;
+  max-width: 1024px;
+  margin: auto;
+}
+
+.wrapper .sidebar {
+  flex: 1 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  font-size: 1rem;
+}
+
+.wrapper .container {
+  flex: 3 1;
+}
+
+.categories {
+  display: flex;
+  flex-direction: column;
+}
+
+.categories .item {
+  display: flex;
+  flex: 1 1;
+  background: var(--background-brigther);
+  border-radius: 0.3rem;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  color: var(--color);
+  border: none;
+}
+
+.categories .item:hover, .categories .item:active {
+  display: flex;
+  flex: 1 1;
+  background: var(--header-border);
+  border-radius: 0.3rem;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.categories .item .title {
+  flex: 3 1;
+}
+
+.categories .item .count {
+  flex: 1 1;
+  text-align: right;
+}
+
+.post-categories {
+  margin-bottom: 1rem;
+}
+
+.post-categories > span.link > a {
+  color: var(--color);
+  border: none;
+  cursor: pointer;
+}
+
+.post-categories > span.link {
+  padding: 0.3rem;
+  border-radius: 0.3rem;
+}
+
+.post-categories > span:hover, .post-categories > span:active {
+  background: var(--header-border);
+}
+
+article *::selection {
+  background: var(--point);
+}
+
 @media screen and (max-width: 760px) {
   html {
     font-size: 14px;
@@ -428,5 +512,18 @@ aside::before {
 
   a:hover {
     text-shadow: none;
+  }
+
+  .header {
+    padding: 1rem 1rem;
+    border-bottom: 1px solid var(--header-border);
+  }
+
+  #root > .header {
+    display: block;
+  }
+
+  .wrapper .sidebar {
+    display: none;
   }
 }

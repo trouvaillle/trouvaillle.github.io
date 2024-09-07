@@ -2,7 +2,7 @@
 layout: post
 title: "2장. 쿠버네티스 생성과 실행"
 date: 2024-08-25 11:00:00 +0900
-categories: study kubernetes-up-and-running
+categories: study kuar
 comments: true
 visible: false
 ---

@@ -2,7 +2,7 @@
 layout: post
 title: "3장. 쿠버네티스 클러스터 배포"
 date: 2024-08-25 16:00:00 +0900
-categories: study kubernetes-up-and-running
+categories: study kuar
 comments: true
 visible: true
 ---

@@ -1,0 +1,45 @@
+{% assign categoriesRaw = site.categories %}
+{% assign categories = "" | split: "" %}
+
+{% for categoryRaw in categoriesRaw %}
+    {% assign array = categoryRaw[1][0].url | split: '/' %}
+    {% assign size = array | size | minus: 2 %}
+    {% assign slicedCategory = array | slice: 1, size | join: '/' %}
+
+    {% assign found = false %}
+
+    {% for category in categories %}
+        {%- if category[0] == slicedCategory -%}
+            {% assign found = true %}
+            {% break %}
+        {%- endif -%}
+    {% endfor %}
+
+    {%- if found == false -%}
+        {% assign item = "" | split: "" %}
+        {% assign item = item | push: slicedCategory %}
+        {% assign arraySize = categoryRaw[1].size %}
+        {% assign item = item | push: arraySize %}
+
+        {% assign categories = categories | push: item %}
+    {%- endif -%}
+{% endfor %}
+{% assign categories = categories | sort %}
+
+<h3 style="padding: 0; margin: 0 0 2rem 0 ;">Categories</h3>
+<div class="categories">
+{% for category in categories %}
+    <a class="item" href={{ "/category/" | append: category[0] }}>
+        <div class="title">
+            {{ category[0] }}
+        </div>
+        <div class="count">
+            {{ category[1] }}
+        </div>
+    </a>
+{% endfor %}
+</div>
+
+<!-- https://shopify.dev/docs/api/liquid/tags/break -->
+<!-- https://shopify.github.io/liquid/basics/types/#boolean -->
+<!-- https://sgwanlee.github.io/dev/jekyll/2016/08/14/jekyll-sub-category/ -->

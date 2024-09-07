@@ -4,29 +4,22 @@ header_pages:
 - _pages/category.md
 - _pages/app.md
 ---
-
-<head>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3VSF418X77"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-
-        gtag('config', 'G-3VSF418X77');
-    </script>
-
-    <!-- Google adsense-->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7824775648651112"
-        crossorigin="anonymous"></script>
-    <script src="/assets/js/post.js"></script>
-
-</head>
-
 <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
-
     <div class="prev">
         <a class="prev" href="/">&laquo; back</a>
+    </div>
+    <div class="post-categories">
+        {% assign link = '/category/' %}
+        {% for category in page.categories %}
+        {% assign link = link | append: category | append: '/' %}
+        <span class="link">
+            <a href={{link}}>{{ category }}</a>
+        </span>
+        {% unless forloop.last %}
+        <span class="divider">/</span>
+        {% endunless %}
+        {% endfor %}
+        <br/>
     </div>
     <header class="post-header">
         <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
