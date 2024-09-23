@@ -1,0 +1,272 @@
+:root {
+    --fore-0: white;
+    --back-0: black;
+}
+
+html {
+    font-size: 14px;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+#root {
+    background: var(--back-0);
+    color: var(--fore-0);
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0; 
+
+    display: flex;
+    flex-direction: column;
+}
+
+/***************** header *****************/
+#root > header {
+    display: flex;
+    padding: 1.5rem 3rem 1.5rem 3rem;
+    font-size: 2rem;
+    flex: 0 1 2rem;
+}
+
+#root > header > div:nth-child(1) {
+    flex: 0 1 4rem;
+    cursor: pointer;
+}
+
+#root > header > div:nth-child(1) > a {
+    color: var(--fore-0);
+    text-decoration: none;
+}
+
+#root > header > div:nth-child(2) {
+    flex: 1 1;
+    display: flex;
+    justify-content: center;
+}
+
+#root > header > div:nth-child(3) {
+    flex: 0 1 4rem;
+}
+
+/***************** section *****************/
+#root > section { 
+    padding: 1.5rem 3rem 3rem 3rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1;
+}
+
+#root > section > #board {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1;
+    padding: 0;
+    margin: 0;
+}
+
+#board .row {
+    display: flex;
+    flex: 1 1;
+    padding: 0;
+    margin: 0;
+}
+
+#board .cell {
+    flex: 1 1;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+#board .cell .item {
+    flex: 1 1;
+    background: #B9B9B8;
+    border-left: 0.4rem solid white;
+    border-right: 0.4rem solid #71706E;
+    border-top: 0.4rem solid white;
+    border-bottom: 0.4rem solid #71706E;
+    cursor: pointer;
+}
+
+#board .cell .item.mousedown {
+    flex: 1 1;
+    background: #B9B9B8;
+    border-left: 0.1rem solid #838383;
+    border-right: 0.1rem solid #838383;
+    border-top: 0.1rem solid #838383;
+    border-bottom: 0.1rem solid #838383;
+    cursor: pointer;
+}
+
+#board .cell .item.mine {
+    background: red;
+}
+
+#board .cell .item.mine::after {
+    content: '💣';
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    transform: translateY(calc(50% - 0.6rem));
+    font-size: 1.2rem;
+}
+
+#board .cell .item.flag::after {
+    content: '⛳️';
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    transform: translateY(calc(50% - 0.6rem));
+    font-size: 1.2rem;
+}
+
+#board .cell .item.question::after {
+    content: '?';
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    color: black;
+    transform: translateY(calc(50% - 1.0rem));
+    font-size: 2rem;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#board .cell .item.number-1::after {
+    content: '1';
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    color: blue;
+    font-weight: bold;
+    transform: translateY(calc(50% - 1.0rem));
+    font-size: 2rem;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#board .cell .item.number-2::after {
+    content: '2';
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    color: green;
+    font-weight: bold;
+    transform: translateY(calc(50% - 1.0rem));
+    font-size: 2rem;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#board .cell .item.number-3::after {
+    content: '3';
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    color: red;
+    font-weight: bold;
+    transform: translateY(calc(50% - 1.0rem));
+    font-size: 2rem;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#board .cell .item.number-4::after {
+    content: '4';
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    color: navy;
+    font-weight: bold;
+    transform: translateY(calc(50% - 1.0rem));
+    font-size: 2rem;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#board .cell .item.number-5::after {
+    content: '5';
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    color: brown;
+    font-weight: bold;
+    transform: translateY(calc(50% - 1.0rem));
+    font-size: 2rem;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#board .cell .item.number-6::after {
+    content: '6';
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    color: teal;
+    font-weight: bold;
+    transform: translateY(calc(50% - 1.0rem));
+    font-size: 2rem;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#board .cell .item.number-7::after {
+    content: '7';
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    color: black;
+    font-weight: bold;
+    transform: translateY(calc(50% - 1.0rem));
+    font-size: 2rem;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#board .cell .item.number-8::after {
+    content: '8';
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    color: grey;
+    font-weight: bold;
+    transform: translateY(calc(50% - 1.0rem));
+    font-size: 2rem;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#board #youwin {
+    visibility: hidden;
+    content: 'You win!';
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    backdrop-filter: blur(0.3rem);
+    font-size: 5rem;
+    font-weight: bold;
+    color: var(--back-0);
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    display: flex;
+    z-index: 10;
+}
+
+#board #youwin::after {
+    content: '😎';
+    transform: translateY(calc(50% - 2.5rem));
+    height: 100%;
+    width: 100%;
+}
