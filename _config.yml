@@ -177,7 +177,7 @@ encoding: "utf-8"
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
 
 # Conversion
-markdown: GFM
+markdown: kramdown
 highlighter: rouge
 lsi: false
 excerpt_separator: "\n\n"
