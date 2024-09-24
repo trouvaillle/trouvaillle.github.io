@@ -7,16 +7,16 @@ window.onload = () => {
   let win = false;
   let score = 0;
   let notClicked = 0;
+  const container =  document.querySelector('#container');
   const board =  document.querySelector('#board');
+  const smiley =  document.querySelector('#smiley');
   const youwin =  document.querySelector('#youwin');
   
   initMap();
   createBoard();
   render();
 
-  function getRandomInt(max) {
-    return Math.floor(Math.random() * max);
-  }
+  window.addEventListener('resize', adjustSize);
 
   function initMap() {
     map = [];
@@ -49,7 +49,15 @@ window.onload = () => {
     notClicked = x * y;
   }
 
+  function adjustSize() {
+    const cellWidth = Math.min(container.clientWidth / x, container.clientHeight / y);
+    console.log(cellWidth);
+    board.setAttribute('style', `width: ${cellWidth * x}px; height: ${cellWidth * y}px; font-size: ${cellWidth * 0.25}px`);
+  }
+
   function createBoard() {
+    adjustSize();
+
     items = [];
     for (let j = 0; j < y; ++j) {
         itemsRow = [];
@@ -64,12 +72,14 @@ window.onload = () => {
                 if (map[j][i] === 0 || map[j][i] === 10 || (map[j][i] >= 12 && map[j][i] <= 15)) {
                     item.classList.add('mousedown');
                     thisItemDown = true;
+                    smiley.innerHTML = '😮';
                 }
             };
             const itemMouseEnter = (item) => (evt) => {
                 evt.preventDefault();
                 if (thisItemDown) {
                     item.classList.add('mousedown');
+                    setSmiley();
                 }
             };
             const itemMouseUp = (item) => (evt) => {
@@ -106,13 +116,15 @@ window.onload = () => {
             };
             const itemMouseLeave = (item) => (evt) => {
                 evt.preventDefault();
-                if (map[j][i] === 0 || map[j][i] === 10 || (map[j][i] >= 12 && map[j][i] <= 15)) {
+                if (map[j][i] === 0 || (!gameover && map[j][i] === 10) || (map[j][i] >= 12 && map[j][i] <= 15)) {
                     item.classList.remove('mousedown');
                     thisItemDown = false;
+                    setSmiley();
                 }
             };
             cell.classList.add('cell');
             item.classList.add('item');
+            item.classList.add('embossed');
             item.addEventListener('mousedown', itemMouseDown(item));
             item.addEventListener('pointerdown', itemMouseDown(item))
             item.addEventListener('mouseenter', itemMouseEnter(item));;
@@ -174,18 +186,39 @@ window.onload = () => {
     }
   }
 
+  function setSmiley() {
+    if (gameover) {
+        if (win) {
+            smiley.innerHTML = '😎';
+        } else {
+            smiley.innerHTML = '😵';
+        }
+    } else {
+        smiley.innerHTML = '🙂';
+    }
+  }
+
   function render() {
     for (let j = 0; j < y; ++j) {
         for (let i = 0; i < x; ++i) {
-            if (map[j][i] === 11) {
+            if (map[j][i] === 11 || (gameover && map[j][i] === 10)) {
+                items[j][i].classList.remove('red');
                 items[j][i].classList.remove('flag');
                 items[j][i].classList.remove('question');
                 items[j][i].classList.add('mine');
+                if (map[j][i] === 11) {
+                    items[j][i].classList.add('red');
+                }
                 items[j][i].classList.add('mousedown');
             } else if (map[j][i] > 0 && map[j][i] < 10) {
+                items[j][i].classList.remove('red');
+                items[j][i].classList.remove('mine');
+                items[j][i].classList.remove('flag');
+                items[j][i].classList.remove('question');
                 items[j][i].classList.add(`number-${map[j][i] - 1}`);
                 items[j][i].classList.add('mousedown');
             } else if (map[j][i] === 0 || map[j][i] === 10) {
+                items[j][i].classList.remove('red');
                 items[j][i].classList.remove('mine');
                 items[j][i].classList.remove('flag');
                 items[j][i].classList.remove('question');
@@ -194,10 +227,12 @@ window.onload = () => {
                     items[j][i].classList.remove(`number-${k}`);
                 }
             } else if (map[j][i] === 12 || map[j][i] === 13) {
+                items[j][i].classList.remove('red');
                 items[j][i].classList.remove('question');
                 items[j][i].classList.add('flag');
                 items[j][i].classList.remove('mousedown');
             } else if (map[j][i] === 14 || map[j][i] === 15) {
+                items[j][i].classList.remove('red');
                 items[j][i].classList.remove('flag');
                 items[j][i].classList.add('question');
                 items[j][i].classList.remove('mousedown');
@@ -208,6 +243,12 @@ window.onload = () => {
     if (!gameover || !win) {
         youwin.removeAttribute('style');
     }
+
+    setSmiley();
+  }
+
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
   }
 
   function getSurroundedMines(a, b) {
@@ -232,6 +273,5 @@ window.onload = () => {
         win = true;
         youwin.setAttribute('style', 'visibility: visible;');
     }
-    console.log(notClicked);
   }
 };
