@@ -14,10 +14,15 @@ window.onload = () => {
   let win = false;
   let score = 0;
   let notClicked = 0;
+  let leftMinesUserThinks = 0;
+  let startTime = 0;
+
   const container =  document.querySelector('#container');
   const board =  document.querySelector('#board');
+  const left =  document.querySelector('#left');
   const smiley =  document.querySelector('#smiley');
-  
+  const time =  document.querySelector('#time');
+
   initMap();
   createBoard();
   render();
@@ -26,13 +31,15 @@ window.onload = () => {
 
   function initMap() {
     map = [];
-    alreadyTaken = new Set();
-    left = mines;
     gameover = false;
     win = false;
     score = 0;
     notClicked = x * y;
+    leftMinesUserThinks = mines;
+    startTime = new Date().getTime();
 
+    let alreadyTaken = new Set();
+    let left = mines;
     while (left > 0) {
         const maxNumber = x * y;
         dice = getRandomInt(maxNumber);
@@ -106,18 +113,26 @@ window.onload = () => {
                             render();
                         } else if (evt.button === 2) {
                             if (map[j][i] === 0) {
-                                map[j][i] = 12;
-                            } else if (map[j][i] === 12) {
-                                map[j][i] = 14;
-                            } else if (map[j][i] === 14) {
+                                map[j][i] = ITEM_FLAG;
+                                --leftMinesUserThinks;
+                                setLeft();
+                            } else if (map[j][i] === ITEM_FLAG) {
+                                map[j][i] = ITEM_QUESTION;
+                                ++leftMinesUserThinks;
+                                setLeft();
+                            } else if (map[j][i] === ITEM_QUESTION) {
                                 map[j][i] = 0;
                             }
-                            if (map[j][i] === 10) {
-                                map[j][i] = 13;
-                            } else if (map[j][i] === 13) {
-                                map[j][i] = 15;
-                            } else if (map[j][i] === 15) {
-                                map[j][i] = 10;
+                            if (map[j][i] === ITEM_MINE) {
+                                map[j][i] = ITEM_FLAG_WITH_MINE;
+                                --leftMinesUserThinks;
+                                setLeft();
+                            } else if (map[j][i] === ITEM_FLAG_WITH_MINE) {
+                                map[j][i] = ITEM_QUESTION_WITH_MINE;
+                                ++leftMinesUserThinks;
+                                setLeft();
+                            } else if (map[j][i] === ITEM_QUESTION_WITH_MINE) {
+                                map[j][i] = ITEM_MINE;
                             }
                             render();
                         }
@@ -224,6 +239,13 @@ window.onload = () => {
   }
 
   function render() {
+    setItems();
+    setSmiley();
+    setLeft();
+    setTime();
+  }
+
+  function setItems() {
     for (let j = 0; j < y; ++j) {
         for (let i = 0; i < x; ++i) {
             if (map[j][i] === ITEM_BOMBED_MINE || (gameover && map[j][i] === ITEM_MINE)) {
@@ -264,8 +286,15 @@ window.onload = () => {
             }
         }
     }
+  }
+  
+  function setLeft() {
+    left.innerHTML = (leftMinesUserThinks < 0 ? 0 : leftMinesUserThinks);
+  }
 
-    setSmiley();
+  function setTime() {
+    const elapsedTime = Math.floor((new Date().getTime() - startTime) / 1000.0);
+    time.innerHTML = elapsedTime;
   }
 
   function getRandomInt(max) {

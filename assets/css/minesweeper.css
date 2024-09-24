@@ -65,10 +65,17 @@ html, body {
     padding: 0.2rem 0.5rem;
 }
 
-#header > #left {
+#header > #left-container {
     flex: 6 1;
     display: flex;
-    justify-content: center;
+    justify-content: start;
+}
+
+#left {
+    color: red;
+    font-family: 'Courier New', Courier, monospace;
+    padding: 0 1rem;
+    font-weight: bold;
 }
 
 #header > #smiley-container {
@@ -84,8 +91,17 @@ html, body {
     cursor: pointer;
 }
 
-#header > #time {
+#header > #time-container {
     flex: 8 1 ;
+    display: flex;
+    justify-content: end;
+}
+
+#time {
+    color: red;
+    padding: 0 1rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
 }
 
 /***************** section *****************/
@@ -175,7 +191,7 @@ html, body {
 }
 
 #board .cell .item.flag::after {
-    content: '⛳️';
+    content: '🚩';
     width: 100%;
     height: 100%;
     display: flex;
