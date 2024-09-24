@@ -28,6 +28,11 @@ html, body {
 
     display: flex;
     flex-direction: column;
+
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
 }
 
 /***************** header *****************/

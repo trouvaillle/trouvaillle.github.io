@@ -80,6 +80,7 @@ window.onload = () => {
             const cell = document.createElement('div');
             const item = document.createElement('div');
             let thisItemDown = false;
+            let timer = null;
             const itemMouseDown = (item) => (evt) => {
                 evt.preventDefault();
                 if (map[j][i] >= 0 && map[j][i] <= ITEM_MINE || (map[j][i] >= 12 && map[j][i] <= 15)) {
@@ -88,6 +89,10 @@ window.onload = () => {
                     }
                     thisItemDown = true;
                     smiley.innerHTML = '😮';
+
+                    timer = setTimeout(() => {
+                        itemMouseUp(item)({'button': 2, 'preventDefault': () => {}});
+                    }, 300);
                 }
             };
             const itemMouseEnter = (item) => (evt) => {
@@ -138,6 +143,10 @@ window.onload = () => {
                         }
                     }
                     thisItemDown = false;
+                    if (timer !== null) {
+                        clearTimeout(timer);
+                        timer = null;
+                    } 
                 }
             };
             const itemMouseLeave = (item) => (evt) => {
