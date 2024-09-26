@@ -6,7 +6,7 @@ window.onload = () => {
   const ITEM_QUESTION = 14;
   const ITEM_QUESTION_WITH_MINE = 15;
 
-  let {x, y, mines} = {x: 10, y: 10, mines: 10};
+  let {x, y, mines} = {x: 9, y: 9, mines: 10};
   let map = []; // 10 - mine, 11 - bombed mine, 12 - flag, 13 - flag with mine, 14 - question, 15 - question with mine
   let mineCoords = [];
   let items = [];
