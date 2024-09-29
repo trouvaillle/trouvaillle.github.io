@@ -12,21 +12,35 @@ date: 2024-09-23 23:41:00 +0900
     <link rel="icon" type="image/x-icon" href="../assets/img/icons8-minesweeper-96.png">
     <link rel="apple-touch-icon" type="image/x-icon" href="../assets/img/icons8-minesweeper-96.png">
     <link rel="stylesheet" href="../assets/css/minesweeper.css"/>
-    <script type="text/javascript" src="../assets/js/minesweeper.js?1=7"></script>
+    <script type="text/javascript" src="../assets/js/minesweeper.js?1=8"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
 </head>
 <body>
     <div id="root">
-        <header>
-            <div id="header" class="debossed">
+        <div id="title">
+            <div class="left">
                 <div id="back-container">
-                    <div id="back" class="embossed">
+                    <div id="back">
                         <a href="/app">
                             ⬅
                         </a>
                     </div>
                 </div>
+            </div>
+            <div class="center">
+                <span class="vt323-regular">Minesweeper</span>
+            </div>
+            <div class="right">
+                
+            </div>
+        </div>
+        <header>
+            <div id="header" class="debossed">
                 <div id="left-container">
-                    <div id="left" class="embossed"></div>
+                    <div id="left" class="embossed vt323-regular"></div>
                 </div>
                 <div id="smiley-container">
                     <div id="smiley" class="embossed">
@@ -34,7 +48,7 @@ date: 2024-09-23 23:41:00 +0900
                     </div>
                 </div>
                 <div id="time-container">
-                    <div id="time" class="embossed"></div>
+                    <div id="time" class="embossed vt323-regular"></div>
                 </div>
             </div>
         </header>

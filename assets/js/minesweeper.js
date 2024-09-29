@@ -6,7 +6,7 @@ window.onload = () => {
   const ITEM_QUESTION = 14;
   const ITEM_QUESTION_WITH_MINE = 15;
 
-  let {x, y, mines} = {x: 16, y: 16, mines: 40};
+  let {x, y, mines} = {x: 9, y: 9, mines: 10};
   let map = []; // 10 - mine, 11 - bombed mine, 12 - flag, 13 - flag with mine, 14 - question, 15 - question with mine
   let mineCoords = [];
   let items = [];
@@ -18,6 +18,7 @@ window.onload = () => {
   let startTime = 0;
 
   const container =  document.querySelector('#container');
+  const header =  document.querySelector('#header');
   const board =  document.querySelector('#board');
   const left =  document.querySelector('#left');
   const smiley =  document.querySelector('#smiley');
@@ -66,6 +67,7 @@ window.onload = () => {
   function adjustSize() {
     const cellWidth = Math.min(container.clientWidth / x, container.clientHeight / y);
     board.setAttribute('style', `width: ${cellWidth * x}px; height: ${cellWidth * y}px; font-size: ${cellWidth * 0.25}px`);
+    header.setAttribute('style', `width: ${cellWidth * x}px;`);
   }
 
   function createBoard() {
@@ -92,7 +94,7 @@ window.onload = () => {
 
                     timer = setTimeout(() => {
                         itemMouseUp(item)({'button': 2, 'preventDefault': () => {}});
-                    }, 300);
+                    }, 250);
                 }
             };
             const itemMouseEnter = (item) => (evt) => {

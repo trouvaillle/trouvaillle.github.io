@@ -1,3 +1,11 @@
+/* external */
+.vt323-regular {
+    font-family: "VT323", monospace;
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* internal */
 :root {
     --fore-0: white;
     --fore-9: black;
@@ -45,40 +53,19 @@ html, body {
 
 #header {
     display: flex;
-    flex: 1 1;
+    /* flex: 1 1; */
     padding: 0.5rem;
-}
-
-#header > #back-container {
-    display: flex;
-    flex: 2 1;
-    cursor: pointer;
-    justify-content: left;
-}
-
-#back {
-    display: flex;
-    aspect-ratio: 1;
-    flex-direction: column;
-    justify-content: center;
-}
-
-#header > #back-container a {
-    color: #F8D655;
-    text-shadow: 0px 0px 0.3rem #BC854E;
-    text-decoration: none;
-    padding: 0.2rem 0.5rem;
+    margin: 0 auto;
 }
 
 #header > #left-container {
-    flex: 6 1;
+    flex: 8 1;
     display: flex;
     justify-content: start;
 }
 
 #left {
     color: red;
-    font-family: 'Courier New', Courier, monospace;
     padding: 0 1rem;
     font-weight: bold;
 }
@@ -105,7 +92,6 @@ html, body {
 #time {
     color: red;
     padding: 0 1rem;
-    font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
 }
 
@@ -125,17 +111,17 @@ html, body {
 }
 
 .embossed {
-    border-left: 0.4rem solid white;
-    border-right: 0.4rem solid #71706E;
-    border-top: 0.4rem solid white;
-    border-bottom: 0.4rem solid #71706E;
+    border-left: 0.3rem solid white;
+    border-right: 0.3rem solid #71706E;
+    border-top: 0.3rem solid white;
+    border-bottom: 0.3rem solid #71706E;
 }
 
 .debossed {
-    border-left: 0.4rem solid #71706E;
-    border-right: 0.4rem solid white;
-    border-top: 0.4rem solid #71706E;
-    border-bottom: 0.4rem solid white;
+    border-left: 0.3rem solid #71706E;
+    border-right: 0.3rem solid white;
+    border-top: 0.3rem solid #71706E;
+    border-bottom: 0.3rem solid white;
 }
 
 #board {
@@ -214,7 +200,7 @@ html, body {
     color: black;
     transform: translateY(calc(50% - 0.5em));
     font-size: 2em;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'VT323', Courier, monospace;
 }
 
 #board .cell .item.number-1::after {
@@ -227,7 +213,7 @@ html, body {
     font-weight: bold;
     transform: translateY(calc(50% - 0.5em));
     font-size: 2em;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'VT323', Courier, monospace;
 }
 
 #board .cell .item.number-2::after {
@@ -240,7 +226,7 @@ html, body {
     font-weight: bold;
     transform: translateY(calc(50% - 0.5em));
     font-size: 2em;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'VT323', Courier, monospace;
 }
 
 #board .cell .item.number-3::after {
@@ -253,7 +239,7 @@ html, body {
     font-weight: bold;
     transform: translateY(calc(50% - 0.5em));
     font-size: 2em;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'VT323', Courier, monospace;
 }
 
 #board .cell .item.number-4::after {
@@ -266,7 +252,7 @@ html, body {
     font-weight: bold;
     transform: translateY(calc(50% - 0.5em));
     font-size: 2em;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'VT323', Courier, monospace;
 }
 
 #board .cell .item.number-5::after {
@@ -279,7 +265,7 @@ html, body {
     font-weight: bold;
     transform: translateY(calc(50% - 0.5em));
     font-size: 2em;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'VT323', Courier, monospace;
 }
 
 #board .cell .item.number-6::after {
@@ -292,7 +278,7 @@ html, body {
     font-weight: bold;
     transform: translateY(calc(50% - 0.5em));
     font-size: 2em;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'VT323', Courier, monospace;
 }
 
 #board .cell .item.number-7::after {
@@ -305,7 +291,7 @@ html, body {
     font-weight: bold;
     transform: translateY(calc(50% - 0.5em));
     font-size: 2em;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'VT323', Courier, monospace;
 }
 
 #board .cell .item.number-8::after {
@@ -318,7 +304,7 @@ html, body {
     font-weight: bold;
     transform: translateY(calc(50% - 0.5em));
     font-size: 2em;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'VT323', Courier, monospace;
 }
 
 #board #youwin {
@@ -333,7 +319,7 @@ html, body {
     font-size: 5rem;
     font-weight: bold;
     color: var(--back-0);
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'VT323', Courier, monospace;
     text-align: center;
     display: flex;
     z-index: 10;
@@ -344,4 +330,54 @@ html, body {
     transform: translateY(calc(50% - 2.5rem));
     height: 100%;
     width: 100%;
+}
+
+#title {
+    background: blue;
+    color: white;
+    border: 1px solid black;
+    display: flex;
+}
+
+#title .left {
+    flex: 2 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+}
+
+#title .center {
+    flex: 8 1;
+    padding: 0.5rem 0;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+#title .right {
+    flex: 2 1;
+}
+
+#title #back-container {
+    display: flex;
+    flex-direction: column;
+    /* flex: 2 1; */
+    cursor: pointer;
+    justify-content: center;
+    aspect-ratio: 1;
+    background: var(--back-cell);
+    border: 1px solid var(--fore-9);
+}
+
+#back {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#title .left > #back-container a {
+    color: var(--fore-0);
+    text-shadow: 0px 1px 1px var(--fore-9);
+    text-decoration: none;
+    font-size: 1rem;
 }
