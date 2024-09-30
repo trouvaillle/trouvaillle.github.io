@@ -75,7 +75,8 @@ window.onload = () => {
   }
 
   function adjustSize() {
-    const cellWidth = Math.min(container.clientWidth / x, container.clientHeight / y);
+    // const cellWidth = Math.min(container.clientWidth / x, container.clientHeight / y);
+    const cellWidth = Math.min(container.clientWidth / x, 48);
     board.setAttribute('style', `width: ${cellWidth * x}px; height: ${cellWidth * y}px; font-size: ${cellWidth * 0.25}px`);
     header.setAttribute('style', `width: ${cellWidth * x}px;`);
   }

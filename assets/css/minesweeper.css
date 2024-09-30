@@ -42,6 +42,7 @@ html, body {
 
     display: flex;
     flex-direction: column;
+    overflow: scroll;
 
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
