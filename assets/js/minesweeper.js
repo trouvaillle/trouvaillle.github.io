@@ -17,6 +17,7 @@ window.onload = () => {
   let notClicked = 0;
   let leftMinesUserThinks = 0;
   let startTime = 0;
+  let timeIndicator = null;
 
   const container =  document.querySelector('#container');
   const header =  document.querySelector('#header');
@@ -36,6 +37,7 @@ window.onload = () => {
   initializeSmiley();
   initializeMenu();
   render();
+  startTimeIndicator();
 
   window.addEventListener('resize', adjustSize);
   window.addEventListener('contextmenu', (evt) => { evt.preventDefault(); });
@@ -388,6 +390,7 @@ window.onload = () => {
     } else if (map[j][i] === ITEM_MINE || map[j][i] === ITEM_QUESTION_WITH_MINE) {
         map[j][i] = ITEM_BOMBED_MINE;
         gameover = true;
+        endTimeIndicator();
     } else if (map[j][i] > 0 && map[j][i] < ITEM_MINE) {
         if (prevent) return;
         const surroundedMines = getSurroundedMines(i, j);
@@ -528,6 +531,7 @@ window.onload = () => {
 
   function checkWin() {
     if (notClicked === mines) {
+        endTimeIndicator();
         gameover = true;
         win = true;
         leftMinesUserThinks = 0;
@@ -538,6 +542,21 @@ window.onload = () => {
                 }
             }
         }
+    }
+  }
+
+  function startTimeIndicator() {
+    if (!gameover) {
+        endTimeIndicator();
+        timeIndicator = setInterval(() => {
+            setTime();
+        }, 500);
+    }
+  }
+
+  function endTimeIndicator() {
+    if (timeIndicator !== null) {
+        clearInterval(timeIndicator);
     }
   }
 };
