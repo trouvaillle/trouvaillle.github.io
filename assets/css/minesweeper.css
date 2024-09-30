@@ -76,10 +76,11 @@ html, body {
 
 #header > .container.left > .box > .ambient {
     position: absolute;
-    z-index: -1;
+    z-index: 0;
 }
 
 #left {
+    position: absolute;
     z-index: 1;
 }
 
@@ -93,6 +94,7 @@ html, body {
 #smiley {
     display: flex;
     aspect-ratio: 1;
+    width: auto;
     justify-content: center;
     cursor: pointer;
 }
@@ -112,10 +114,11 @@ html, body {
 
 #header > .container.time > .box > .ambient {
     position: absolute;
-    z-index: -1;
+    z-index: 0;
 }
 
 #time {
+    position: absolute;
     z-index: 1;
 }
 
@@ -126,9 +129,13 @@ html, body {
 }
 
 .ambient.digital-red {
-    color: #400;
+    color: #600;
     font-weight: bold;
     font-family: DSEG14ClassicMini-Bold;
+}
+
+.invisible {
+    visibility: hidden;
 }
 
 /***************** section *****************/
@@ -151,6 +158,20 @@ html, body {
     border-right: 0.3rem solid #71706E;
     border-top: 0.3rem solid white;
     border-bottom: 0.3rem solid #71706E;
+}
+
+.embossed-small {
+    border-left: 0.1rem solid white;
+    border-right: 0.1rem solid #71706E;
+    border-top: 0.1rem solid white;
+    border-bottom: 0.1rem solid #71706E;
+}
+
+.embossed-middle {
+    border-left: 0.2rem solid white;
+    border-right: 0.2rem solid #71706E;
+    border-top: 0.2rem solid white;
+    border-bottom: 0.2rem solid #71706E;
 }
 
 .debossed {
@@ -414,6 +435,7 @@ html, body {
     cursor: pointer;
     justify-content: center;
     aspect-ratio: 1;
+    width: auto;
     background: var(--back-cell);
     border: 1px solid var(--fore-9);
 }
