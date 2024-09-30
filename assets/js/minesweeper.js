@@ -29,6 +29,7 @@ window.onload = () => {
   render();
 
   window.addEventListener('resize', adjustSize);
+  window.addEventListener('contextmenu', (evt) => { evt.preventDefault(); });
 
   function initMap() {
     map = [];
@@ -106,7 +107,12 @@ window.onload = () => {
             };
             const itemMouseUp = (item) => (evt) => {
                 evt.preventDefault();
+                if (timer !== null) {
+                    clearTimeout(timer);
+                    timer = null;
+                }
                 if (resetGame()) {
+                    thisItemDown = false;
                     return;
                 }
                 if (map[j][i] >= 0 && map[j][i] <= ITEM_MINE || (map[j][i] >= 12 && map[j][i] <= 15)) {
@@ -145,10 +151,6 @@ window.onload = () => {
                         }
                     }
                     thisItemDown = false;
-                    if (timer !== null) {
-                        clearTimeout(timer);
-                        timer = null;
-                    } 
                 }
             };
             const itemMouseLeave = (item) => (evt) => {
@@ -180,6 +182,64 @@ window.onload = () => {
         board.appendChild(row);
         items.push(itemsRow);
       }
+
+      initializeSmiley();
+  }
+
+  function initializeSmiley() {
+    let thisItemDown = false;
+    let timer = null;
+    const itemMouseDown = (item) => (evt) => {
+        evt.preventDefault();
+        if (evt.button === 0) {
+            item.classList.add('debossed-middle');
+        }
+        thisItemDown = true;
+        if (!gameover) {
+            smiley.innerHTML = '😮';
+        }
+
+        /* timer = setTimeout(() => {
+            itemMouseUp(item)({'button': 0, 'preventDefault': () => {}});
+        }, 250); */
+    };
+    const itemMouseEnter = (item) => (evt) => {
+        evt.preventDefault();
+        if (thisItemDown) {
+            item.classList.add('debossed-middle');
+            setSmiley();
+        }
+    };
+    const itemMouseUp = (item) => (evt) => {
+        evt.preventDefault();
+        item.classList.remove('debossed-middle');
+        setSmiley();
+        if (timer !== null) {
+            clearTimeout(timer);
+            timer = null;
+        } 
+        if (thisItemDown && resetGame()) {
+            thisItemDown = false;
+            return;
+        }
+        thisItemDown = false;
+    };
+    const itemMouseLeave = (item) => (evt) => {
+        evt.preventDefault();
+        item.classList.remove('debossed-middle');
+        thisItemDown = false;
+        setSmiley();
+    };
+
+    smiley.addEventListener('mousedown', itemMouseDown(smiley));
+    smiley.addEventListener('pointerdown', itemMouseDown(smiley))
+    smiley.addEventListener('mouseenter', itemMouseEnter(smiley));;
+    smiley.addEventListener('pointerenter', itemMouseEnter(smiley));
+    smiley.addEventListener('mouseup', itemMouseUp(smiley));
+    smiley.addEventListener('pointerup', itemMouseUp(smiley));
+    smiley.addEventListener('mouseleave', itemMouseLeave(smiley));
+    smiley.addEventListener('pointerleave', itemMouseLeave(smiley));
+    smiley.addEventListener('contextmenu', (evt) => { evt.preventDefault(); });
   }
 
   function resetGame() {
