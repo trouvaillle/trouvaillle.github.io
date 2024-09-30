@@ -294,10 +294,12 @@ window.onload = () => {
     menuGameContextNew.addEventListener('mouseup', () => {
         initMap();
         render();
+        startTimeIndicator();
     });
     menuGameContextNew.addEventListener('pointerup', () => {
         initMap();
         render();
+        startTimeIndicator();
     });
     menuGameContextBeginner.addEventListener('mouseup', () => {
         setDifficulty('beginner');
@@ -364,6 +366,7 @@ window.onload = () => {
     if (gameover) {
         initMap();
         render();
+        startTimeIndicator();
         return true;
     } else {
         return false;
