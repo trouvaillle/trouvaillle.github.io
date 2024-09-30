@@ -529,6 +529,7 @@ window.onload = () => {
     if (notClicked === mines) {
         gameover = true;
         win = true;
+        leftMinesUserThinks = 0;
         for (let j = 0; j < y; ++j) {
             for (let i = 0; i < x; ++i) {
                 if (map[j][i] === ITEM_MINE) {
