@@ -300,12 +300,23 @@ window.onload = () => {
   }
   
   function setLeft() {
-    left.innerHTML = (leftMinesUserThinks < 0 ? 0 : leftMinesUserThinks);
+    const number = (leftMinesUserThinks < 0 ? 0 : leftMinesUserThinks);
+    let text = number + '';
+    const char = '<span class="ambient digital-red">8</span>';
+    if (text.length < 3) {
+        text = char.repeat(3 - text.length) + text;
+    }
+    left.innerHTML = text;
   }
 
   function setTime() {
     const elapsedTime = Math.floor((new Date().getTime() - startTime) / 1000.0);
-    time.innerHTML = elapsedTime;
+    let text = elapsedTime + '';
+    const char = '<span class="ambient digital-red">8</span>';
+    if (text.length < 3) {
+        text = char.repeat(3 - text.length) + text;
+    }
+    time.innerHTML = text;
   }
 
   function getRandomInt(max) {

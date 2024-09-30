@@ -5,6 +5,11 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: "DSEG14ClassicMini-Bold";
+    src: url("../fonts/DSEG14ClassicMini-Bold.woff");
+}
+
 /* internal */
 :root {
     --fore-0: white;
@@ -53,27 +58,36 @@ html, body {
 
 #header {
     display: flex;
-    /* flex: 1 1; */
-    padding: 0.5rem;
     margin: 0 auto;
 }
 
-#header > #left-container {
+#header > .container.left {
     flex: 8 1;
     display: flex;
     justify-content: start;
+    margin: 0.5rem 0 0.5rem 0.5rem;
+}
+
+#header > .container.left > .box {
+    position: relative;
+    padding: 0.2rem;
+    background: black;
+}
+
+#header > .container.left > .box > .ambient {
+    position: absolute;
+    z-index: -1;
 }
 
 #left {
-    color: red;
-    padding: 0 1rem;
-    font-weight: bold;
+    z-index: 1;
 }
 
 #header > #smiley-container {
     flex: 2 1;
     display: flex;
     justify-content: center;
+    margin: 0.5rem 0 0.5rem 0;
 }
 
 #smiley {
@@ -83,16 +97,38 @@ html, body {
     cursor: pointer;
 }
 
-#header > #time-container {
+#header > .container.time {
     flex: 8 1 ;
     display: flex;
     justify-content: end;
+    margin: 0.5rem 0.5rem 0.5rem 0;
+}
+
+#header > .container.time > .box {
+    position: relative;
+    padding: 0.2rem;
+    background: black;
+}
+
+#header > .container.time > .box > .ambient {
+    position: absolute;
+    z-index: -1;
 }
 
 #time {
+    z-index: 1;
+}
+
+.digital-red {
     color: red;
-    padding: 0 1rem;
     font-weight: bold;
+    font-family: DSEG14ClassicMini-Bold;
+}
+
+.ambient.digital-red {
+    color: #400;
+    font-weight: bold;
+    font-family: DSEG14ClassicMini-Bold;
 }
 
 /***************** section *****************/
@@ -122,6 +158,20 @@ html, body {
     border-right: 0.3rem solid white;
     border-top: 0.3rem solid #71706E;
     border-bottom: 0.3rem solid white;
+}
+
+.debossed-small {
+    border-left: 0.1rem solid #71706E;
+    border-right: 0.1rem solid white;
+    border-top: 0.1rem solid #71706E;
+    border-bottom: 0.1rem solid white;
+}
+
+.debossed-middle {
+    border-left: 0.2rem solid #71706E;
+    border-right: 0.2rem solid white;
+    border-top: 0.2rem solid #71706E;
+    border-bottom: 0.2rem solid white;
 }
 
 #board {
@@ -361,7 +411,6 @@ html, body {
 #title #back-container {
     display: flex;
     flex-direction: column;
-    /* flex: 2 1; */
     cursor: pointer;
     justify-content: center;
     aspect-ratio: 1;
