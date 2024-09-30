@@ -6,6 +6,7 @@ window.onload = () => {
   const ITEM_QUESTION = 14;
   const ITEM_QUESTION_WITH_MINE = 15;
 
+  let difficulty = 'beginner';
   let {x, y, mines} = {x: 9, y: 9, mines: 10};
   let map = []; // 10 - mine, 11 - bombed mine, 12 - flag, 13 - flag with mine, 14 - question, 15 - question with mine
   let mineCoords = [];
@@ -23,9 +24,17 @@ window.onload = () => {
   const left =  document.querySelector('#left');
   const smiley =  document.querySelector('#smiley');
   const time =  document.querySelector('#time');
+  const menuGame =  document.querySelector('#menu-game');
+  const menuGameContext =  document.querySelector('#menu-game-context');
+  const menuGameContextNew = document.querySelector('#menu-game-context-new');
+  const menuGameContextBeginner = document.querySelector('#menu-game-context-beginner');
+  const menuGameContextIntermediate = document.querySelector('#menu-game-context-intermediate');
+  const menuGameContextExpert = document.querySelector('#menu-game-context-expert');
 
   initMap();
   createBoard();
+  initializeSmiley();
+  initializeMenu();
   render();
 
   window.addEventListener('resize', adjustSize);
@@ -74,6 +83,7 @@ window.onload = () => {
   function createBoard() {
     adjustSize();
 
+    board.innerHTML = '';
     items = [];
     for (let j = 0; j < y; ++j) {
         itemsRow = [];
@@ -182,8 +192,6 @@ window.onload = () => {
         board.appendChild(row);
         items.push(itemsRow);
       }
-
-      initializeSmiley();
   }
 
   function initializeSmiley() {
@@ -240,6 +248,113 @@ window.onload = () => {
     smiley.addEventListener('mouseleave', itemMouseLeave(smiley));
     smiley.addEventListener('pointerleave', itemMouseLeave(smiley));
     smiley.addEventListener('contextmenu', (evt) => { evt.preventDefault(); });
+  }
+
+  function initializeMenu() {
+    let opened = false;
+    let thisItemDown = false;
+    const itemMouseDown = (item) => (evt) => {
+        evt.preventDefault();
+        thisItemDown = true;
+    };
+    const itemMouseEnter = (item) => (evt) => {
+        evt.preventDefault();
+    };
+    const itemMouseUp = (item) => (evt) => {
+        evt.preventDefault();
+        
+        if (opened) {
+            item.classList.remove('debossed-small');
+            menuGameContext.removeAttribute('style');
+        } else {
+            item.classList.add('debossed-small');
+            menuGameContext.setAttribute('style', 'display: block;');
+        }
+        opened = !opened;
+        thisItemDown = false;
+    };
+    const itemMouseLeave = (item) => (evt) => {
+        evt.preventDefault();
+        thisItemDown = false;
+    };
+
+    menuGame.addEventListener('mousedown', itemMouseDown(menuGame));
+    menuGame.addEventListener('pointerdown', itemMouseDown(menuGame))
+    menuGame.addEventListener('mouseenter', itemMouseEnter(menuGame));;
+    menuGame.addEventListener('pointerenter', itemMouseEnter(menuGame));
+    menuGame.addEventListener('mouseup', itemMouseUp(menuGame));
+    menuGame.addEventListener('pointerup', itemMouseUp(menuGame));
+    menuGame.addEventListener('mouseleave', itemMouseLeave(menuGame));
+    menuGame.addEventListener('pointerleave', itemMouseLeave(menuGame));
+    menuGame.addEventListener('contextmenu', (evt) => { evt.preventDefault(); });
+
+    menuGameContextNew.addEventListener('mouseup', () => {
+        initMap();
+        render();
+    });
+    menuGameContextNew.addEventListener('pointerup', () => {
+        initMap();
+        render();
+    });
+    menuGameContextBeginner.addEventListener('mouseup', () => {
+        setDifficulty('beginner');
+        closeAllMenuContext();
+    });
+    menuGameContextBeginner.addEventListener('pointerup', () => {
+        setDifficulty('beginner');
+        closeAllMenuContext();
+    });
+    menuGameContextIntermediate.addEventListener('mouseup', () => {
+        setDifficulty('intermediate');
+        closeAllMenuContext();
+    });
+    menuGameContextIntermediate.addEventListener('pointerup', () => {
+        setDifficulty('intermediate');
+        closeAllMenuContext();
+    });
+    menuGameContextExpert.addEventListener('mouseup', () => {
+        setDifficulty('expert');
+        closeAllMenuContext();
+    });
+    menuGameContextExpert.addEventListener('pointerup', () => {
+        setDifficulty('expert');
+        closeAllMenuContext();
+    });
+  }
+
+  function setDifficulty(newValue) {
+    if (difficulty === newValue) {
+        return;
+    }
+    difficulty = newValue;
+    let settings = {x: 9, y: 9, mines: 10};
+    switch (difficulty) {
+        case 'beginner':
+            settings = {x: 9, y: 9, mines: 10};
+            break;
+        case 'intermediate':
+            settings = {x: 16, y: 16, mines: 40};
+            break;
+        case 'expert':
+            settings = {x: 16, y: 30, mines: 99};
+            break;
+        default:
+            break;
+    }
+    x = settings.x;
+    y = settings.y;
+    mines = settings.mines;
+
+    console.log(settings);
+
+    initMap();
+    createBoard();
+    render();
+  }
+
+  function closeAllMenuContext() {
+    menuGame.classList.remove('debossed-small');
+    menuGameContext.removeAttribute('style');
   }
 
   function resetGame() {
