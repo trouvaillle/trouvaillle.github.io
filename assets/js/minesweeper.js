@@ -124,10 +124,10 @@ window.onload = () => {
                     clearTimeout(timer);
                     timer = null;
                 }
-                if (resetGame()) {
+                /* if (resetGame()) {
                     thisItemDown = false;
                     return;
-                }
+                } */
                 if (map[j][i] >= 0 && map[j][i] <= ITEM_MINE || (map[j][i] >= 12 && map[j][i] <= 15)) {
                     if (!(map[j][i] > 0 && map[j][i] < ITEM_MINE)) {
                         item.classList.remove('mousedown');
