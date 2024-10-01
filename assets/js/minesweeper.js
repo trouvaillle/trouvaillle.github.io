@@ -99,6 +99,7 @@ window.onload = () => {
             let timer = null;
             const itemMouseDown = (item) => (evt) => {
                 evt.preventDefault();
+                if (gameover) return;
                 if (map[j][i] >= 0 && map[j][i] <= ITEM_MINE || (map[j][i] >= 12 && map[j][i] <= 15)) {
                     if (evt.button === 0) {
                         item.classList.add('mousedown');
@@ -113,7 +114,7 @@ window.onload = () => {
             };
             const itemMouseEnter = (item) => (evt) => {
                 evt.preventDefault();
-                if (thisItemDown) {
+                if (!gameover && thisItemDown) {
                     item.classList.add('mousedown');
                     setSmiley();
                 }
@@ -128,6 +129,7 @@ window.onload = () => {
                     thisItemDown = false;
                     return;
                 } */
+                if (gameover) return;
                 if (map[j][i] >= 0 && map[j][i] <= ITEM_MINE || (map[j][i] >= 12 && map[j][i] <= 15)) {
                     if (!(map[j][i] > 0 && map[j][i] < ITEM_MINE)) {
                         item.classList.remove('mousedown');
