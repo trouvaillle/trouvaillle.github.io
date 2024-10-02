@@ -110,7 +110,7 @@ html, body {
 /***************** header *****************/
 #root header {
     display: flex;
-    padding: 0.5rem 1rem 0.5rem 1rem;
+    padding: 1rem 1rem 0.5rem 1rem;
     font-size: 2rem;
     flex: 0 1 2rem;
 }
@@ -219,7 +219,7 @@ html, body {
     display: flex;
     flex: 1 1;
     justify-content: center;
-    margin: 0 0 1rem 0;
+    margin: 0;
     overflow-x: hidden;
     overflow-y: scroll;
 }
@@ -665,13 +665,14 @@ html, body {
     padding: 0.3rem 1.5rem 0.3rem 0.5rem; 
     font-size: 1.5rem;
     font-family: 'VT323', Courier, monospace;
+    border: 0.1rem solid transparent;
 }
 
 .menu-item:hover, .menu-item:active {
     background: var(--back-cell-focus);
 }
 
-#menu-game-context {
+.context-menu {
     position: absolute;
     left: 0;
     top: 2.1rem;
@@ -681,23 +682,23 @@ html, body {
     display: none;
 }
 
-#menu-game-context ul {
+.context-menu ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
-#menu-game-context li {
+.context-menu li {
     padding: 0.2rem 3rem 0.2rem 0.5rem;
     margin: 0;
     cursor: pointer;
 }
 
-#menu-game-context li:hover, #menu-game-context li:active {
+.context-menu li:hover, .context-menu li:active {
     background: var(--back-cell-focus);
 }
 
-#menu-game-context hr {
+.context-menu hr {
     padding: 0;
     margin: 0.3rem 0;
     width: auto;

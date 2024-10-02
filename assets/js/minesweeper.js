@@ -38,6 +38,7 @@ window.onload = () => {
   const left =  document.querySelector('#left');
   const smiley =  document.querySelector('#smiley');
   const time =  document.querySelector('#time');
+  const menu =  document.querySelector('#menu');
   const menuGame =  document.querySelector('#menu-game');
   const menuGameContext =  document.querySelector('#menu-game-context');
   const menuGameContextNew = document.querySelector('#menu-game-context-new');
@@ -271,8 +272,139 @@ window.onload = () => {
   }
 
   function initializeMenu() {
-    let opened = false;
-    let thisItemDown = false;
+    const menus = [
+        {
+            'name': '<u>G</u>ame',
+            'children': [
+                {
+                    'type': 'submenu',
+                    'name': 'New',
+                    'action': () => {
+                        initMap();
+                        render();
+                        startTimeIndicator();
+                    }
+                },
+                {
+                    'type': 'hr',
+                    'name': '',
+                    'action': null
+                },
+                {
+                    'type': 'submenu',
+                    'name': 'Beginner',
+                    'action': () => {
+                        setDifficulty('beginner');
+                        closeAllMenuContext();
+                    }
+                },
+                {
+                    'type': 'submenu',
+                    'name': 'Intermediate',
+                    'action': () => {
+                        setDifficulty('intermediate');
+                        closeAllMenuContext();
+                    }
+                },
+                {
+                    'type': 'submenu',
+                    'name': 'Expert',
+                    'action': () => {
+                        setDifficulty('expert');
+                        closeAllMenuContext();
+                    }
+                },
+            ],
+            'action': null
+        },
+        {
+            'name': '<u>H</u>elp',
+            'children': [],
+            'action': null
+        }
+    ]
+    menu.innerHTML = '';
+    menus.forEach(it => {
+        let opened = false;
+        let thisItemDown = false;
+
+        const element = document.createElement('div');
+        element.classList.add('menu-item');
+        element.innerHTML = it.name;
+
+        element.addEventListener('mousedown', (evt) => {
+            evt.preventDefault();
+            thisItemDown = true;
+        });
+        element.addEventListener('pointerdown', (evt) => evt.preventDefault());
+        element.addEventListener('mouseenter', (evt) => evt.preventDefault());
+        element.addEventListener('pointerenter', (evt) => evt.preventDefault());
+        element.addEventListener('mouseleave', (evt) => {
+            evt.preventDefault();
+            thisItemDown = false;
+        });
+        element.addEventListener('contextmenu', (evt) => evt.preventDefault());
+
+        if (it.children && it.children.length > 0) {
+            const div = document.createElement('div');
+            div.classList.add('context-menu');
+            div.classList.add('embossed-small');
+
+            const ul = document.createElement('ul');
+            it.children.forEach(child => {
+                if (child.type === 'submenu') {
+                    const li = document.createElement('li');
+                    li.innerHTML = child.name;
+                    if (child.action) {
+                        li.addEventListener('mouseup', child.action);
+                        li.addEventListener('pointerup', child.action);
+                    }
+                    ul.appendChild(li);
+                } else {
+                    const hr = document.createElement('hr');
+                    ul.appendChild(hr);
+                }
+            });
+            div.append(ul);
+            element.appendChild(div);
+            
+            const action = (evt) => {
+                evt.preventDefault();
+                if (it.action) {
+                    it.action(evt);
+                }
+                
+                if (opened) {
+                    element.classList.remove('debossed-small');
+                    div.removeAttribute('style');
+                } else {
+                    element.classList.add('debossed-small');
+                    div.setAttribute('style', 'display: block;');
+                }
+                opened = !opened;
+                thisItemDown = false;
+            };
+
+            element.addEventListener('mouseup', action);
+            element.addEventListener('pointerup', action);
+        } else {
+            if (it.action) {
+                element.addEventListener('mouseup', it.action);
+                element.addEventListener('pointerup', it.action);
+            } else {
+                element.addEventListener('mouseup', (evt) => evt.preventDefault());
+                element.addEventListener('pointerup', (evt) => evt.preventDefault());
+            }
+        }
+
+        menu.appendChild(element);
+    });
+
+    return;
+    
+
+
+    
     const itemMouseDown = (item) => (evt) => {
         evt.preventDefault();
         thisItemDown = true;
@@ -297,51 +429,6 @@ window.onload = () => {
         evt.preventDefault();
         thisItemDown = false;
     };
-
-    menuGame.addEventListener('mousedown', itemMouseDown(menuGame));
-    menuGame.addEventListener('pointerdown', itemMouseDown(menuGame))
-    menuGame.addEventListener('mouseenter', itemMouseEnter(menuGame));;
-    menuGame.addEventListener('pointerenter', itemMouseEnter(menuGame));
-    menuGame.addEventListener('mouseup', itemMouseUp(menuGame));
-    menuGame.addEventListener('pointerup', itemMouseUp(menuGame));
-    menuGame.addEventListener('mouseleave', itemMouseLeave(menuGame));
-    menuGame.addEventListener('pointerleave', itemMouseLeave(menuGame));
-    menuGame.addEventListener('contextmenu', (evt) => { evt.preventDefault(); });
-
-    menuGameContextNew.addEventListener('mouseup', () => {
-        initMap();
-        render();
-        startTimeIndicator();
-    });
-    menuGameContextNew.addEventListener('pointerup', () => {
-        initMap();
-        render();
-        startTimeIndicator();
-    });
-    menuGameContextBeginner.addEventListener('mouseup', () => {
-        setDifficulty('beginner');
-        closeAllMenuContext();
-    });
-    menuGameContextBeginner.addEventListener('pointerup', () => {
-        setDifficulty('beginner');
-        closeAllMenuContext();
-    });
-    menuGameContextIntermediate.addEventListener('mouseup', () => {
-        setDifficulty('intermediate');
-        closeAllMenuContext();
-    });
-    menuGameContextIntermediate.addEventListener('pointerup', () => {
-        setDifficulty('intermediate');
-        closeAllMenuContext();
-    });
-    menuGameContextExpert.addEventListener('mouseup', () => {
-        setDifficulty('expert');
-        closeAllMenuContext();
-    });
-    menuGameContextExpert.addEventListener('pointerup', () => {
-        setDifficulty('expert');
-        closeAllMenuContext();
-    });
   }
 
   function setDifficulty(newValue) {
