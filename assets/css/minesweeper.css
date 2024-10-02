@@ -224,48 +224,6 @@ html, body {
     overflow-y: scroll;
 }
 
-.embossed {
-    border-left: 0.2rem solid var(--border-upper);
-    border-right: 0.2rem solid var(--border-lower);
-    border-top: 0.2rem solid var(--border-upper);
-    border-bottom: 0.2rem solid var(--border-lower);
-}
-
-.embossed-small {
-    border-left: 0.1rem solid var(--border-upper);
-    border-right: 0.1rem solid var(--border-lower);
-    border-top: 0.1rem solid var(--border-upper);
-    border-bottom: 0.1rem solid var(--border-lower);
-}
-
-.embossed-middle {
-    border-left: 0.15rem solid var(--border-upper);
-    border-right: 0.15rem solid var(--border-lower);
-    border-top: 0.15rem solid var(--border-upper);
-    border-bottom: 0.15rem solid var(--border-lower);
-}
-
-.debossed {
-    border-left: 0.2rem solid var(--border-lower);
-    border-right: 0.2rem solid var(--border-upper);
-    border-top: 0.2rem solid var(--border-lower);
-    border-bottom: 0.2rem solid var(--border-upper);
-}
-
-.debossed-small {
-    border-left: 0.1rem solid var(--border-lower);
-    border-right: 0.1rem solid var(--border-upper);
-    border-top: 0.1rem solid var(--border-lower);
-    border-bottom: 0.1rem solid var(--border-upper);
-}
-
-.debossed-middle {
-    border-left: 0.15rem solid var(--border-lower);
-    border-right: 0.15rem solid var(--border-upper);
-    border-top: 0.15rem solid var(--border-lower);
-    border-bottom: 0.15rem solid var(--border-upper);
-}
-
 #board {
     position: relative;
     display: flex;
@@ -333,8 +291,7 @@ html, body {
     background: red;
 }
 
-#board .cell .item.mine::after {
-    content: '💣';
+#board .cell .item::after, #board .cell .item::before {
     width: 100%;
     height: 100%;
 
@@ -342,26 +299,22 @@ html, body {
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    
-    font-size: 2em;
-    overflow: hidden;
 
-    /* transform: translateY(calc(50% - 0.6em)); */
+    font-size: 4.5em;
+    font-family: 'VT323', Courier, monospace;
+    font-weight: bold;
+
+    overflow: hidden;
+}
+
+#board .cell .item.mine::after {
+    content: '💣';
+    font-size: 2em;
 }
 
 #board .cell .item.flag::after {
     content: '🚩';
-    width: 100%;
-    height: 100%;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    /* transform: translateY(calc(50% - 0.9em)); */
-    
-    font-size: 2.4em;
-    overflow: hidden;
+    font-size: 2.2em;
 
     z-index: 0;
     position: absolute;
@@ -369,184 +322,57 @@ html, body {
 
 #board .cell .item.flag.no-mine::before {
     content: '✕';
-    width: 100%;
-    height: 100%;
+    color: red;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    
-    font-size: 3em;
-    overflow: hidden;
+    font-size: 4.5em;
 
     z-index: 1;
     position: absolute;
-
-    color: red;
 }
 
 #board .cell .item.question::after {
     content: '?';
-    width: 100%;
-    height: 100%;
-    display: flex;
     color: black;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-
-    /* transform: translateY(calc(50% - 0.5em));*/
-
-    font-size: 4em;
-    font-family: 'VT323', Courier, monospace;
-    overflow: hidden;
 }
 
 #board .cell .item.number-1::after {
     content: '1';
-    width: 100%;
-    height: 100%;
     color: var(--number-1);
-    font-weight: bold;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    /* transform: translateY(calc(50% - 0.5em)); */
-
-    font-size: 4em;
-    font-family: 'VT323', Courier, monospace;
-    overflow: hidden;
 }
 
 #board .cell .item.number-2::after {
     content: '2';
-    width: 100%;
-    height: 100%;
     color: var(--number-2);
-    font-weight: bold;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    /* transform: translateY(calc(50% - 0.5em)); */
-
-    font-size: 4em;
-    font-family: 'VT323', Courier, monospace;
-    overflow: hidden;
 }
 
 #board .cell .item.number-3::after {
     content: '3';
-    width: 100%;
-    height: 100%;
     color: var(--number-3);
-    font-weight: bold;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    /* transform: translateY(calc(50% - 0.5em)); */
-
-    font-size: 4em;
-    font-family: 'VT323', Courier, monospace;
-    overflow: hidden;
 }
 
 #board .cell .item.number-4::after {
     content: '4';
-    width: 100%;
-    height: 100%;
     color: var(--number-4);
-    font-weight: bold;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    /* transform: translateY(calc(50% - 0.5em)); */
-
-    font-size: 4em;
-    font-family: 'VT323', Courier, monospace;
-    overflow: hidden;
 }
 
 #board .cell .item.number-5::after {
     content: '5';
-    width: 100%;
-    height: 100%;
     color: var(--number-5);
-    font-weight: bold;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    /* transform: translateY(calc(50% - 0.5em)); */
-    
-    font-size: 4em;
-    font-family: 'VT323', Courier, monospace;
-    overflow: hidden;
 }
 
 #board .cell .item.number-6::after {
     content: '6';
-    width: 100%;
-    height: 100%;
     color: var(--number-6);
-    font-weight: bold;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    /* transform: translateY(calc(50% - 0.5em)); */
-    
-    font-size: 4em;
-    font-family: 'VT323', Courier, monospace;
-    overflow: hidden;
 }
 
 #board .cell .item.number-7::after {
     content: '7';
-    width: 100%;
-    height: 100%;
     color: var(--number-7);
-    font-weight: bold;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    /* transform: translateY(calc(50% - 0.5em)); */
-    
-    font-size: 4em;
-    font-family: 'VT323', Courier, monospace;
-    overflow: hidden;
 }
 
 #board .cell .item.number-8::after {
     content: '8';
-    width: 100%;
-    height: 100%;
     color: var(--number-8);
-    font-weight: bold;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    /* transform: translateY(calc(50% - 0.5em)); */
-    
-    font-size: 4em;
-    font-family: 'VT323', Courier, monospace;
-    overflow: hidden;
 }
 
 #board #youwin {
@@ -660,9 +486,12 @@ html, body {
     flex: 0 1;
 }
 
+.menu-button {
+    padding: 0.3rem 1.5rem 0.3rem 0.5rem;
+}
+
 .menu-item {
     position: relative;
-    padding: 0.3rem 1.5rem 0.3rem 0.5rem; 
     font-size: 1.5rem;
     font-family: 'VT323', Courier, monospace;
     border: 0.1rem solid transparent;
@@ -707,4 +536,47 @@ html, body {
     border-bottom: 1px solid var(--hr-bottom);
     border-right: none;
     border-left: none;
+}
+
+/* decorator */
+.embossed {
+    border-left: 0.2rem solid var(--border-upper);
+    border-right: 0.2rem solid var(--border-lower);
+    border-top: 0.2rem solid var(--border-upper);
+    border-bottom: 0.2rem solid var(--border-lower);
+}
+
+.embossed-small {
+    border-left: 0.1rem solid var(--border-upper);
+    border-right: 0.1rem solid var(--border-lower);
+    border-top: 0.1rem solid var(--border-upper);
+    border-bottom: 0.1rem solid var(--border-lower);
+}
+
+.embossed-middle {
+    border-left: 0.15rem solid var(--border-upper);
+    border-right: 0.15rem solid var(--border-lower);
+    border-top: 0.15rem solid var(--border-upper);
+    border-bottom: 0.15rem solid var(--border-lower);
+}
+
+.debossed {
+    border-left: 0.2rem solid var(--border-lower);
+    border-right: 0.2rem solid var(--border-upper);
+    border-top: 0.2rem solid var(--border-lower);
+    border-bottom: 0.2rem solid var(--border-upper);
+}
+
+.debossed-small {
+    border-left: 0.1rem solid var(--border-lower);
+    border-right: 0.1rem solid var(--border-upper);
+    border-top: 0.1rem solid var(--border-lower);
+    border-bottom: 0.1rem solid var(--border-upper);
+}
+
+.debossed-middle {
+    border-left: 0.15rem solid var(--border-lower);
+    border-right: 0.15rem solid var(--border-upper);
+    border-top: 0.15rem solid var(--border-lower);
+    border-bottom: 0.15rem solid var(--border-upper);
 }
