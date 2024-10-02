@@ -248,10 +248,13 @@ window.onload = () => {
                 clearTimeout(timer);
                 timer = null;
             }
+            /*
             if (thisItemDown && resetGame()) {
                 thisItemDown = false;
                 return;
             }
+            */
+            newGame();
             thisItemDown = false;
         };
         const itemMouseLeave = (item) => (evt) => {
@@ -281,9 +284,7 @@ window.onload = () => {
                         'type': 'submenu',
                         'name': 'New',
                         'action': () => {
-                            initMap();
-                            render();
-                            startTimeIndicator();
+                            newGame();
                         }
                     },
                     {
@@ -380,6 +381,7 @@ window.onload = () => {
                                                             if (clickItem(i + a - 1, j + b - 1, true)) {
                                                                 changed = true;
                                                                 // render();
+                                                                startTime -= 3000;
                                                             }
                                                         }
                                                     }
@@ -398,10 +400,12 @@ window.onload = () => {
                                                                 map[d][c] = ITEM_FLAG_WITH_MINE;
                                                                 --leftMinesUserThinks;
                                                                 changed = true;
+                                                                startTime -= 1000;
                                                             } else if (map[d][c] === 0) {
                                                                 map[d][c] = ITEM_FLAG;
                                                                 --leftMinesUserThinks;
                                                                 changed = true;
+                                                                startTime -= 3000;
                                                             } else {
                                                                 continue;
                                                             }
@@ -594,14 +598,18 @@ window.onload = () => {
 
     function resetGame() {
         if (gameover) {
-            initMap();
-            render();
-            startTimeIndicator();
-            saveState();
+            newGame();
             return true;
         } else {
             return false;
         }
+    }
+
+    function newGame() {
+        initMap();
+        render();
+        startTimeIndicator();
+        saveState();
     }
 
     function clickItem(i, j, prevent) {
