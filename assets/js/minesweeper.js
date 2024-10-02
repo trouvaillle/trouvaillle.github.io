@@ -186,7 +186,7 @@ window.onload = () => {
                 };
                 const itemMouseLeave = (item) => (evt) => {
                     evt.preventDefault();
-                    if (map[j][i] === 0 || (!gameover && map[j][i] === ITEM_MINE) || (map[j][i] >= ITEM_FLAG && map[j][i] <= ITEM_QUESTION_WITH_MINE)) {
+                    if (map[j][i] === 0 || (!gameover && (map[j][i] === ITEM_MINE || (map[j][i] >= ITEM_FLAG && map[j][i] <= ITEM_QUESTION_WITH_MINE)))) {
                         item.classList.remove('mousedown');
                         thisItemDown = false;
                         setSmiley();
@@ -342,7 +342,91 @@ window.onload = () => {
                         'type': 'submenu',
                         'name': 'Autoplay',
                         'action': () => {
+                            if (gameover) return;
 
+                            function sleep(time) {
+                                let next = Date.now() + time;
+                                while (Date.now() < next) {}
+                            }
+
+                            //while (leftMinesUserThinks > 0) {
+                            let doneSomething = false;
+
+                            for (i of [...new Array(10).keys()]) {
+                                if (gameover) return;
+                                let changed = false;
+                                if (checkWin()) {
+                                    render();
+                                    return;
+                                }
+
+                                for (let j = 0; j < y; ++j) {
+                                    for (let i = 0; i < x; ++i) {
+                                        if (map[j][i] > 0 && map[j][i] < ITEM_MINE) {
+                                            const surroundedMines = getSurroundedMines(i, j);
+                                            const surroundedConfirms = getSurroundedConfirms(i, j);
+                                            if (surroundedMines === surroundedConfirms) {
+                                                for (let a = 0; a < 3; ++a) {
+                                                    for (let b = 0; b < 3; ++b) {
+                                                        if (!(a === 1 && b === 1)) {
+                                                            if (clickItem(i + a - 1, j + b - 1, true)) {
+                                                                changed = true;
+                                                                // render();
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        if (map[j][i] > 0 && map[j][i] < ITEM_MINE && getSurroundedItems(i, j, [0, ITEM_MINE, ITEM_FLAG, ITEM_FLAG_WITH_MINE]) === map[j][i] - 1) {
+                                            for (let a = 0; a < 3; ++a) {
+                                                for (let b = 0; b < 3; ++b) {
+                                                    if (!(a === 1 && b === 1)) {
+                                                        let c = i + a - 1;
+                                                        let d = j + b - 1;
+                                                        if ((c >= 0 && c < x && d >= 0 && d < y)) {
+                                                            if (map[d][c] === ITEM_MINE) {
+                                                                map[d][c] = ITEM_FLAG_WITH_MINE;
+                                                                --leftMinesUserThinks;
+                                                                changed = true;
+                                                            } else if (map[d][c] === 0) {
+                                                                map[d][c] = ITEM_FLAG;
+                                                                --leftMinesUserThinks;
+                                                                changed = true;
+                                                            } else {
+                                                                continue;
+                                                            }
+                                                            // render();
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }   
+                                }
+                                if (!changed && !doneSomething) {
+                                    if (leftMinesUserThinks > 0) {
+                                        let candidates = [];
+                                        for (let j = 0; j < y; ++j) {
+                                            for (let i = 0; i < x; ++i) {
+                                                if ([0, ITEM_MINE, ITEM_QUESTION, ITEM_QUESTION_WITH_MINE].includes(map[j][i])) {
+                                                    candidates.push([i, j]);
+                                                }
+                                            }
+                                        }
+                                        candidates.sort((a, b) => Math.random() - 0.5);
+                                        let [a, b] = candidates.pop();
+                                        clickItem(a, b);
+                                    } else {
+                                        break;
+                                    }
+                                }
+
+                                doneSomething = true;
+                            }
+
+                            render();
                         }
                     }
                 ],
@@ -500,6 +584,7 @@ window.onload = () => {
             initMap();
             render();
             startTimeIndicator();
+            saveState();
             return true;
         } else {
             return false;
@@ -507,13 +592,16 @@ window.onload = () => {
     }
 
     function clickItem(i, j, prevent) {
+        let changed = false;
+
         if (!(i >= 0 && i < x && j >= 0 && j < y)) {
-            return;
+            return false;
         }
         if (map[j][i] === 0 || map[j][i] === ITEM_QUESTION) {
             const num = getSurroundedMines(i, j);
             map[j][i] = num + 1;
             --notClicked;
+            changed = true;
             if (num == 0) {
                 for (let a = 0; a < 3; ++a) {
                     for (let b = 0; b < 3; ++b) {
@@ -526,30 +614,34 @@ window.onload = () => {
         } else if (map[j][i] === ITEM_MINE || map[j][i] === ITEM_QUESTION_WITH_MINE) {
             map[j][i] = ITEM_BOMBED_MINE;
             gameover = true;
+            changed = true;
             endTimeIndicator();
         } else if (map[j][i] > 0 && map[j][i] < ITEM_MINE) {
-            if (prevent) return;
+            if (prevent) return false;
             const surroundedMines = getSurroundedMines(i, j);
             const surroundedConfirms = getSurroundedConfirms(i, j);
             if (surroundedMines === surroundedConfirms) {
                 for (let a = 0; a < 3; ++a) {
                     for (let b = 0; b < 3; ++b) {
                         if (!(a === 1 && b === 1)) {
-                            clickItem(i + a - 1, j + b - 1, true);
+                            changed = changed || clickItem(i + a - 1, j + b - 1, true);
                         }
                     }
                 }
             }
         }
         render();
+        return changed;
     }
 
     function checkAndClick(i, j) {
+        let changed = false;
         if (i >= 0 && i < x && j >= 0 && j < y) {
             if (map[j][i] === 0) {
-                clickItem(i, j);
+                changed = changed || clickItem(i, j);
             }
         }
+        return changed;
     }
 
     function setSmiley() {
@@ -574,7 +666,7 @@ window.onload = () => {
     function setItems() {
         for (let j = 0; j < y; ++j) {
             for (let i = 0; i < x; ++i) {
-                if (map[j][i] === ITEM_BOMBED_MINE || (gameover && map[j][i] === ITEM_MINE)) {
+                if (map[j][i] === ITEM_BOMBED_MINE || (gameover && (map[j][i] === ITEM_MINE || map[j][i] === ITEM_QUESTION_WITH_MINE))) {
                     items[j][i].classList.remove('red');
                     items[j][i].classList.remove('flag');
                     items[j][i].classList.remove('question');
@@ -689,7 +781,9 @@ window.onload = () => {
                     }
                 }
             }
+            return true;
         }
+        return false;
     }
 
     function startTimeIndicator() {
@@ -781,7 +875,7 @@ window.onload = () => {
         if (!json || json === '') return;
         try {
             const data = JSON.parse(json);
-            
+
             difficulty = data.difficulty;
             x = data.x;
             y = data.y;
