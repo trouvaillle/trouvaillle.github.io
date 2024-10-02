@@ -39,12 +39,6 @@ window.onload = () => {
   const smiley =  document.querySelector('#smiley');
   const time =  document.querySelector('#time');
   const menu =  document.querySelector('#menu');
-  const menuGame =  document.querySelector('#menu-game');
-  const menuGameContext =  document.querySelector('#menu-game-context');
-  const menuGameContextNew = document.querySelector('#menu-game-context-new');
-  const menuGameContextBeginner = document.querySelector('#menu-game-context-beginner');
-  const menuGameContextIntermediate = document.querySelector('#menu-game-context-intermediate');
-  const menuGameContextExpert = document.querySelector('#menu-game-context-expert');
   const theme = document.querySelector('#theme');
 
   initMap();
@@ -292,9 +286,25 @@ window.onload = () => {
                 },
                 {
                     'type': 'submenu',
+                    'name': 'Baby',
+                    'action': () => {
+                        setDifficulty('baby');
+                        closeAllMenuContext();
+                    }
+                },
+                {
+                    'type': 'submenu',
                     'name': 'Beginner',
                     'action': () => {
                         setDifficulty('beginner');
+                        closeAllMenuContext();
+                    }
+                },
+                {
+                    'type': 'submenu',
+                    'name': 'Novice',
+                    'action': () => {
+                        setDifficulty('novice');
                         closeAllMenuContext();
                     }
                 },
@@ -314,6 +324,14 @@ window.onload = () => {
                         closeAllMenuContext();
                     }
                 },
+                {
+                    'type': 'submenu',
+                    'name': 'Hard',
+                    'action': () => {
+                        setDifficulty('hard');
+                        closeAllMenuContext();
+                    }
+                }
             ],
             'action': null
         },
@@ -399,36 +417,6 @@ window.onload = () => {
 
         menu.appendChild(element);
     });
-
-    return;
-    
-
-
-    
-    const itemMouseDown = (item) => (evt) => {
-        evt.preventDefault();
-        thisItemDown = true;
-    };
-    const itemMouseEnter = (item) => (evt) => {
-        evt.preventDefault();
-    };
-    const itemMouseUp = (item) => (evt) => {
-        evt.preventDefault();
-        
-        if (opened) {
-            item.classList.remove('debossed-small');
-            menuGameContext.removeAttribute('style');
-        } else {
-            item.classList.add('debossed-small');
-            menuGameContext.setAttribute('style', 'display: block;');
-        }
-        opened = !opened;
-        thisItemDown = false;
-    };
-    const itemMouseLeave = (item) => (evt) => {
-        evt.preventDefault();
-        thisItemDown = false;
-    };
   }
 
   function setDifficulty(newValue) {
@@ -438,14 +426,23 @@ window.onload = () => {
     difficulty = newValue;
     let settings = {x: 9, y: 9, mines: 10};
     switch (difficulty) {
+        case 'baby':
+            settings = {x: 5, y: 5, mines: 6};
+            break;
         case 'beginner':
             settings = {x: 9, y: 9, mines: 10};
+            break;
+        case 'novice':
+            settings = {x: 9, y: 9, mines: 20};
             break;
         case 'intermediate':
             settings = {x: 16, y: 16, mines: 40};
             break;
         case 'expert':
             settings = {x: 16, y: 30, mines: 99};
+            break;
+        case 'hard':
+            settings = {x: 16, y: 44, mines: 150};
             break;
         default:
             break;
@@ -462,8 +459,12 @@ window.onload = () => {
   }
 
   function closeAllMenuContext() {
-    menuGame.classList.remove('debossed-small');
-    menuGameContext.removeAttribute('style');
+    Array.from(menu.querySelectorAll('div')).forEach(it => {
+        it.classList.remove('debossed-small');
+        Array.from(it.querySelectorAll('div')).forEach(inner => {
+            inner.removeAttribute('style');
+        });
+    });
   }
 
   function resetGame() {
@@ -549,6 +550,7 @@ window.onload = () => {
                 items[j][i].classList.remove('red');
                 items[j][i].classList.remove('flag');
                 items[j][i].classList.remove('question');
+                items[j][i].classList.remove('no-mine');
                 items[j][i].classList.add('mine');
                 if (map[j][i] === ITEM_BOMBED_MINE) {
                     items[j][i].classList.add('red');
@@ -559,6 +561,7 @@ window.onload = () => {
                 items[j][i].classList.remove('mine');
                 items[j][i].classList.remove('flag');
                 items[j][i].classList.remove('question');
+                items[j][i].classList.remove('no-mine');
                 items[j][i].classList.add(`number-${map[j][i] - 1}`);
                 items[j][i].classList.add('mousedown');
             } else if (map[j][i] === 0 || map[j][i] === ITEM_MINE) {
@@ -566,6 +569,7 @@ window.onload = () => {
                 items[j][i].classList.remove('mine');
                 items[j][i].classList.remove('flag');
                 items[j][i].classList.remove('question');
+                items[j][i].classList.remove('no-mine');
                 items[j][i].classList.remove('mousedown');
                 for (let k = 1; k < 9; ++k) {
                     items[j][i].classList.remove(`number-${k}`);
@@ -584,6 +588,7 @@ window.onload = () => {
                 items[j][i].classList.remove('red');
                 items[j][i].classList.remove('flag');
                 items[j][i].classList.add('question');
+                items[j][i].classList.remove('no-mine');
                 items[j][i].classList.remove('mousedown');
             }
         }
@@ -652,7 +657,7 @@ window.onload = () => {
         for (let j = 0; j < y; ++j) {
             for (let i = 0; i < x; ++i) {
                 if (map[j][i] === ITEM_MINE) {
-                    map[j][i] = ITEM_FLAG;
+                    map[j][i] = ITEM_FLAG_WITH_MINE;
                 }
             }
         }
@@ -671,6 +676,7 @@ window.onload = () => {
   function endTimeIndicator() {
     if (timeIndicator !== null) {
         clearInterval(timeIndicator);
+        timeIndicator = null;
     }
   }
 
