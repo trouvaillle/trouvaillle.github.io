@@ -820,13 +820,17 @@ window.onload = () => {
         document.documentElement.setAttribute(dataTheme, 'light');
         theme.innerHTML = '🌙';
         const mouseUpAction = () => {
+            let newTheme = 'light';
             if (document.documentElement.getAttribute(dataTheme) === 'dark') {
                 theme.innerHTML = '🌙';
-                document.documentElement.setAttribute(dataTheme, 'light');
+                newTheme = 'light';
+                document.documentElement.setAttribute(dataTheme, newTheme);
             } else {
                 theme.innerHTML = '☀️';
-                document.documentElement.setAttribute(dataTheme, 'dark');
+                newTheme = 'dark';
+                document.documentElement.setAttribute(dataTheme, newTheme);
             }
+            localStorage.setItem(`${keyPrefix}/theme`, newTheme);
         };
         theme.addEventListener('mouseeup', mouseUpAction);
         theme.addEventListener('pointerup', mouseUpAction);
@@ -838,7 +842,7 @@ window.onload = () => {
         let theme = "light";
 
         if (localStorage.getItem(`${keyPrefix}/theme`)) {
-            if (localStorage.getItem(`${keyPrefix}/theme`) == "dark") {
+            if (localStorage.getItem(`${keyPrefix}/theme`) === "dark") {
                 theme = "dark";
             }
         } else if (!window.matchMedia) {
