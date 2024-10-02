@@ -241,6 +241,7 @@ window.onload = () => {
         };
         const itemMouseUp = (item) => (evt) => {
             evt.preventDefault();
+            closeAllMenuContext();
             item.classList.remove('debossed-middle');
             setSmiley();
             if (timer !== null) {
@@ -583,6 +584,8 @@ window.onload = () => {
         initMap();
         createBoard();
         render();
+
+        saveState();
     }
 
     function closeAllMenuContext(exclude) {
