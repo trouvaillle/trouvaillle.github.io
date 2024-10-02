@@ -17,7 +17,6 @@
     --back-0: black;
     --back-cell: #C0C0C0;
     --back-cell-focus: #CFCFCF;
-    --width: calc(100vw-2rem);
     --border-upper: white;
     --border-lower: #71706E;
     --back-outline: #808080;
@@ -41,7 +40,6 @@
     --back-0: black;
     --back-cell: #4E545B;
     --back-cell-focus: #747d87;
-    --width: calc(100vw-2rem);
     --border-upper: #777E85;
     --border-lower: #242A31;
     --back-outline: #20262D;
@@ -338,16 +336,14 @@ html, body {
     content: '💣';
     width: 100%;
     height: 100%;
+
     display: flex;
+    flex-direction: column;
     justify-content: center;
     text-align: center;
     
     font-size: 2em;
     overflow: hidden;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 
     /* transform: translateY(calc(50% - 0.6em)); */
 }
@@ -356,9 +352,13 @@ html, body {
     content: '🚩';
     width: 100%;
     height: 100%;
+
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    transform: translateY(calc(50% - 0.9em));
+    text-align: center;
+    /* transform: translateY(calc(50% - 0.9em)); */
+    
     font-size: 1.8em;
     overflow: hidden;
 }
@@ -368,9 +368,15 @@ html, body {
     width: 100%;
     height: 100%;
     display: flex;
-    justify-content: center;
     color: black;
-    transform: translateY(calc(50% - 0.5em));
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+
+    /* transform: translateY(calc(50% - 0.5em));*/
+
     font-size: 4em;
     font-family: 'VT323', Courier, monospace;
     overflow: hidden;
@@ -380,11 +386,15 @@ html, body {
     content: '1';
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
     color: var(--number-1);
     font-weight: bold;
-    transform: translateY(calc(50% - 0.5em));
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    /* transform: translateY(calc(50% - 0.5em)); */
+
     font-size: 4em;
     font-family: 'VT323', Courier, monospace;
     overflow: hidden;
@@ -394,11 +404,15 @@ html, body {
     content: '2';
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
     color: var(--number-2);
     font-weight: bold;
-    transform: translateY(calc(50% - 0.5em));
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    /* transform: translateY(calc(50% - 0.5em)); */
+
     font-size: 4em;
     font-family: 'VT323', Courier, monospace;
     overflow: hidden;
@@ -408,11 +422,15 @@ html, body {
     content: '3';
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
     color: var(--number-3);
     font-weight: bold;
-    transform: translateY(calc(50% - 0.5em));
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    /* transform: translateY(calc(50% - 0.5em)); */
+
     font-size: 4em;
     font-family: 'VT323', Courier, monospace;
     overflow: hidden;
@@ -422,11 +440,15 @@ html, body {
     content: '4';
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
     color: var(--number-4);
     font-weight: bold;
-    transform: translateY(calc(50% - 0.5em));
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    /* transform: translateY(calc(50% - 0.5em)); */
+
     font-size: 4em;
     font-family: 'VT323', Courier, monospace;
     overflow: hidden;
@@ -436,11 +458,15 @@ html, body {
     content: '5';
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
     color: var(--number-5);
     font-weight: bold;
-    transform: translateY(calc(50% - 0.5em));
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    /* transform: translateY(calc(50% - 0.5em)); */
+    
     font-size: 4em;
     font-family: 'VT323', Courier, monospace;
     overflow: hidden;
@@ -450,11 +476,15 @@ html, body {
     content: '6';
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
     color: var(--number-6);
     font-weight: bold;
-    transform: translateY(calc(50% - 0.5em));
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    /* transform: translateY(calc(50% - 0.5em)); */
+    
     font-size: 4em;
     font-family: 'VT323', Courier, monospace;
     overflow: hidden;
@@ -464,11 +494,15 @@ html, body {
     content: '7';
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
     color: var(--number-7);
     font-weight: bold;
-    transform: translateY(calc(50% - 0.5em));
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    /* transform: translateY(calc(50% - 0.5em)); */
+    
     font-size: 4em;
     font-family: 'VT323', Courier, monospace;
     overflow: hidden;
@@ -478,11 +512,15 @@ html, body {
     content: '8';
     width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: center;
     color: var(--number-8);
     font-weight: bold;
-    transform: translateY(calc(50% - 0.5em));
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    /* transform: translateY(calc(50% - 0.5em)); */
+    
     font-size: 4em;
     font-family: 'VT323', Courier, monospace;
     overflow: hidden;
