@@ -439,6 +439,7 @@ window.onload = () => {
                             }
 
                             render();
+                            saveState();
                         }
                     }
                 ],
