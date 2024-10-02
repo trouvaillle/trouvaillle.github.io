@@ -572,7 +572,7 @@ window.onload = () => {
                 settings = { x: 16, y: 40, mines: 135 };
                 break;
             case 'insane':
-                settings = { x: 20, y: 28, mines: 125 };
+                settings = { x: 20, y: 27, mines: 120 };
                 break;
             default:
                 break;
