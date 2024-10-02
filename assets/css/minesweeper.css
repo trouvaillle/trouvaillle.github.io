@@ -319,10 +319,10 @@ html, body {
 #board .cell .item.mousedown {
     flex: 1 1;
     background: var(--back-cell);
-    border-left: 0.1rem solid var(--back-outline);
-    border-right: 0.1rem solid var(--back-outline);
-    border-top: 0.1rem solid var(--back-outline);
-    border-bottom: 0.1rem solid var(--back-outline);
+    border-left: 0.05rem solid var(--back-outline);
+    border-right: 0.05rem solid var(--back-outline);
+    border-top: 0.05rem solid var(--back-outline);
+    border-bottom: 0.05rem solid var(--back-outline);
     cursor: pointer;
 }
 
@@ -340,9 +340,16 @@ html, body {
     height: 100%;
     display: flex;
     justify-content: center;
-    transform: translateY(calc(50% - 0.6em));
+    text-align: center;
+    
     font-size: 2em;
     overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    /* transform: translateY(calc(50% - 0.6em)); */
 }
 
 #board .cell .item.flag::after {
