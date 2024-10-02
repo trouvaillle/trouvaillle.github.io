@@ -488,6 +488,11 @@ window.onload = () => {
                 items[j][i].classList.remove('question');
                 items[j][i].classList.add('flag');
                 items[j][i].classList.remove('mousedown');
+                if (gameover && map[j][i] === ITEM_FLAG) {
+                    items[j][i].classList.add('no-mine');
+                } else {
+                    items[j][i].classList.remove('no-mine');
+                }
             } else if (map[j][i] === ITEM_QUESTION || map[j][i] === ITEM_QUESTION_WITH_MINE) {
                 items[j][i].classList.remove('red');
                 items[j][i].classList.remove('flag');
