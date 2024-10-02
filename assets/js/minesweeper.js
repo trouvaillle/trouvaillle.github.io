@@ -331,6 +331,13 @@ window.onload = () => {
                         'action': () => {
                             setDifficulty('hard');
                         }
+                    },
+                    {
+                        'type': 'submenu',
+                        'name': 'Insane',
+                        'action': () => {
+                            setDifficulty('insane');
+                        }
                     }
                 ],
                 'action': null
@@ -362,7 +369,7 @@ window.onload = () => {
 
                                 for (let j = 0; j < y; ++j) {
                                     for (let i = 0; i < x; ++i) {
-                                        if (map[j][i] > 0 && map[j][i] < ITEM_MINE) {
+                                        if (map[j][i] > 1 && map[j][i] < ITEM_MINE) {
                                             const surroundedMines = getSurroundedMines(i, j);
                                             const surroundedConfirms = getSurroundedConfirms(i, j);
                                             if (surroundedMines === surroundedConfirms) {
@@ -379,7 +386,7 @@ window.onload = () => {
                                             }
                                         }
 
-                                        if (map[j][i] > 0 && map[j][i] < ITEM_MINE && getSurroundedItems(i, j, [0, ITEM_MINE, ITEM_FLAG, ITEM_FLAG_WITH_MINE]) === map[j][i] - 1) {
+                                        if (map[j][i] > 1 && map[j][i] < ITEM_MINE && getSurroundedItems(i, j, [0, ITEM_MINE, ITEM_FLAG, ITEM_FLAG_WITH_MINE]) === map[j][i] - 1) {
                                             for (let a = 0; a < 3; ++a) {
                                                 for (let b = 0; b < 3; ++b) {
                                                     if (!(a === 1 && b === 1)) {
@@ -552,7 +559,7 @@ window.onload = () => {
                 settings = { x: 9, y: 9, mines: 10 };
                 break;
             case 'novice':
-                settings = { x: 9, y: 9, mines: 20 };
+                settings = { x: 9, y: 9, mines: 15 };
                 break;
             case 'intermediate':
                 settings = { x: 16, y: 16, mines: 40 };
@@ -561,7 +568,10 @@ window.onload = () => {
                 settings = { x: 16, y: 30, mines: 99 };
                 break;
             case 'hard':
-                settings = { x: 16, y: 44, mines: 150 };
+                settings = { x: 16, y: 40, mines: 135 };
+                break;
+            case 'insane':
+                settings = { x: 20, y: 36, mines: 160 };
                 break;
             default:
                 break;
