@@ -1,14 +1,26 @@
 window.onload = () => {
+  /* 
+    map values
+    10 - mine, 
+    11 - bombed mine, 
+    12 - flag,
+    13 - flag with mine,
+    14 - flag with no mine,
+    15 - question,
+    16 - question with mine 
+  */
+
   const ITEM_MINE = 10;
   const ITEM_BOMBED_MINE = 11;
   const ITEM_FLAG = 12;
   const ITEM_FLAG_WITH_MINE = 13;
-  const ITEM_QUESTION = 14;
-  const ITEM_QUESTION_WITH_MINE = 15;
+  const ITEM_FLAG_WITH_NO_MINE = 14;
+  const ITEM_QUESTION = 15;
+  const ITEM_QUESTION_WITH_MINE = 16;
 
   let difficulty = 'beginner';
   let {x, y, mines} = {x: 9, y: 9, mines: 10};
-  let map = []; // 10 - mine, 11 - bombed mine, 12 - flag, 13 - flag with mine, 14 - question, 15 - question with mine
+  let map = []; // map values
   let mineCoords = [];
   let items = [];
   let gameover = false;
@@ -19,6 +31,7 @@ window.onload = () => {
   let startTime = 0;
   let timeIndicator = null;
 
+  const body =  document.querySelector('body');
   const container =  document.querySelector('#container');
   const header =  document.querySelector('#header');
   const board =  document.querySelector('#board');
@@ -31,11 +44,13 @@ window.onload = () => {
   const menuGameContextBeginner = document.querySelector('#menu-game-context-beginner');
   const menuGameContextIntermediate = document.querySelector('#menu-game-context-intermediate');
   const menuGameContextExpert = document.querySelector('#menu-game-context-expert');
+  const theme = document.querySelector('#theme');
 
   initMap();
   createBoard();
   initializeSmiley();
   initializeMenu();
+  initializeTheme();
   render();
   startTimeIndicator();
 
@@ -78,7 +93,7 @@ window.onload = () => {
 
   function adjustSize() {
     // const cellWidth = Math.min(container.clientWidth / x, container.clientHeight / y);
-    const cellWidth = Math.min(container.clientWidth / x, 48);
+    const cellWidth = Math.min((body.clientWidth - 14 * (2.6+0.1))/ x, 48);
     board.setAttribute('style', `width: ${cellWidth * x}px; height: ${cellWidth * y}px; font-size: ${cellWidth * 0.25}px`);
     header.setAttribute('style', `width: ${cellWidth * x}px;`);
   }
@@ -100,7 +115,7 @@ window.onload = () => {
             const itemMouseDown = (item) => (evt) => {
                 evt.preventDefault();
                 if (gameover) return;
-                if (map[j][i] >= 0 && map[j][i] <= ITEM_MINE || (map[j][i] >= 12 && map[j][i] <= 15)) {
+                if (map[j][i] >= 0 && map[j][i] <= ITEM_MINE || (map[j][i] >= ITEM_FLAG && map[j][i] <= ITEM_QUESTION_WITH_MINE)) {
                     if (evt.button === 0) {
                         item.classList.add('mousedown');
                     }
@@ -109,7 +124,7 @@ window.onload = () => {
 
                     timer = setTimeout(() => {
                         itemMouseUp(item)({'button': 2, 'preventDefault': () => {}});
-                    }, 250);
+                    }, 150);
                 }
             };
             const itemMouseEnter = (item) => (evt) => {
@@ -130,7 +145,7 @@ window.onload = () => {
                     return;
                 } */
                 if (gameover) return;
-                if (map[j][i] >= 0 && map[j][i] <= ITEM_MINE || (map[j][i] >= 12 && map[j][i] <= 15)) {
+                if (map[j][i] >= 0 && map[j][i] <= ITEM_MINE || (map[j][i] >= ITEM_FLAG && map[j][i] <= ITEM_QUESTION_WITH_MINE)) {
                     if (!(map[j][i] > 0 && map[j][i] < ITEM_MINE)) {
                         item.classList.remove('mousedown');
                     }
@@ -170,7 +185,7 @@ window.onload = () => {
             };
             const itemMouseLeave = (item) => (evt) => {
                 evt.preventDefault();
-                if (map[j][i] === 0 || (!gameover && map[j][i] === ITEM_MINE) || (map[j][i] >= 12 && map[j][i] <= 15)) {
+                if (map[j][i] === 0 || (!gameover && map[j][i] === ITEM_MINE) || (map[j][i] >= ITEM_FLAG && map[j][i] <= ITEM_QUESTION_WITH_MINE)) {
                     item.classList.remove('mousedown');
                     thisItemDown = false;
                     setSmiley();
@@ -448,7 +463,7 @@ window.onload = () => {
                 items[j][i].classList.remove('flag');
                 items[j][i].classList.remove('question');
                 items[j][i].classList.add('mine');
-                if (map[j][i] === 11) {
+                if (map[j][i] === ITEM_BOMBED_MINE) {
                     items[j][i].classList.add('red');
                 }
                 items[j][i].classList.add('mousedown');
@@ -499,6 +514,8 @@ window.onload = () => {
     const char = '<span class="ambient digital-red">8</span>';
     if (text.length < 3) {
         text = char.repeat(3 - text.length) + text;
+    } else {
+        text = text.substring(text.length - 3, text.length);
     }
     time.innerHTML = text;
   }
@@ -562,6 +579,54 @@ window.onload = () => {
   function endTimeIndicator() {
     if (timeIndicator !== null) {
         clearInterval(timeIndicator);
+    }
+  }
+
+  function initializeTheme() {
+    const dataTheme = 'data-theme';
+    document.documentElement.setAttribute(dataTheme, 'light');
+    theme.innerHTML = '🌙';
+    const mouseUpAction = () => {
+        if (document.documentElement.getAttribute(dataTheme) === 'dark') {
+            theme.innerHTML = '🌙';
+            document.documentElement.setAttribute(dataTheme, 'light');
+        } else {
+            theme.innerHTML = '☀️';
+            document.documentElement.setAttribute(dataTheme, 'dark');
+        }
+    };
+    theme.addEventListener('mouseeup', mouseUpAction);
+    theme.addEventListener('pointerup', mouseUpAction);
+    detectColorScheme();
+  }
+
+  function detectColorScheme() {
+    const dataTheme = 'data-theme';
+    let theme = "light";
+
+    if(localStorage.getItem("trouvaille.github.io/app/minesweeper/theme")){
+        if(localStorage.getItem("trouvaille.github.io/app/minesweeper/theme") == "dark"){
+            theme = "dark";
+        }
+    } else if(!window.matchMedia) {
+        return false;
+    } else if(window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        theme = "dark";
+    } else {
+      theme = "light";
+    }
+
+    document.documentElement.setAttribute(dataTheme, theme);
+
+    setThemeButtonState();
+  }
+
+  function setThemeButtonState() {
+    const dataTheme = 'data-theme';
+    if (document.documentElement.getAttribute(dataTheme) === 'dark') {
+        theme.innerHTML = '☀️';
+    } else {
+        theme.innerHTML = '🌙';
     }
   }
 };

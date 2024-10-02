@@ -15,9 +15,48 @@
     --fore-0: white;
     --fore-9: black;
     --back-0: black;
-    --back-cell: #B9B9B8;
-    --back-cell-focus: #cfcfcf;
+    --back-cell: #C0C0C0;
+    --back-cell-focus: #CFCFCF;
     --width: calc(100vw-2rem);
+    --border-upper: white;
+    --border-lower: #71706E;
+    --back-outline: #808080;
+    --title-bar: navy;
+    --hr-top: #616161;
+    --hr-bottom: white;
+
+    --number-1: blue;
+    --number-2: green;
+    --number-3: red;
+    --number-4: navy;
+    --number-5: brown;
+    --number-6: teal;
+    --number-7: black;
+    --number-8: grey;
+}
+
+[data-theme="dark"] {
+    --fore-0: white;
+    --fore-9: black;
+    --back-0: black;
+    --back-cell: #4E545B;
+    --back-cell-focus: #747d87;
+    --width: calc(100vw-2rem);
+    --border-upper: #777E85;
+    --border-lower: #242A31;
+    --back-outline: #20262D;
+    --title-bar: navy;
+    --hr-top: #242A31;
+    --hr-bottom: #777E85;
+
+    --number-1: #8DC5FA;
+    --number-2: #7DC070;
+    --number-3: #EE7F8A;
+    --number-4: #E08DF9;
+    --number-5: #D5AC43;
+    --number-6: #80CACB;
+    --number-7: #999999;
+    --number-8: #D1D8DF;
 }
 
 html {
@@ -42,7 +81,8 @@ html, body {
 
     display: flex;
     flex-direction: column;
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: hidden;
 
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
@@ -53,8 +93,24 @@ html, body {
                                   currently supported by Chrome, Edge, Opera and Firefox */
 }
 
+/***************** wrapper *****************/
+#wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0.5rem auto 0 auto;
+    flex: 1 1;
+    overflow: hidden;
+}
+
+#subwrapper {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
 /***************** header *****************/
-#root > header {
+#root header {
     display: flex;
     padding: 0.5rem 1rem 0.5rem 1rem;
     font-size: 2rem;
@@ -99,10 +155,13 @@ html, body {
 #smiley {
     display: flex;
     aspect-ratio: 1;
-    width: auto;
+    width: 2.5rem;overflow: hidden;
+    height: 2.5rem;
     justify-content: center;
     cursor: pointer;
     font-size: 2rem;
+    text-shadow: -1px -1px 0 var(--fore-9), 1px -1px 0 var(--fore-9), -1px 1px 0 var(--fore-9), 1px 1px 0 var(--fore-9);
+    outline: 1px solid var(--border-lower);
 }
 
 #header > .container.time {
@@ -134,7 +193,7 @@ html, body {
 }
 
 .ambient.digital-red {
-    color: #600;
+    color: #400;
     font-family: DSEG14ClassicMini-Bold;
 }
 
@@ -143,11 +202,19 @@ html, body {
 }
 
 /***************** section *****************/
-#root > section { 
+#root section { 
     padding: 0.5rem 1rem 1rem 1rem;
     display: flex;
     flex-direction: column;
     flex: 1 1;
+    overflow: hidden;
+
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+#root section::-webkit-scrollbar {
+    display: none;
 }
 
 #container {
@@ -155,48 +222,50 @@ html, body {
     flex: 1 1;
     justify-content: center;
     margin: 0 0 1rem 0;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 .embossed {
-    border-left: 0.3rem solid white;
-    border-right: 0.3rem solid #71706E;
-    border-top: 0.3rem solid white;
-    border-bottom: 0.3rem solid #71706E;
+    border-left: 0.2rem solid var(--border-upper);
+    border-right: 0.2rem solid var(--border-lower);
+    border-top: 0.2rem solid var(--border-upper);
+    border-bottom: 0.2rem solid var(--border-lower);
 }
 
 .embossed-small {
-    border-left: 0.1rem solid white;
-    border-right: 0.1rem solid #71706E;
-    border-top: 0.1rem solid white;
-    border-bottom: 0.1rem solid #71706E;
+    border-left: 0.1rem solid var(--border-upper);
+    border-right: 0.1rem solid var(--border-lower);
+    border-top: 0.1rem solid var(--border-upper);
+    border-bottom: 0.1rem solid var(--border-lower);
 }
 
 .embossed-middle {
-    border-left: 0.2rem solid white;
-    border-right: 0.2rem solid #71706E;
-    border-top: 0.2rem solid white;
-    border-bottom: 0.2rem solid #71706E;
+    border-left: 0.15rem solid var(--border-upper);
+    border-right: 0.15rem solid var(--border-lower);
+    border-top: 0.15rem solid var(--border-upper);
+    border-bottom: 0.15rem solid var(--border-lower);
 }
 
 .debossed {
-    border-left: 0.3rem solid #71706E;
-    border-right: 0.3rem solid white;
-    border-top: 0.3rem solid #71706E;
-    border-bottom: 0.3rem solid white;
+    border-left: 0.2rem solid var(--border-lower);
+    border-right: 0.2rem solid var(--border-upper);
+    border-top: 0.2rem solid var(--border-lower);
+    border-bottom: 0.2rem solid var(--border-upper);
 }
 
 .debossed-small {
-    border-left: 0.1rem solid #71706E;
-    border-right: 0.1rem solid white;
-    border-top: 0.1rem solid #71706E;
-    border-bottom: 0.1rem solid white;
+    border-left: 0.1rem solid var(--border-lower);
+    border-right: 0.1rem solid var(--border-upper);
+    border-top: 0.1rem solid var(--border-lower);
+    border-bottom: 0.1rem solid var(--border-upper);
 }
 
 .debossed-middle {
-    border-left: 0.2rem solid #71706E;
-    border-right: 0.2rem solid white;
-    border-top: 0.2rem solid #71706E;
-    border-bottom: 0.2rem solid white;
+    border-left: 0.15rem solid var(--border-lower);
+    border-right: 0.15rem solid var(--border-upper);
+    border-top: 0.15rem solid var(--border-lower);
+    border-bottom: 0.15rem solid var(--border-upper);
 }
 
 #board {
@@ -250,10 +319,10 @@ html, body {
 #board .cell .item.mousedown {
     flex: 1 1;
     background: var(--back-cell);
-    border-left: 0.1rem solid #838383;
-    border-right: 0.1rem solid #838383;
-    border-top: 0.1rem solid #838383;
-    border-bottom: 0.1rem solid #838383;
+    border-left: 0.1rem solid var(--back-outline);
+    border-right: 0.1rem solid var(--back-outline);
+    border-top: 0.1rem solid var(--back-outline);
+    border-bottom: 0.1rem solid var(--back-outline);
     cursor: pointer;
 }
 
@@ -282,7 +351,7 @@ html, body {
     height: 100%;
     display: flex;
     justify-content: center;
-    transform: translateY(calc(50% - 0.8em));
+    transform: translateY(calc(50% - 0.9em));
     font-size: 1.8em;
     overflow: hidden;
 }
@@ -306,7 +375,7 @@ html, body {
     height: 100%;
     display: flex;
     justify-content: center;
-    color: blue;
+    color: var(--number-1);
     font-weight: bold;
     transform: translateY(calc(50% - 0.5em));
     font-size: 4em;
@@ -320,7 +389,7 @@ html, body {
     height: 100%;
     display: flex;
     justify-content: center;
-    color: green;
+    color: var(--number-2);
     font-weight: bold;
     transform: translateY(calc(50% - 0.5em));
     font-size: 4em;
@@ -334,7 +403,7 @@ html, body {
     height: 100%;
     display: flex;
     justify-content: center;
-    color: red;
+    color: var(--number-3);
     font-weight: bold;
     transform: translateY(calc(50% - 0.5em));
     font-size: 4em;
@@ -348,7 +417,7 @@ html, body {
     height: 100%;
     display: flex;
     justify-content: center;
-    color: navy;
+    color: var(--number-4);
     font-weight: bold;
     transform: translateY(calc(50% - 0.5em));
     font-size: 4em;
@@ -362,7 +431,7 @@ html, body {
     height: 100%;
     display: flex;
     justify-content: center;
-    color: brown;
+    color: var(--number-5);
     font-weight: bold;
     transform: translateY(calc(50% - 0.5em));
     font-size: 4em;
@@ -376,7 +445,7 @@ html, body {
     height: 100%;
     display: flex;
     justify-content: center;
-    color: teal;
+    color: var(--number-6);
     font-weight: bold;
     transform: translateY(calc(50% - 0.5em));
     font-size: 4em;
@@ -390,7 +459,7 @@ html, body {
     height: 100%;
     display: flex;
     justify-content: center;
-    color: black;
+    color: var(--number-7);
     font-weight: bold;
     transform: translateY(calc(50% - 0.5em));
     font-size: 4em;
@@ -404,7 +473,7 @@ html, body {
     height: 100%;
     display: flex;
     justify-content: center;
-    color: grey;
+    color: var(--number-8);
     font-weight: bold;
     transform: translateY(calc(50% - 0.5em));
     font-size: 4em;
@@ -437,11 +506,15 @@ html, body {
     width: 100%;
 }
 
+/* title */
+
 #title {
-    background: blue;
+    background: var(--title-bar);
     color: white;
     border: 1px solid black;
     display: flex;
+    height: 2.5rem;
+    flex: 0 1;
 }
 
 #title .left {
@@ -461,6 +534,9 @@ html, body {
 
 #title .right {
     flex: 2 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
 }
 
 #title #back-container {
@@ -469,7 +545,7 @@ html, body {
     cursor: pointer;
     justify-content: center;
     aspect-ratio: 1;
-    width: auto;
+    width: 2.5rem;
     background: var(--back-cell);
     border-right: 1px solid var(--fore-9);
 }
@@ -482,9 +558,28 @@ html, body {
 
 #title .left > #back-container a {
     color: var(--fore-0);
-    text-shadow: 0px 1px 1px var(--fore-9);
+    text-shadow: -1px -1px 0 var(--fore-9), 1px -1px 0 var(--fore-9), -1px 1px 0 var(--fore-9), 1px 1px 0 var(--fore-9);
     text-decoration: none;
     font-size: 1rem;
+}
+
+#title #theme-container {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    justify-content: center;
+    aspect-ratio: 1;
+    width: 2.5rem;
+    background: var(--back-cell);
+    border-left: 1px solid var(--fore-9);
+}
+
+#theme {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    font-size: 1.5rem;
+    text-shadow: -1px -1px 0 var(--fore-9), 1px -1px 0 var(--fore-9), -1px 1px 0 var(--fore-9), 1px 1px 0 var(--fore-9);
 }
 
 /* navigation */
@@ -494,6 +589,7 @@ html, body {
     flex-direction: row;
     justify-content: left;
     padding: 0 0 0 1rem;
+    flex: 0 1;
 }
 
 .menu-item {
@@ -536,5 +632,10 @@ html, body {
 #menu-game-context hr {
     padding: 0;
     margin: 0.3rem 0;
-    width: 100%;
+    width: auto;
+
+    border-top: 1px solid var(--hr-top);
+    border-bottom: 1px solid var(--hr-bottom);
+    border-right: none;
+    border-left: none;
 }
