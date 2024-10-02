@@ -616,7 +616,7 @@ window.onload = () => {
                 for (let a = 0; a < 3; ++a) {
                     for (let b = 0; b < 3; ++b) {
                         if (!(a === 1 && b === 1)) {
-                            checkAndClick(i + a - 1, j + b - 1);
+                            changed = checkAndClick(i + a - 1, j + b - 1) || changed;
                         }
                     }
                 }
@@ -634,7 +634,7 @@ window.onload = () => {
                 for (let a = 0; a < 3; ++a) {
                     for (let b = 0; b < 3; ++b) {
                         if (!(a === 1 && b === 1)) {
-                            changed = changed || clickItem(i + a - 1, j + b - 1, true);
+                            changed = clickItem(i + a - 1, j + b - 1, true) || changed;
                         }
                     }
                 }
@@ -648,7 +648,7 @@ window.onload = () => {
         let changed = false;
         if (i >= 0 && i < x && j >= 0 && j < y) {
             if (map[j][i] === 0) {
-                changed = changed || clickItem(i, j);
+                changed = clickItem(i, j) || changed;
             }
         }
         return changed;
