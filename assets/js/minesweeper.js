@@ -249,12 +249,22 @@ window.onload = () => {
         };
         const itemMouseUp = (item) => (evt) => {
             evt.preventDefault();
+
+            thisItemDown = false;
             closeAllMenuContext();
             item.classList.remove('debossed-middle');
             setSmiley();
+            
             if (timer !== null) {
                 clearTimeout(timer);
                 timer = null;
+            }
+
+            if (autoplayTimer !== null) {
+                clearInterval(autoplayTimer);
+                autoplayTimer = null;
+            } else {
+                newGame();
             }
             /*
             if (thisItemDown && resetGame()) {
@@ -262,8 +272,6 @@ window.onload = () => {
                 return;
             }
             */
-            newGame();
-            thisItemDown = false;
         };
         const itemMouseLeave = (item) => (evt) => {
             evt.preventDefault();
@@ -475,6 +483,7 @@ window.onload = () => {
 
     function autoplay() {
         if (gameover) return;
+        let doneSomething = false;
 
         function stopAutoplay() {
             if (autoplayTimer !== null) {
@@ -504,6 +513,7 @@ window.onload = () => {
                                     if (!(a === 1 && b === 1)) {
                                         if (clickItem(i + a - 1, j + b - 1, true)) {
                                             changed = true;
+                                            doneSomething = true;
                                             startTime -= 3000;
                                         }
                                     }
@@ -527,11 +537,13 @@ window.onload = () => {
                                             map[d][c] = ITEM_FLAG_WITH_MINE;
                                             --leftMinesUserThinks;
                                             changed = true;
+                                            doneSomething = true;
                                             startTime -= 1000;
                                         } else if (map[d][c] === 0) {
                                             map[d][c] = ITEM_FLAG;
                                             --leftMinesUserThinks;
                                             changed = true;
+                                            doneSomething = true;
                                             startTime -= 3000;
                                         } else {
                                             continue;
@@ -546,7 +558,7 @@ window.onload = () => {
                 if (changed) break;
             }
 
-            if (!changed) {
+            if (!changed && !doneSomething) {
                 if (leftMinesUserThinks > 0) {
                     let candidates = [];
                     for (let j = 0; j < y; ++j) {
@@ -559,6 +571,7 @@ window.onload = () => {
                     candidates.sort((a, b) => Math.random() - 0.5);
                     let [a, b] = candidates.pop();
                     clickItem(a, b);
+                    doneSomething = true;
                 }
             }
 
@@ -575,7 +588,7 @@ window.onload = () => {
             return;
         }
 
-        autoplayTimer = setInterval(step, 200);        
+        autoplayTimer = setInterval(step, 150);        
     }
 
     function setDifficulty(newValue) {
@@ -722,7 +735,11 @@ window.onload = () => {
                 smiley.innerHTML = '😵';
             }
         } else {
-            smiley.innerHTML = '🙂';
+            if (autoplayTimer !== null) {
+                smiley.innerHTML = '🥸';
+            } else {
+                smiley.innerHTML = '🙂';
+            }
         }
     }
 
