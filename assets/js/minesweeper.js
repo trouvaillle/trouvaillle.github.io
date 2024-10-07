@@ -33,6 +33,8 @@ window.onload = () => {
     let startTime = 0;
     let timeIndicator = null;
     let menuCloser = [];
+    let autoplayTimer = null;
+
 
     const body = document.querySelector('body');
     const container = document.querySelector('#container');
@@ -64,6 +66,10 @@ window.onload = () => {
         notClicked = x * y;
         leftMinesUserThinks = mines;
         startTime = new Date().getTime();
+        if (autoplayTimer !== null) {
+            clearInterval(autoplayTimer);
+            autoplayTimer = null;
+        }
 
         let alreadyTaken = new Set();
         let left = mines;
@@ -351,95 +357,7 @@ window.onload = () => {
                         'type': 'submenu',
                         'name': 'Autoplay',
                         'action': () => {
-                            if (gameover) return;
-
-                            function sleep(time) {
-                                let next = Date.now() + time;
-                                while (Date.now() < next) {}
-                            }
-
-                            //while (leftMinesUserThinks > 0) {
-                            let doneSomething = false;
-
-                            for (i of [...new Array(10).keys()]) {
-                                if (gameover) return;
-                                let changed = false;
-                                if (checkWin()) {
-                                    render();
-                                    return;
-                                }
-
-                                for (let j = 0; j < y; ++j) {
-                                    for (let i = 0; i < x; ++i) {
-                                        if (map[j][i] > 1 && map[j][i] < ITEM_MINE) {
-                                            const surroundedMines = getSurroundedMines(i, j);
-                                            const surroundedConfirms = getSurroundedConfirms(i, j);
-                                            if (surroundedMines === surroundedConfirms) {
-                                                for (let a = 0; a < 3; ++a) {
-                                                    for (let b = 0; b < 3; ++b) {
-                                                        if (!(a === 1 && b === 1)) {
-                                                            if (clickItem(i + a - 1, j + b - 1, true)) {
-                                                                changed = true;
-                                                                // render();
-                                                                startTime -= 3000;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                        if (map[j][i] > 1 && map[j][i] < ITEM_MINE && getSurroundedItems(i, j, [0, ITEM_MINE, ITEM_FLAG, ITEM_FLAG_WITH_MINE]) === map[j][i] - 1) {
-                                            for (let a = 0; a < 3; ++a) {
-                                                for (let b = 0; b < 3; ++b) {
-                                                    if (!(a === 1 && b === 1)) {
-                                                        let c = i + a - 1;
-                                                        let d = j + b - 1;
-                                                        if ((c >= 0 && c < x && d >= 0 && d < y)) {
-                                                            if (map[d][c] === ITEM_MINE) {
-                                                                map[d][c] = ITEM_FLAG_WITH_MINE;
-                                                                --leftMinesUserThinks;
-                                                                changed = true;
-                                                                startTime -= 1000;
-                                                            } else if (map[d][c] === 0) {
-                                                                map[d][c] = ITEM_FLAG;
-                                                                --leftMinesUserThinks;
-                                                                changed = true;
-                                                                startTime -= 3000;
-                                                            } else {
-                                                                continue;
-                                                            }
-                                                            // render();
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }   
-                                }
-                                if (!changed && !doneSomething) {
-                                    if (leftMinesUserThinks > 0) {
-                                        let candidates = [];
-                                        for (let j = 0; j < y; ++j) {
-                                            for (let i = 0; i < x; ++i) {
-                                                if ([0, ITEM_MINE, ITEM_QUESTION, ITEM_QUESTION_WITH_MINE].includes(map[j][i])) {
-                                                    candidates.push([i, j]);
-                                                }
-                                            }
-                                        }
-                                        candidates.sort((a, b) => Math.random() - 0.5);
-                                        let [a, b] = candidates.pop();
-                                        clickItem(a, b);
-                                    } else {
-                                        break;
-                                    }
-                                }
-
-                                doneSomething = true;
-                            }
-
-                            render();
-                            saveState();
+                            autoplay();
                         }
                     }
                 ],
@@ -485,11 +403,13 @@ window.onload = () => {
                         const li = document.createElement('li');
                         li.innerHTML = child.name;
                         if (child.action) {
+                            /*
                             li.addEventListener('mouseup', (evt) => {
                                 evt.preventDefault();
                                 child.action(evt);
                                 closeAllMenuContext();
                             });
+                            */
                             li.addEventListener('pointerup', (evt) => {
                                 evt.preventDefault();
                                 child.action(evt);
@@ -549,6 +469,111 @@ window.onload = () => {
 
             menu.appendChild(element);
         });
+    }
+
+    function autoplay() {
+        if (gameover) return;
+
+        function stopAutoplay() {
+            if (autoplayTimer !== null) {
+                clearInterval(autoplayTimer);
+                autoplayTimer = null;
+            }
+            render();
+            saveState();
+        }
+
+        function step() {
+            if (gameover || checkWin()) {
+                stopAutoplay();
+            }
+
+            let changed = false;
+
+            for (let j = 0; j < y; ++j) {
+                for (let i = 0; i < x; ++i) {
+                    // click surrounded
+                    if (map[j][i] > 1 && map[j][i] < ITEM_MINE) {
+                        const surroundedMines = getSurroundedMines(i, j);
+                        const surroundedConfirms = getSurroundedConfirms(i, j);
+                        if (surroundedMines === surroundedConfirms) {
+                            for (let a = 0; a < 3; ++a) {
+                                for (let b = 0; b < 3; ++b) {
+                                    if (!(a === 1 && b === 1)) {
+                                        if (clickItem(i + a - 1, j + b - 1, true)) {
+                                            changed = true;
+                                            startTime -= 3000;
+                                        }
+                                    }
+                                }
+                            }
+                            if (changed) {
+                                break;
+                            }
+                        }
+                    }
+
+                    // make a flag
+                    if (map[j][i] > 1 && map[j][i] < ITEM_MINE && getSurroundedItems(i, j, [0, ITEM_MINE, ITEM_FLAG, ITEM_FLAG_WITH_MINE]) === map[j][i] - 1) {
+                        for (let a = 0; a < 3; ++a) {
+                            for (let b = 0; b < 3; ++b) {
+                                if (!(a === 1 && b === 1)) {
+                                    let c = i + a - 1;
+                                    let d = j + b - 1;
+                                    if ((c >= 0 && c < x && d >= 0 && d < y)) {
+                                        if (map[d][c] === ITEM_MINE) {
+                                            map[d][c] = ITEM_FLAG_WITH_MINE;
+                                            --leftMinesUserThinks;
+                                            changed = true;
+                                            startTime -= 1000;
+                                        } else if (map[d][c] === 0) {
+                                            map[d][c] = ITEM_FLAG;
+                                            --leftMinesUserThinks;
+                                            changed = true;
+                                            startTime -= 3000;
+                                        } else {
+                                            continue;
+                                        }
+                                        // render();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }   
+                if (changed) break;
+            }
+
+            if (!changed) {
+                if (leftMinesUserThinks > 0) {
+                    let candidates = [];
+                    for (let j = 0; j < y; ++j) {
+                        for (let i = 0; i < x; ++i) {
+                            if ([0, ITEM_MINE, ITEM_QUESTION, ITEM_QUESTION_WITH_MINE].includes(map[j][i])) {
+                                candidates.push([i, j]);
+                            }
+                        }
+                    }
+                    candidates.sort((a, b) => Math.random() - 0.5);
+                    let [a, b] = candidates.pop();
+                    clickItem(a, b);
+                }
+            }
+
+            render();
+            saveState();
+
+            if (!changed) {
+                stopAutoplay();
+            }
+        }
+
+        if (autoplayTimer !== null) {
+            stopAutoplay();
+            return;
+        }
+
+        autoplayTimer = setInterval(step, 200);        
     }
 
     function setDifficulty(newValue) {
