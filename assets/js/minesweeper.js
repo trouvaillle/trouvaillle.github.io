@@ -34,6 +34,7 @@ window.onload = () => {
     let timeIndicator = null;
     let menuCloser = [];
     let autoplayTimer = null;
+    let openedItems = 0;
 
 
     const body = document.querySelector('body');
@@ -70,6 +71,7 @@ window.onload = () => {
             clearInterval(autoplayTimer);
             autoplayTimer = null;
         }
+        openedItems = 0;
 
         let alreadyTaken = new Set();
         let left = mines;
@@ -645,8 +647,10 @@ window.onload = () => {
             return false;
         }
         if (map[j][i] === 0 || map[j][i] === ITEM_QUESTION) {
+            // clear
             const num = getSurroundedMines(i, j);
             map[j][i] = num + 1;
+            ++openedItems;
             --notClicked;
             changed = true;
             if (num == 0) {
@@ -659,11 +663,30 @@ window.onload = () => {
                 }
             }
         } else if (map[j][i] === ITEM_MINE || map[j][i] === ITEM_QUESTION_WITH_MINE) {
+            // mine
+            if (openedItems === 0) {
+                // guarantee first click is clear
+                let candidates = [];
+                for (let j = 0; j < y; ++j) {
+                    for (let i = 0; i < x; ++i) {
+                        if (map[j][i] === 0) {
+                            candidates.push([i, j]);
+                        }
+                    }
+                }
+                candidates.sort(_ => Math.random() - 0.5);
+                let [a, b] = candidates.pop();
+                map[j][i] = 0;
+                map[b][a] = ITEM_MINE;
+                clickItem(i, j);
+                return;
+            }
             map[j][i] = ITEM_BOMBED_MINE;
             gameover = true;
             changed = true;
             endTimeIndicator();
         } else if (map[j][i] > 0 && map[j][i] < ITEM_MINE) {
+            // surrounded opening
             if (prevent) return false;
             const surroundedMines = getSurroundedMines(i, j);
             const surroundedConfirms = getSurroundedConfirms(i, j);
