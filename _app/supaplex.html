@@ -1,0 +1,1758 @@
+---
+title: Supaplex
+layout: none
+permalink: /app/supaplex
+date: 2024-10-18 23:24:00 +0900
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=1.0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Supaplex</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            background-color: black;
+        }
+        #info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            text-shadow: 0 0 3px black;
+        }
+        #message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 2rem;
+            text-shadow: 0 0 3px black;
+            display: none;
+        }
+        .controller.wrapper {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        .controller.container {
+            position: relative;
+            height: 22vh;
+            background: transparent;
+            display: flex;
+        }
+        .controller.horizontal {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: flex;
+        }
+        .controller.left {
+            flex: 1 1;
+            background: transparent;
+            pointer-events: auto;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .controller.left::before {
+            content: "<";
+            color: #ffffff60;
+            text-align: left;
+            padding-left: 3rem;
+            font-size: 5rem;
+            text-shadow: 0 0 0.3rem #00000040;
+        }
+        .controller.right {
+            flex: 1 1;
+            background: transparent;
+            pointer-events: auto;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .controller.right::before {
+            content: ">";
+            color: #ffffff60;
+            text-align: right;
+            padding-right: 3rem;
+            font-size: 5rem;
+            text-shadow: 0 0 0.3rem #00000040;
+        }
+        .controller.vertical {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            vertical-align: middle;
+            pointer-events: none;
+        }
+        .controller.middle {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            width: 18vh;
+            pointer-events: none;
+        }
+        .controller.circle {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 18vh;
+            height: 18vh;
+            border-radius: 50%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .controller.up {
+            background: transparent;
+            height: 10vh;
+            pointer-events: auto;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .controller.up::before {
+            content: "\2191";
+            color: #ffffff60;
+            text-align: center;
+            font-size: 9vh;
+            text-shadow: 0 0 0.3rem #00000040;
+        }
+        .controller.down {
+            background: transparent;
+            height: 10vh;
+            pointer-events: auto;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .controller.down::before {
+            content: "\2193";
+            color: #ffffff60;
+            text-align: center;
+            font-size: 9vh;
+            text-shadow: 0 0 0.3rem #00000040;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div id="info"></div>
+    <div id="message"></div>
+    <div class="controller wrapper">
+        <div class="controller container">
+            <div class="controller horizontal">
+                <div class="controller left">
+
+                </div>
+                <div class="controller right">
+
+                </div>
+            </div>
+            <div class="controller vertical">
+                <div class="controller middle">
+                    <div class="controller circle">
+                        <div class="controller up">
+
+                        </div>
+                        <div class="controller down">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const info = document.getElementById('info');
+        const message = document.getElementById('message');
+        const scaleFactor = 1;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        ctx.scale(1 / scaleFactor, 1 / scaleFactor);
+        const COLORS = {
+            Background: '#000000',
+            Panel: '#828282',
+            Murphy: '#D03125',
+            LightSteelBlueText: '#86A3F8',
+            RedText: '#EA382A',
+            EmbossLight: '#929292',
+            EmbossDark: '#616161',
+            EmbossLighter: '#BBBBBB'
+        };
+
+        const TILE_SIZE = 40 * scaleFactor; // original: 64
+        const LEVEL_WIDTH = 60; // original: 60, Math.floor(canvas.width / TILE_SIZE);
+        const LEVEL_HEIGHT = 24; // original: 24, Math.floor(canvas.height / TILE_SIZE);
+
+        const viewBorderWidth = TILE_SIZE / 2;
+        const viewBorderEmbossWidth = TILE_SIZE / 8;
+        const viewStartX = viewBorderWidth;
+        const viewStartY = viewBorderWidth;
+        const viewPanelHeight = 91 * scaleFactor;
+        let VIEW_RECT = {
+            left: 0,
+            right: canvas.width * scaleFactor,
+            top: 0,
+            bottom: canvas.height * scaleFactor - viewPanelHeight
+        };
+        VIEW_RECT = {
+            ...VIEW_RECT,
+            width: VIEW_RECT.right - VIEW_RECT.left,
+            height: VIEW_RECT.bottom - VIEW_RECT.top,
+        }
+        let VIEW_WIDTH = VIEW_RECT.width / TILE_SIZE;
+        let VIEW_HEIGHT = VIEW_RECT.height / TILE_SIZE;
+        
+
+        let offsetX = 0;
+        let offsetY = 0;
+
+        const stepDelay = 200;
+        const levels = [];
+        const items = [];
+        let level = 0;
+        let infotronsCollected = 0;
+        let totalInfotrons = 0;
+        let neededInfotrons = 0;
+        let rotationAngle = 0;
+        let gameEnded = false;
+        let keys = {};
+
+        // 게임 루프
+        let lastFrameTimestamp = -stepDelay;
+
+        // 폭발 목록
+        const explosions = [];
+
+        // 방향 상수
+        const DIRECTIONS = [
+            { dx: 1, dy: 0 },  // 오른쪽
+            { dx: 0, dy: -1 }, // 위
+            { dx: -1, dy: 0 },  // 왼쪽
+            { dx: 0, dy: 1 },  // 아래
+        ];
+
+        const ITEMS = {
+            EMPTY: 0,
+            INFOTRON: 1,
+            TERMIANL: 2,
+            BASE: 3,
+            EXIT: 4,
+            BUG: 5,
+            ELECTRON: 6,
+            SNIKSNAK: 7,
+            ZONK: 8,
+            UTILITY_DISK_ORANGE: 9,
+            UTILITY_DISK_RED: 10,
+            UTILITY_DISK_YELLOW: 11,
+            PORT_ONE_WAY: 12,
+            PORT_TWO_WAY: 13,
+            PORT_FOUR_WAY: 14,
+            RAM_CHIPS: 15,
+            HARDWARE: 16
+        };
+
+        class Explosion {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = 0; // 초기 크기
+                this.maxSize = Math.random() * TILE_SIZE / 2 + TILE_SIZE / 2; // 최대 크기
+                this.alpha = 1; // 초기 불투명도
+                this.fadeSpeed = 0.2; // 사라지는 속도
+            }
+
+            // 폭발 애니메이션 업데이트
+            update() {
+                this.size += 2 * scaleFactor; // 크기 증가
+                if (this.size >= this.maxSize) {
+                    this.alpha -= this.fadeSpeed; // 불투명도 감소
+                    if (this.alpha <= 0) {
+                        this.alpha = 0; // 불투명도 하한 설정
+                    }
+                }
+            }
+
+            // 폭발 효과 그리기
+            draw(ctx) {
+                if (this.alpha > 0) {
+                    const {viewX, viewY} = getViewCoord(this.x, this.y);
+                    if (viewX === null) return;
+                    const centerX = viewX + TILE_SIZE / 2;
+                    const centerY = viewY + TILE_SIZE / 2;
+
+                    // 붉은색 원 그리기
+                    ctx.fillStyle = `rgba(255, 0, 0, ${this.alpha})`;
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // 노란색 원 그리기 (작게)
+                    ctx.fillStyle = `rgba(255, 255, 0, ${this.alpha * 0.8})`;
+                    ctx.beginPath();
+                    ctx.arc(centerX, centerY, this.size * 0.7, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        // 폭발 추가
+        function createExplosion(x, y) {
+            explosions.push(new Explosion(x, y));
+        }
+
+        // 애니메이션 업데이트 및 그리기
+        function updateExplosions() {
+            for (let i = explosions.length - 1; i >= 0; i--) {
+                explosions[i].update();
+                explosions[i].draw(ctx);
+                // 불투명도가 0 이하인 폭발 삭제
+                if (explosions[i].alpha <= 0) {
+                    explosions.splice(i, 1);
+                }
+            }
+        }
+
+        // 레벨 생성
+        function generateLevels() {
+            levels.length = 0;
+            items.length = 0;
+            for (let i = 0; i < 1; i++) {
+                let newLevel = [];
+                let infotronCount = 0;
+                let electronCount = 0;
+                let hasExit = false;
+                for (let y = 0; y < LEVEL_HEIGHT; y++) {
+                    let row = [];
+                    for (let x = 0; x < LEVEL_WIDTH; x++) {
+                        // 0: 빈 공간, 1: 돌, 2: 전자회로, 3: 가위, 4: 별, 5: electron
+                        let tile = Math.random();
+                        if (tile < 0.14) {
+                            tile = ITEMS.INFOTRON;
+                        } else if (tile < 0.18) {
+                            tile = ITEMS.ELECTRON;
+                        } else if (tile < 0.22) {
+                            tile = ITEMS.SNIKSNAK;
+                        } else if (tile < 0.86) {
+                            tile = ITEMS.BASE;
+                        } else if (tile < 0.92) {
+                            tile = ITEMS.ZONK;
+                        } else {
+                            tile = ITEMS.EMPTY;
+                        }
+
+                        if (player.x === x && player.y === y) {
+                            tile = ITEMS.EMPTY;
+                        } else {
+                            if (!hasExit && Math.random() < 0.003) {
+                                tile = ITEMS.EXIT;
+                                hasExit = true;
+                            } else if (!hasExit && x === LEVEL_WIDTH - 1 && y === LEVEL_HEIGHT - 1) {
+                                tile = ITEMS.EXIT;
+                                hasExit = true;
+                            }
+                        }
+
+                        switch (tile) {
+                            case ITEMS.EMPTY:
+                                break;
+                            case ITEMS.ZONK:
+                                addZonk(x, y);
+                                break;
+                            case ITEMS.BASE: // 전자회로
+                                break;
+                            case ITEMS.SNIKSNAK: // 가위
+                                addSniksnak(x, y);
+                                break;
+                            case ITEMS.ELECTRON:
+                                electronCount++;
+                                addElectron(x, y);
+                                break;
+                            case ITEMS.INFOTRON:
+                                infotronCount++;
+                                addInfotron(x, y);
+                                break;
+                            default:
+                                break;
+                        }
+                        row.push(tile);
+                    }
+                    newLevel.push(row);
+                }
+                totalInfotrons = electronCount;
+                neededInfotrons = Math.floor(Math.random() * (infotronCount + Math.floor(electronCount * Math.random()) * 9));
+
+                levels.push(newLevel);
+            }
+        }
+
+        // Supaplex 캐릭터
+        const player = {
+            x: 1,
+            y: 1,
+            targetX: 1,
+            targetY: 1,
+            speed: 1.0 / 10,
+            size: TILE_SIZE,
+            color: COLORS.Murphy,
+            moving: false,
+            name: 'SUPAPLEX',
+            draw() {
+                const {viewX, viewY} = getViewCoord(this.x, this.y);
+                if (viewX === null) return;
+                ctx.save();
+                ctx.translate(viewX + TILE_SIZE / 2, viewY + TILE_SIZE / 2);
+
+                ctx.fillStyle = COLORS.Background;
+                ctx.fillRect(-TILE_SIZE / 2,-TILE_SIZE / 2, TILE_SIZE, TILE_SIZE);
+
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(0, 0, this.size / 2, 0.2 * Math.PI, 1.8 * Math.PI);
+                ctx.lineTo(0, 0);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.restore();
+            },
+            updatePosition() {
+                let dx, dy;
+                if (this.targetX !== this.x) {
+                    dx = (this.targetX - this.x) / Math.abs(this.targetX - this.x) * this.speed;
+                } else {
+                    dx = 0;
+                }
+                if (this.targetY !== this.y) {
+                    dy = (this.targetY - this.y) / Math.abs(this.targetY - this.y) * this.speed;
+                } else {
+                    dy = 0;
+                }
+
+                if (this.targetX === this.x && this.targetY === this.y) {
+                    this.moving = false;
+                }
+
+                this.x += dx;
+                this.y += dy;
+                // adjust offset
+                if (this.x > VIEW_WIDTH / 2) {
+                    if (this.x < LEVEL_WIDTH - VIEW_WIDTH / 2 + 1) {
+                        offsetX = -(this.x - VIEW_WIDTH / 2) * TILE_SIZE;
+                    } else {
+                        offsetX = -(LEVEL_WIDTH - VIEW_WIDTH / 2 + 1 - VIEW_WIDTH / 2) * TILE_SIZE;
+                    }
+                } else {
+                    offsetX = 0;
+                }
+                if (this.y > VIEW_HEIGHT / 2) {
+                    if (this.y < LEVEL_HEIGHT - VIEW_HEIGHT / 2 + 1) {
+                        offsetY = -(this.y - VIEW_HEIGHT / 2) * TILE_SIZE;
+                    } else {
+                        offsetY = -(LEVEL_HEIGHT - VIEW_HEIGHT / 2 + 1 - VIEW_HEIGHT / 2) * TILE_SIZE;
+                    }
+                }   else {
+                    offsetY = 0;
+                }
+                //
+
+                if (Math.abs(this.targetX - this.x) < this.speed) {
+                    this.x = this.targetX;
+                }
+                if (Math.abs(this.targetY - this.y) < this.speed) {
+                    this.y = this.targetY;
+                }
+
+                // 가위나 별에 부딪히면 게임 종료
+                for (let item of items) {
+                    if (!item.alive) continue;
+                    if ([ITEMS.ELECTRON, ITEMS.SNIKSNAK].includes(item.type)) {
+                        if (Math.abs(this.x - item.x) < 1 && Math.abs(this.y - item.y) < 1){
+                            setSafeNearbyMapValue(this.targetX, this.targetY, ITEMS.EMPTY);
+                            endGame(false);
+                        }
+                    }
+                }
+
+                // electron을 먹음
+                collectInfotron();
+                collectBase();
+            },
+            move(dx, dy) {
+                const newX = this.targetX + dx;
+                const newY = this.targetY + dy;
+                if (!(Math.abs(this.x - this.targetX) + Math.abs(this.y - this.targetY) < this.speed)) {
+                    return;
+                }
+                if (newX >= 0 && newX < LEVEL_WIDTH &&
+                    newY >= 0 && newY < LEVEL_HEIGHT) { 
+                    if (!([ITEMS.ZONK, ITEMS.EXIT].includes(levels[level][newY][newX]))) { // 돌에 충돌하지 않음
+                        this.targetX = newX;
+                        this.targetY = newY;
+                        this.moving = true;
+                    } else {
+                        // push a zonk
+                        if (dy === 0 && getSafeMapValue(newX, newY) === ITEMS.ZONK && getSafeMapValue(newX + dx, newY + dy) === ITEMS.EMPTY) {
+                            /*
+                            levels[level][newY][newX] = ITEMS.EMPTY;
+                            levels[level][newY + dy][newX + dx] = ITEMS.ZONK;
+                            */
+                           
+                           
+                            for (item of items) {
+                                if (item.alive && item.type === ITEMS.ZONK && 
+                                    item.x === newX && 
+                                    item.y === newY) {
+                                    moveItem(item, dx, dy);
+                                    /*
+                                    item.x += dx;
+                                    item.y += dy;
+                                    */
+                                }
+                            }
+                            
+                            this.targetX = newX;
+                            this.targetY = newY;
+                            this.moving = true;
+                        } else if (getSafeMapValue(newX , newY) === ITEMS.EXIT) {
+                            // enter into an exit
+                            if (infotronsCollected >= neededInfotrons) {
+                                endGame(true); // 승리 조건 만족
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        function updateItemPosition(item) {
+            // cartesian
+            let dx, dy;
+            if (item.targetX !== item.x) {
+                dx = (item.targetX - item.x) / Math.abs(item.targetX - item.x) * item.speed;
+            } else {
+                dx = 0;
+            }
+            if (item.targetY !== item.y) {
+                dy = (item.targetY - item.y) / Math.abs(item.targetY - item.y) * item.speed;
+            } else {
+                dy = 0;
+            }
+
+            item.x += dx;
+            item.y += dy;
+
+            if (Math.abs(item.targetX - item.x) < item.speed) {
+                item.x = item.targetX;
+            }
+            if (Math.abs(item.targetY - item.y) < item.speed) {
+                item.y = item.targetY;
+            }
+            
+            if (item.moving && item.targetX === item.x && item.targetY === item.y) {
+                levels[level][item.fromY][item.fromX] = ITEMS.EMPTY;
+                levels[level][item.y][item.x] = item.type;
+                item.moving = false;
+            }
+
+            // polar
+            let dtheta;
+            if (item.directionIndex !== item.theta) {
+                if (Math.abs(item.directionIndex - item.theta) <= 1) {
+                    dtheta = (item.directionIndex - item.theta) / Math.abs(item.directionIndex - item.theta) * item.speed;
+                } else if (Math.abs(item.directionIndex - item.theta) <= 3) {
+                    dtheta = -(item.directionIndex - item.theta) / Math.abs(item.directionIndex - item.theta) * item.speed;
+                } else {
+                    dtheta = item.speed;
+                }
+            } else {
+                dtheta = 0;
+            }
+
+            item.theta += dtheta;
+            if (item.theta >= 4) item.theta -= 4;
+            if (item.theta < 0) item.theta += 4;
+
+            if (Math.abs(item.directionIndex - item.theta) < item.speed || 4- Math.abs(item.directionIndex - item.theta) < item.speed) {
+                item.theta = item.directionIndex;
+            }
+            // console.log(item.theta, item.directionIndex);
+        }
+
+        function moveItem(item, dx, dy) {
+            const newX = item.targetX + dx;
+            const newY = item.targetY + dy;
+            if (!(Math.abs(item.x - item.targetX) + Math.abs(item.y - item.targetY) < item.speed)) {
+                return;
+            }
+            if (newX >= 0 && newX < LEVEL_WIDTH &&
+                newY >= 0 && newY < LEVEL_HEIGHT) { 
+                if (levels[level][newY][newX] === ITEMS.EMPTY) {
+                    item.fromX = Math.floor(item.x);
+                    item.fromY = Math.floor(item.y);
+                    item.targetX = newX;
+                    item.targetY = newY;
+                    levels[level][newY][newX] = item.type;
+                    item.moving = true;
+                }
+            }
+        }
+
+        function addZonk(x, y) {
+            items.push({
+                type: ITEMS.ZONK,
+                x: x,
+                y: y,
+                targetX: x,
+                targetY: y,
+                fromX: x,
+                fromY: y,
+                speed: 1.0 / 10,
+                directionIndex: 0, // useless
+                theta: 0,
+                size: TILE_SIZE - 10,
+                lastTimestamp: -stepDelay,
+                moving: false,
+                falling: false,
+                alive: true,
+                gravity: true,
+                animal: false,
+                straight: false
+            });
+        }
+
+        function addSniksnak(x, y) {
+            items.push({
+                type: ITEMS.SNIKSNAK,
+                x: x,
+                y: y,
+                targetX: x,
+                targetY: y,
+                fromX: x,
+                fromY: y,
+                speed: 1.0 / 10,
+                directionIndex: Math.floor(Math.random() * 4), // 초기 방향
+                theta: 0,
+                size: TILE_SIZE - 10,
+                lastTimestamp: -stepDelay,
+                moving: false,
+                falling: false,
+                alive: true,
+                gravity: false,
+                animal: true,
+                straight: false
+            });
+        }
+
+        function addElectron(x, y) {
+            items.push({
+                type: ITEMS.ELECTRON,
+                x: x,
+                y: y,
+                targetX: x,
+                targetY: y,
+                fromX: x,
+                fromY: y,
+                speed: 1.0 / 10,
+                directionIndex: Math.floor(Math.random() * 4), // 초기 방향
+                theta: 0,
+                size: TILE_SIZE - 10,
+                lastTimestamp: -stepDelay,
+                moving: false,
+                falling: false,
+                alive: true,
+                gravity: false,
+                animal: true,
+                straight: false
+            });
+        }
+
+        function addInfotron(x, y) {
+            items.push({
+                type: ITEMS.INFOTRON,
+                x: x,
+                y: y,
+                targetX: x,
+                targetY: y,
+                fromX: x,
+                fromY: y,
+                speed: 1.0 / 10,
+                directionIndex: 0,
+                theta: 0,
+                size: TILE_SIZE,
+                lastTimestamp: -stepDelay,
+                moving: false,
+                falling: false,
+                alive: true,
+                gravity: true,
+                animal: false,
+                straight: false
+            });
+        }
+
+        // 충돌 처리
+        function isCollision(x, y, withPlayer) {
+            if (withPlayer === null || withPlayer === undefined) withPlayer = true;
+            if (x >= 0 && x < LEVEL_WIDTH && y >= 0 && y < LEVEL_HEIGHT) {
+                return levels[level][y][x] !== ITEMS.EMPTY || 
+                    withPlayer && (
+                        player.targetX === x && player.targetY === y || 
+                        (Math.abs(player.x - x) < 1 && Math.abs(player.y - y) < 1)
+                    ); // 돌이나 벽이 있는지 확인
+            } else {
+                return true;
+            }
+        }
+
+        function getSafeMapValue(x, y) {
+            if (x >= 0 && x < LEVEL_WIDTH && y >= 0 && y < LEVEL_HEIGHT) {
+                return levels[level][y][x];
+            } else {
+                return null;
+            }
+        }
+
+        function setSafeMapValue(x, y, value) {
+            if (x >= 0 && x < LEVEL_WIDTH && y >= 0 && y < LEVEL_HEIGHT) {
+                levels[level][y][x] = value;
+            }
+        }
+
+        function setSafeNearbyMapValue(x, y, value) {
+            for (let i = -1; i < 2; ++i) {
+                for (let j = -1; j < 2; ++j) {
+                    const u = x + i;
+                    const v = y + j;
+                    if (u >= 0 && u < LEVEL_WIDTH && v >= 0 && v < LEVEL_HEIGHT) {
+                        createExplosion(u, v);
+                    }
+                    if (player.x === u && player.y === v) {
+                        endGame(false);
+                    }
+                    const currentMapValue = getSafeMapValue(u, v);
+
+                    for (let item of items) {
+                        if (item.alive && item.type === currentMapValue && item.targetX === u && item.targetY === v) {
+                            item.alive = false;
+                            if (item.moving) {
+                                levels[level][item.fromY][item.fromX] = ITEMS.EMPTY;
+                            }
+                            break;
+                        }
+                    }
+                    if (![null, ITEMS.HARDWARE].includes(currentMapValue) &&
+                        value === ITEMS.INFOTRON) {
+                        addInfotron(u, v);
+                    }
+
+                    switch (currentMapValue) {
+                        case ITEMS.EMPTY:
+                        case ITEMS.BASE:
+                        case ITEMS.INFOTRON:
+                        case ITEMS.ZONK:
+                        case ITEMS.EXIT:
+                            setSafeMapValue(u, v, value);
+                            break;
+                        case ITEMS.ELECTRON:
+                        case ITEMS.SNIKSNAK:
+                            let newValue = value;
+                            if (currentMapValue === ITEMS.INFOTRON) {
+                                newValue = ITEMS.INFOTRON;
+                            }
+                            setSafeMapValue(u, v, value);
+                            setSafeNearbyMapValue(u, v, newValue);
+                            break;
+                        default:
+                            break;
+                    }
+                }   
+            }
+        }
+
+        function isSlippery(x, y) {
+            if (x >= 0 && x < LEVEL_WIDTH && y >= 0 && y < LEVEL_HEIGHT) {
+                return [ITEMS.ZONK, ITEMS.INFOTRON, ITEMS.RAM_CHIPS].includes(levels[level][y][x]);
+            } else {
+                return false;
+            }
+        }
+
+        function updateItems(timestamp) {
+            items.forEach(item => {
+                if (!item.alive) return;
+                // ### gravity ###
+                if (item.gravity && !item.moving) {
+                    if (item.lastTimestamp + stepDelay < timestamp) {
+                        if (!isCollision(item.x, item.y + 1)) {
+                            moveItem(item, 0, 1);
+                            item.lastTimestamp = timestamp;
+                            item.falling = true;
+                        } else if (isSlippery(item.x, item.y + 1) && !isCollision(item.x - 1, item.y) && !isCollision(item.x - 1, item.y + 1)) {
+                            moveItem(item, -1, 0);
+                            item.lastTimestamp = timestamp;
+                            item.falling = true;
+                        } else if (isSlippery(item.x, item.y + 1) && !isCollision(item.x + 1, item.y) && !isCollision(item.x + 1, item.y + 1)) {
+                            moveItem(item, 1, 0);
+                            item.lastTimestamp = timestamp;
+                            item.falling = true;
+                        } else if (item.falling && item.x === player.targetX && item.y + 1 === player.targetY) {
+                            item.falling = false;
+                            item.alive = false;
+                            createExplosion(player.x, player.y);
+                            endGame(false);
+                        } else if (item.falling && [ITEMS.SNIKSNAK, ITEMS.ELECTRON].includes(getSafeMapValue(item.x, item.y + 1))) {
+                            item.falling = false;
+                            item.alive = false;
+                            switch (getSafeMapValue(item.x, item.y + 1)) {
+                                case ITEMS.SNIKSNAK:
+                                    setSafeNearbyMapValue(item.x, item.y + 1, ITEMS.EMPTY);
+                                    break;
+                                case ITEMS.ELECTRON:
+                                    setSafeNearbyMapValue(item.x, item.y + 1, ITEMS.INFOTRON);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        } else {
+                            item.falling = false;
+                        }
+                    }
+                }
+                
+                // ### animal ###
+                if (item.animal && !item.moving) {
+                    let done = false;
+                    if (timestamp - item.lastTimestamp > stepDelay) {
+                        item.lastTimestamp = timestamp;
+                    } else {
+                        done = true;
+                    }
+                    
+                    if (!done && item.straight) {
+                        let moved = false;
+                        let blocked = 0;
+                        for (let i = 0; i < DIRECTIONS.length; ++i) {
+                            const candidate = (item.directionIndex + DIRECTIONS.length - i + 1) % DIRECTIONS.length;
+                            const { dx, dy } = DIRECTIONS[candidate];
+                            const newX = item.x + dx;
+                            const newY = item.y + dy;
+
+                            if (
+                                !(isCollision(newX, newY, false) ||
+                                player.moving && (
+                                    player.targetX === newX && player.targetY === newY || 
+                                    (Math.abs(player.x - newX) < 1 && Math.abs(player.y - newY) < 1)
+                                ))
+                            ) {
+                                if (item.directionIndex === candidate) {
+                                    moveItem(item, dx, dy);
+                                    item.straight = true;
+                                    done = true;
+                                    if (player.x === newX && player.y === newY) {
+                                        createExplosion(newX, newY);
+                                        endGame(false);
+                                        return;
+                                    }
+                                    break;
+                                } else {
+                                    if (Math.abs(item.directionIndex - candidate) === 1 || 
+                                    Math.abs(item.directionIndex - candidate) === DIRECTIONS.length - 1) {
+                                        item.directionIndex = candidate;
+                                    } else {
+                                        item.directionIndex = (item.directionIndex + 1) % DIRECTIONS.length;
+                                    }
+                                    item.straight = false;
+                                    done = true;
+                                    break;
+                                }
+                            } else {
+                                ++blocked;
+                            }
+                        }
+                    }
+
+                    if (!done) {
+                        const { dx, dy } = DIRECTIONS[item.directionIndex];
+                        const newX = item.x + dx;
+                        const newY = item.y + dy;
+                        if (
+                            !(isCollision(newX, newY, false) ||
+                            player.moving && (
+                                player.targetX === newX && player.targetY === newY || 
+                                (Math.abs(player.x - newX) < 1 && Math.abs(player.y - newY) < 1)
+                            ))
+                        ) {
+                            moveItem(item, dx, dy);
+                            item.straight = true;
+                            if (player.x === newX && player.y === newY) {
+                                createExplosion(newX, newY);
+                                endGame(false);
+                                return;
+                            }
+                        } else {
+                            item.directionIndex = (item.directionIndex + 1) % DIRECTIONS.length;
+                            item.straight = false;
+                        }
+                        done = true;
+                    }
+                }
+
+                updateItemPosition(item);
+            });
+        }
+
+        function drawItems(timestamp) {
+            items.forEach(item => {
+                if (!item.alive) return;
+                switch (item.type) {
+                    case ITEMS.SNIKSNAK:
+                        drawSniksnak(item, timestamp);
+                        break;
+                    case ITEMS.ELECTRON:
+                        drawElectron(item, timestamp);
+                        break;
+                    case ITEMS.ZONK:
+                        drawZonk(item, timestamp);
+                        break;
+                    case ITEMS.INFOTRON:
+                        drawInfotron(item, timestamp);
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
+
+        function drawZonk(item, timestamp) {
+            const {x, y} = item;
+            const {viewX, viewY} = getViewCoord(x, y);
+            if (viewX === null) return;
+            ctx.save(); // 현재 상태 저장
+            ctx.translate(viewX + TILE_SIZE / 2, viewY + TILE_SIZE / 2);
+
+            // ctx.rotate(0);
+            let gradient = ctx.createRadialGradient(
+                0, 0, TILE_SIZE / 6, 
+                0, 0, TILE_SIZE / 2
+            );
+            gradient.addColorStop(0, "#B4B6B8");
+            gradient.addColorStop(0.9, "#737373");
+            gradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(-TILE_SIZE/2, -TILE_SIZE/2, TILE_SIZE, TILE_SIZE);
+
+            gradient = ctx.createLinearGradient(
+                -TILE_SIZE/2, 0,
+                TILE_SIZE/2, 0
+            );
+            gradient.addColorStop(0, "#000");
+            gradient.addColorStop(0.1, "#000");
+            gradient.addColorStop(0.3, "#F00");
+            gradient.addColorStop(0.5, '#FF0');
+            gradient.addColorStop(0.7, "#F00");
+            gradient.addColorStop(0.9, "#000");
+            gradient.addColorStop(1, "#000");
+            ctx.fillStyle = gradient;
+            ctx.fillRect(-TILE_SIZE/2, -TILE_SIZE / 14, TILE_SIZE, TILE_SIZE / 7);
+            ctx.restore();
+        }
+
+        function drawSniksnak(item, timestamp) {
+            const {x, y, directionIndex, theta} = item;
+            const {viewX, viewY} = getViewCoord(x, y);
+            if (viewX === null) return;
+            const centerX = viewX + TILE_SIZE / 2;
+            const centerY = viewY + TILE_SIZE / 2;
+
+            // 진행 방향에 따라 가위 그리기
+            ctx.save(); // 현재 상태 저장
+            ctx.translate(centerX, centerY); // 가위 중심으로 이동
+            // ctx.rotate((-directionIndex * Math.PI) / 2); // 방향에 따라 회전
+            ctx.rotate((-theta * Math.PI) / 2); // 방향에 따라 회전
+
+            // 가위 날 그리기 (삼각형 형태로)
+            ctx.fillStyle = '#808080';
+            ctx.beginPath();
+            ctx.moveTo(0, TILE_SIZE / 6);
+            ctx.lineTo(TILE_SIZE / 2, TILE_SIZE / 2 * 2 * (Math.abs(0.5 - timestamp / 10 % 30 / 30)));
+            ctx.lineTo(TILE_SIZE / 2, -TILE_SIZE / 6 + TILE_SIZE / 2 * 2 * (Math.abs(0.5 - timestamp / 10 % 30 / 30)));
+            ctx.lineTo(0, 0);
+            ctx.closePath();
+            ctx.fill(); // 오른쪽 날
+
+            ctx.beginPath();
+            ctx.moveTo(0, -TILE_SIZE / 6);
+            ctx.lineTo(TILE_SIZE / 2, -TILE_SIZE / 2 * 2 * (Math.abs(0.5 - timestamp / 10 % 30 / 30)));
+            ctx.lineTo(TILE_SIZE / 2, TILE_SIZE / 6 - TILE_SIZE / 2 * 2 * (Math.abs(0.5 - timestamp / 10 % 30 / 30)));
+            ctx.lineTo(0, 0);
+            ctx.closePath();
+            ctx.fill(); // 왼쪽 날
+
+            // 가위 손잡이 그리기 (찌그러진 타원)
+            ctx.fillStyle = '#D63226';
+            ctx.beginPath();
+            ctx.ellipse(-10 * scaleFactor, -5 * scaleFactor, 10 * scaleFactor, 5 * scaleFactor, 0, 0, Math.PI * 1.2); // 오른쪽 손잡이
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(-10 * scaleFactor, 5 * scaleFactor, 10 * scaleFactor, 5 * scaleFactor, 0, 0, Math.PI * 1.2); // 왼쪽 손잡이
+            ctx.fill();
+
+            ctx.restore(); // 상태 복원
+        }
+
+        // 별 그리기
+        function drawElectron(item, timestamp) {
+            const {x, y, directionIndex} = item;
+            const {viewX, viewY} = getViewCoord(x, y);
+            if (viewX === null) return;
+            const centerX = viewX + TILE_SIZE / 2;
+            const centerY = viewY + TILE_SIZE / 2;
+            ctx.fillStyle = 'blueviolet';
+
+            for (let i = 0; i < 5; i++) {
+                const angle = (i * Math.PI * 2) / 5;
+                const diamondX = Math.cos(angle) * TILE_SIZE / 4;
+                const diamondY = Math.sin(angle) * TILE_SIZE / 4;
+                ctx.save();
+                ctx.translate(centerX, centerY); // 가위 중심으로 이동
+
+                // ctx.rotate(-(directionIndex * Math.PI) / 2); // 방향에 따라 회전
+
+                const littlebit = 0.21;
+                const offset = 0.025;
+                const starSize = TILE_SIZE * 0.21;
+                const timefunc0 = 2 * Math.abs(0.5 - timestamp / 10 % 30 / 30);
+                const timefunc1 = 2 * Math.abs(0.5 - (timestamp / 10 + 5) % 30 / 30);
+                const timefunc2 = 2 * Math.abs(0.5 - (timestamp / 10 + 10) % 30 / 30);
+                const timefunc3 = 2 * Math.abs(0.5 - (timestamp / 10 + 15) % 30 / 30);
+                const timefunc4 = 2 * Math.abs(0.5 - (timestamp / 10 + 20) % 30 / 30);
+                drawStar(-TILE_SIZE * (littlebit - offset), -TILE_SIZE * littlebit, starSize * timefunc0);
+                drawStar(TILE_SIZE * (littlebit + offset), -TILE_SIZE * littlebit, starSize * timefunc1);
+                drawStar(-TILE_SIZE * (littlebit + offset), TILE_SIZE * littlebit, starSize * timefunc2);
+                drawStar(TILE_SIZE * (littlebit - offset), TILE_SIZE * littlebit, starSize * timefunc3);
+                drawStar(0, 0, starSize * timefunc4);
+
+                ctx.restore();
+            }
+        }
+
+        function drawStar(x, y, size, timestamp) {
+            ctx.save();
+            ctx.translate(x, y); // 가위 중심으로 이동
+
+            let gradient = ctx.createRadialGradient(
+                0, 0, size / 6, 
+                0, 0, size / 2
+            );
+            gradient.addColorStop(0, "white");
+            gradient.addColorStop(0.4, "#5A54C1");
+            gradient.addColorStop(1, '#5A54C1');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.moveTo(0, size);
+            ctx.bezierCurveTo(0, size, size / 8, size / 8, size, 0);
+            ctx.bezierCurveTo(size, 0, size / 8, -size / 8, 0, -size);
+            ctx.bezierCurveTo(0, -size, -size / 8, -size / 8, -size, 0);
+            ctx.bezierCurveTo(-size, 0, -size / 8, size / 8, 0, size);
+            ctx.closePath();
+            ctx.fill();
+            
+
+            ctx.restore();
+        }
+
+        // 회로 그리기
+        function drawCircuit(x, y, width, height) {
+            ctx.strokeStyle = '#51B26B'; // 회로 색상
+            ctx.lineWidth = TILE_SIZE / 20; // 회로 두께
+
+            // 간단한 나뭇가지 형태의 회로 그리기
+            const branches = 4; // 가지 수
+            let angle = 0.3 * Math.PI * 2; // 0~360도
+            let length = (0.1 * (width / 3) + 10) * scaleFactor; // 10~width/3 길이
+            for (let i = 0; i < branches; i++) {
+                const startX = x + width / 2; // 시작점 (사각형 중심)
+                const startY = y + height / 2;
+
+                // 랜덤한 각도와 길이
+                angle += 0.37 * Math.PI * 2;
+                length -= 0.1 * scaleFactor;
+
+                // 끝점 계산
+                const endX = startX + Math.cos(angle) * length;
+                const endY = startY + Math.sin(angle) * length;
+
+                ctx.beginPath();
+                ctx.moveTo(startX, startY); // 시작점
+                ctx.lineTo(endX, endY); // 끝점
+                ctx.closePath();
+                ctx.stroke(); // 선 그리기
+
+                // 끝점에서 추가 가지 그리기
+                drawBranches(endX, endY, 2, 0.6); // 2개의 추가 가지, 60% 길이
+            }
+        }
+
+        // 추가 가지 그리기
+        function drawBranches(x, y, depth, size) {
+            if (depth <= 0) return; // 최대 깊이 도달 시 종료
+
+            // 랜덤한 각도와 길이
+            const branches = Math.floor(0.3* 2) + 2; // 2~3개의 가지
+            let angle = (0.6 - 0.5) * Math.PI / 2; // -45도 ~ 45도
+            let length = size * (0.3 * 10 + 5) * scaleFactor; // 5~15 길이
+            for (let i = 0; i < branches; i++) {
+                angle += 0.23 * Math.PI * 2;
+                length -= 0.03 * scaleFactor;
+
+                const endX = x + Math.cos(angle) * length;
+                const endY = y + Math.sin(angle) * length;
+
+                ctx.beginPath();
+                ctx.moveTo(x, y); // 시작점
+                ctx.lineTo(endX, endY); // 끝점
+                ctx.closePath();
+                ctx.stroke(); // 선 그리기
+
+                // 다음 가지 그리기
+                drawBranches(endX, endY, depth - 1, size * 0.8); // 깊이 감소 및 크기 감소
+            }
+        }
+
+        // 플랫티콘 그리기
+        function drawCircuitBoard(x, y, size) {
+            ctx.fillStyle = '#398156'; // 배경 색상
+            ctx.fillRect(x, y, size, size); // 초록색 사각형
+
+            drawCircuit(x, y, size, size); // 회로 그리기
+        }
+
+        function drawBorder(timestamp) {
+            // left
+            if (-offsetX < TILE_SIZE / 2) {
+                ctx.fillStyle = COLORS.Panel;
+                let x = offsetX;
+                let y = offsetY + TILE_SIZE / 2;
+                let height = VIEW_RECT.bottom;
+                if (offsetY < -(LEVEL_HEIGHT - VIEW_HEIGHT / 2 - VIEW_HEIGHT / 2) * TILE_SIZE) {
+                    height = (LEVEL_HEIGHT + 1/2) * TILE_SIZE + offsetY;
+                    if (-offsetY < TILE_SIZE / 2) {
+                        height -= 1 / 2 * TILE_SIZE;
+                    }
+                }
+                ctx.fillRect(x, y < 0 ? 0 : y, viewBorderWidth, height);
+
+                ctx.fillStyle = COLORS.EmbossLight;
+                ctx.fillRect(x, y < 0 ? 0 : y, viewBorderEmbossWidth, height);
+
+                ctx.fillStyle = COLORS.EmbossDark;
+                ctx.fillRect(x + viewBorderWidth - viewBorderEmbossWidth, y < 0 ? 0 : y, viewBorderEmbossWidth, height);
+            }
+
+            // right
+            if (offsetX < -(LEVEL_WIDTH - VIEW_WIDTH / 2 - VIEW_WIDTH / 2) * TILE_SIZE) {
+                ctx.fillStyle = COLORS.Panel;
+                let x = LEVEL_WIDTH * TILE_SIZE + offsetX + TILE_SIZE / 2;
+                let y = offsetY + TILE_SIZE / 2;
+                let height = VIEW_RECT.bottom;
+                if (offsetY < -(LEVEL_HEIGHT - VIEW_HEIGHT / 2 - VIEW_HEIGHT / 2) * TILE_SIZE) {
+                    height = (LEVEL_HEIGHT + 1/2) * TILE_SIZE + offsetY;
+                    if (-offsetY < TILE_SIZE / 2) {
+                        height -= 1 / 2 * TILE_SIZE;
+                    }
+                }
+                ctx.fillRect(x, y < 0 ? 0 : y, viewBorderWidth, height);
+
+                ctx.fillStyle = COLORS.EmbossLight;
+                ctx.fillRect(x, y < 0 ? 0 : y, viewBorderEmbossWidth, height);
+
+                ctx.fillStyle = COLORS.EmbossDark;
+                ctx.fillRect(x + viewBorderWidth - viewBorderEmbossWidth, y < 0 ? 0 : y, viewBorderEmbossWidth, height);
+            }
+
+            // top
+            if (-offsetY < TILE_SIZE / 2) {
+                ctx.fillStyle = COLORS.Panel;
+                let x = offsetX + TILE_SIZE / 2;
+                let y = offsetY;
+                let width = VIEW_RECT.width;
+                if (offsetX < -(LEVEL_WIDTH - VIEW_WIDTH / 2 - VIEW_WIDTH / 2) * TILE_SIZE) {
+                    width = (LEVEL_WIDTH + 1/2) * TILE_SIZE + offsetX;
+                    if (-offsetX < TILE_SIZE / 2) {
+                        width -= 1 / 2 * TILE_SIZE;
+                    }
+                }
+                ctx.fillRect(x < 0 ? 0 : x, y, width, viewBorderWidth);
+
+                ctx.fillStyle = COLORS.EmbossLighter;
+                ctx.fillRect(x < 0 ? 0 : x, y, width, viewBorderEmbossWidth);
+
+                ctx.fillStyle = COLORS.EmbossDark;
+                ctx.fillRect(x < 0 ? 0 : x, y + viewBorderWidth - viewBorderEmbossWidth, width, viewBorderEmbossWidth);
+            }
+
+            // bottom
+            if (offsetY < -(LEVEL_HEIGHT - VIEW_HEIGHT / 2 - VIEW_HEIGHT / 2) * TILE_SIZE) {
+                ctx.fillStyle = COLORS.Panel;
+                let x = offsetX + TILE_SIZE / 2;
+                let y = LEVEL_HEIGHT * TILE_SIZE + offsetY + TILE_SIZE / 2;
+                let width = VIEW_RECT.width;
+                if (offsetX < -(LEVEL_WIDTH - VIEW_WIDTH / 2 - VIEW_WIDTH / 2) * TILE_SIZE) {
+                    width = (LEVEL_WIDTH + 1/2) * TILE_SIZE + offsetX;
+                    if (-offsetX < TILE_SIZE / 2) {
+                        width -= 1 / 2 * TILE_SIZE;
+                    }
+                }
+                ctx.fillRect(x < 0 ? 0 : x, y, width, viewBorderWidth);
+
+                ctx.fillStyle = COLORS.EmbossLighter;
+                ctx.fillRect(x < 0 ? 0 : x, y, width, viewBorderEmbossWidth);
+
+                ctx.fillStyle = COLORS.EmbossDark;
+                ctx.fillRect(x < 0 ? 0 : x, y + viewBorderWidth - viewBorderEmbossWidth, width, viewBorderEmbossWidth);
+            }
+
+            // left top
+            if (-offsetX < TILE_SIZE / 2 && -offsetY < TILE_SIZE / 2) {
+                let x = offsetX;
+                let y = offsetY;
+                let width = TILE_SIZE / 2;
+                let height = TILE_SIZE / 2;
+                ctx.fillStyle = COLORS.Panel;
+                ctx.fillRect(x, y, viewBorderWidth, height);
+
+                ctx.fillStyle = COLORS.EmbossLight;
+                ctx.fillRect(x, y, viewBorderEmbossWidth, height);
+
+                ctx.fillStyle = COLORS.EmbossLighter;
+                ctx.fillRect(x, y, width, viewBorderEmbossWidth);
+
+                ctx.fillStyle = COLORS.EmbossDark;
+                ctx.fillRect(x + viewBorderWidth - viewBorderEmbossWidth, y + viewBorderWidth - viewBorderEmbossWidth, viewBorderEmbossWidth, viewBorderEmbossWidth);
+            }
+
+            // right top
+            if (offsetX < -(LEVEL_WIDTH - VIEW_WIDTH / 2 - VIEW_WIDTH / 2) * TILE_SIZE && offsetX < -(LEVEL_WIDTH - VIEW_WIDTH / 2 - VIEW_WIDTH / 2) * TILE_SIZE) {
+                let x = (LEVEL_WIDTH + 1 / 2) * TILE_SIZE + offsetX;
+                let y = offsetY;
+                let width = TILE_SIZE / 2;
+                let height = TILE_SIZE / 2;
+                ctx.fillStyle = COLORS.Panel;
+                ctx.fillRect(x, y, viewBorderWidth, height);
+
+                ctx.fillStyle = COLORS.EmbossLight;
+                ctx.fillRect(x, y + viewBorderWidth - viewBorderEmbossWidth, viewBorderEmbossWidth, viewBorderEmbossWidth);
+
+                ctx.fillStyle = COLORS.EmbossLighter;
+                ctx.fillRect(x, y, width, viewBorderEmbossWidth);
+
+                ctx.fillStyle = COLORS.EmbossDark;
+                ctx.fillRect(x + viewBorderWidth - viewBorderEmbossWidth, y + viewBorderEmbossWidth, viewBorderEmbossWidth, height - viewBorderEmbossWidth);
+            }
+
+            // left bottom
+            if (-offsetX < TILE_SIZE / 2 && offsetY < -(LEVEL_HEIGHT - VIEW_HEIGHT / 2 - VIEW_HEIGHT / 2) * TILE_SIZE) {
+                let x = offsetX;
+                let y = (LEVEL_HEIGHT + 1 / 2) * TILE_SIZE + offsetY;
+                let width = TILE_SIZE / 2;
+                let height = TILE_SIZE / 2;
+                ctx.fillStyle = COLORS.Panel;
+                ctx.fillRect(x, y, viewBorderWidth, height);
+
+                ctx.fillStyle = COLORS.EmbossLight;
+                ctx.fillRect(x, y, viewBorderEmbossWidth, height);
+
+                ctx.fillStyle = COLORS.EmbossLighter;
+                ctx.fillRect(x + viewBorderWidth - viewBorderEmbossWidth, y, viewBorderEmbossWidth, viewBorderEmbossWidth);
+
+                ctx.fillStyle = COLORS.EmbossDark;
+                ctx.fillRect(x, y + viewBorderWidth - viewBorderEmbossWidth, width, viewBorderEmbossWidth);
+            }
+
+            // right bottom
+            if (offsetX < -(LEVEL_WIDTH - VIEW_WIDTH / 2 - VIEW_WIDTH / 2) * TILE_SIZE && offsetY < -(LEVEL_HEIGHT - VIEW_HEIGHT / 2 - VIEW_HEIGHT / 2) * TILE_SIZE) {
+                let x = (LEVEL_WIDTH + 1 / 2) * TILE_SIZE + offsetX;
+                let y = (LEVEL_HEIGHT + 1 / 2) * TILE_SIZE + offsetY;
+                let width = TILE_SIZE / 2;
+                let height = TILE_SIZE / 2;
+                ctx.fillStyle = COLORS.Panel;
+                ctx.fillRect(x, y, viewBorderWidth, height);
+
+                ctx.fillStyle = COLORS.EmbossLight;
+                ctx.fillRect(x, y, viewBorderEmbossWidth, viewBorderEmbossWidth);
+
+                ctx.fillStyle = COLORS.EmbossDark;
+                ctx.fillRect(x + viewBorderWidth - viewBorderEmbossWidth, y, viewBorderEmbossWidth, height);
+
+                ctx.fillStyle = COLORS.EmbossDark;
+                ctx.fillRect(x, y + viewBorderWidth - viewBorderEmbossWidth, width, viewBorderEmbossWidth);
+            }
+        }
+
+        function drawPanel(timestamp) {
+            // panel background
+            ctx.fillStyle = COLORS.Panel;
+            ctx.fillRect(0, VIEW_RECT.bottom + 2 * scaleFactor, canvas.width * scaleFactor, viewPanelHeight);
+
+            // seperation line
+            ctx.lineWidth = 1 * scaleFactor;
+            ctx.strokeStyle = COLORS.Background;
+            ctx.moveTo(0, VIEW_RECT.bottom + 1);
+            ctx.lineTo(canvas.width, VIEW_RECT.bottom + 1);
+            ctx.stroke();
+
+            // player name
+            ctx.fillStyle = COLORS.Background;
+            ctx.fillRect(284 / 1280 * canvas.width * scaleFactor, VIEW_RECT.bottom + (2 + 8) * scaleFactor, 260 / 1280 * canvas.width * scaleFactor, 33 * scaleFactor);
+
+            ctx.fillStyle = COLORS.RedText;
+            ctx.font = `${Math.min(canvas.width * scaleFactor * 0.03, TILE_SIZE * 0.7)}px sans-serif`;
+            ctx.textAlign = 'right'; // 텍스트 중앙 정렬
+            ctx.textBaseline = 'middle'; // 텍스트 세로 정렬
+            ctx.fillText(player.name, (284 + 260) / 1280 * canvas.width * scaleFactor - 4 * scaleFactor, VIEW_RECT.bottom + (2 + 8) * scaleFactor + 33 * scaleFactor / 2 +  4 * scaleFactor);
+
+            // left infotron
+            ctx.fillStyle = COLORS.Background;
+            ctx.fillRect(1083 / 1280 * canvas.width * scaleFactor, VIEW_RECT.bottom + (2 + 8) * scaleFactor, 100 / 1280 * canvas.width * scaleFactor, 32 * scaleFactor);
+
+            ctx.fillStyle = COLORS.LightSteelBlueText;
+            ctx.font = `${Math.min(canvas.width * scaleFactor * 0.03, TILE_SIZE * 0.7)}px sans-serif`;
+            ctx.textAlign = 'right'; // 텍스트 중앙 정렬
+            ctx.textBaseline = 'middle'; // 텍스트 세로 정렬
+            let leftInfotrons = neededInfotrons - infotronsCollected;
+            if (leftInfotrons <= 0) {
+                leftInfotrons = 0;
+                ctx.fillStyle = COLORS.RedText;
+            }
+            ctx.fillText(leftInfotrons, (1083 + 100) / 1280 * canvas.width * scaleFactor - 4 * scaleFactor, VIEW_RECT.bottom + (2 + 8) * scaleFactor + 32 * scaleFactor / 2 +  4 * scaleFactor);
+            
+        }
+
+        // infotron 수집 로직
+        function collectInfotron(x, y) {
+            if (x === undefined || y === undefined) {
+                x = player.x;
+                y = player.y;
+            }
+            if (levels[level][Math.floor(y)][Math.floor(x)] === ITEMS.INFOTRON) {
+                // infotron이 있으면
+                levels[level][Math.floor(y)][Math.floor(x)] = ITEMS.EMPTY; // infotron을 없앰
+                for (let item of items) {
+                    if (item.alive && item.type === ITEMS.INFOTRON && !item.moving && Math.abs(item.targetX - x) < 1 && Math.abs(item.targetY - y) < 1) {
+                        item.alive = false;
+                        break;
+                    }
+                }
+                infotronsCollected++; // 수집한 infotron 갯수 증가
+            }
+        }
+
+        // base 수집 로직
+        function collectBase() {
+            if (levels[level][Math.floor(player.y)][Math.floor(player.x)] === ITEMS.BASE) {
+                // EletricBoards이 있으면
+                levels[level][Math.floor(player.y)][Math.floor(player.x)] = ITEMS.EMPTY; // Base을 없앰
+            }
+        }
+
+        // 게임 종료
+        function endGame(won) {
+            gameEnded = true;
+            message.textContent = won ? 'Victory!' : 'Game Over';
+            message.style.display = 'block';
+            let interval = null;
+            if (won) {
+                interval = setInterval(() => {
+                    player.size *= 0.8;
+                    player.draw();
+                }, 50);
+            }
+            setTimeout(() => {
+                if (interval !== null) {
+                    clearInterval(interval);
+                }
+                message.style.display = 'none';
+                gameEnded = false;
+                resetGame();
+            }, 800);
+        }
+
+        // 게임 리셋
+        function resetGame() {
+            infotronsCollected = 0;
+            level = (level + 1) % levels.length;
+            player.x = player.targetX = 1;
+            player.y = player.targetY = 1;
+            player.size = TILE_SIZE;
+            offsetX = 0;
+            offsetY = 0;
+            keys = {};
+            generateLevels();
+        }
+
+        function gameLoop(timestamp) {
+            if (1000.0/60 < timestamp - lastFrameTimestamp) {
+                lastFrameTimestamp = timestamp;
+            } else {
+                requestAnimationFrame(gameLoop);
+                return;
+            }
+            if (!gameEnded) {
+                processKeys(timestamp);
+                ctx.clearRect(0, 0, canvas.width * scaleFactor, canvas.height * scaleFactor);
+                drawLevel(timestamp);
+
+                updateItems(timestamp);
+                player.updatePosition();
+
+                drawItems(timestamp);
+                player.draw();
+                drawBorder(timestamp);
+                // 폭발 업데이트 및 그리기
+                updateExplosions();
+                drawPanel(timestamp);
+
+                // drawDebug(timestamp);
+            } else {
+                // 폭발 업데이트 및 그리기
+                updateExplosions();
+            }
+            
+            requestAnimationFrame(gameLoop);
+        }
+
+        function collectEdible(dx, dy) {
+            const [u, v] = [player.x + dx, player.y + dy];
+            const value = getSafeMapValue(u, v);
+            switch (value) {
+                case ITEMS.INFOTRON:
+                    collectInfotron(u, v);
+                    break;
+                case ITEMS.BASE:
+                    setSafeMapValue(u, v, ITEMS.EMPTY);
+                    break;
+            }
+        }
+
+        // let lastKeyTimestamp = -stepDelay / 2;
+        function processKeys(timestamp) {
+            /*
+            if (lastKeyTimestamp + stepDelay / 2 <= timestamp) {
+                lastKeyTimestamp = timestamp;
+            } else {
+                return;
+            }
+            */
+            if (gameEnded) {
+                if (keys['Enter'] || keys[' ']) {
+                    resetGame();
+                }
+                return;
+            }
+            
+            if (keys['ArrowUp']) {
+                if (!keys[' ']) {
+                    player.move(0, -1);
+                } else if (!player.moving) {
+                    collectEdible(0, -1);
+                }
+            }
+            if (keys['ArrowDown']) {
+                if (!keys[' ']) {
+                    player.move(0, 1);
+                } else if (!player.moving) {
+                    collectEdible(0, 1);
+                }
+            }
+            if (keys['ArrowLeft']) {
+                if (!keys[' ']) {
+                    player.move(-1, 0);
+                } else if (!player.moving) {
+                    collectEdible(-1, 0);
+                }
+            }
+            if (keys['ArrowRight']) {
+                if (!keys[' ']) {
+                    player.move(1, 0);
+                } else if (!player.moving) {
+                    collectEdible(1, 0);
+                }
+            }
+        }
+
+        // 레벨 그리기
+        function drawLevel(timestamp) {
+            for (let y = 0; y < LEVEL_HEIGHT; y++) {
+                for (let x = 0; x < LEVEL_WIDTH; x++) {
+                    const tile = levels[level][y][x];
+                    const {viewX, viewY} = getViewCoord(x, y);
+                    if (viewX === null) continue;
+                    switch (tile) {
+                        case ITEMS.BASE:
+                            // ctx.fillStyle = 'green';
+                            // ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                            drawCircuitBoard(viewX, viewY, TILE_SIZE, TILE_SIZE);
+                            break;
+                        case ITEMS.EXIT:
+                            drawExit(viewX, viewY, TILE_SIZE, TILE_SIZE);
+                            break;
+                        case ITEMS.EMPTY:
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+
+        function getViewCoord(x, y) {
+            const result = {
+                viewX: Math.floor(x * TILE_SIZE + viewStartX + offsetX),
+                viewY: Math.floor(y * TILE_SIZE + viewStartY + offsetY),
+            }
+            if (result.viewX + TILE_SIZE >= VIEW_RECT.left && 
+                result.viewX <= VIEW_RECT.right + 1 &&
+                result.viewY + TILE_SIZE >= VIEW_RECT.top && 
+                result.viewY <= VIEW_RECT.bottom + 1
+            ) {
+                return result;
+            } else {
+                return {
+                    viewX: null,
+                    viewY: null
+                };
+            }
+        }
+
+        function drawDebug(timemstamp) {
+            for (let y = 0; y < LEVEL_HEIGHT; y++) {
+                for (let x = 0; x < LEVEL_WIDTH; x++) {
+                    const tile = levels[level][y][x];
+                    const {viewX, viewY} = getViewCoord(x, y);
+                    if (viewX === null) continue;
+                    ctx.font = `${TILE_SIZE * 0.18}px Arial`;
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = 'middle'; // 텍스트 세로 정렬
+                    const text = Object.keys(ITEMS).filter(it => ITEMS[it] === tile);
+                    ctx.fillStyle = 'black';
+                    ctx.fillText(text, viewX + TILE_SIZE * (1 / 2 + 1 / 40), viewY + TILE_SIZE * (1 / 2 + 1 / 40));
+                    ctx.fillStyle = 'white';
+                    ctx.fillText(text, viewX + TILE_SIZE * (1 / 2), viewY + TILE_SIZE * (1 / 2));
+                }
+            }
+        }
+
+        function drawInfotron(item, timestamp) {
+            const {x, y} = item;
+            for (let i = 0; i < 3; ++i) {
+                const {viewX, viewY} = getViewCoord(x, y);
+                if (viewX === null) continue;
+                ctx.beginPath();
+                ctx.arc(
+                    viewX + TILE_SIZE / 2 + TILE_SIZE * 0.27 * Math.cos(i / 3 * Math.PI * 2 - Math.PI / 2),
+                    viewY + TILE_SIZE / 2 + TILE_SIZE * 0.27 * Math.sin(i / 3 * Math.PI * 2 - Math.PI / 2), 
+                    TILE_SIZE * 0.20,
+                    0, 
+                    2 * Math.PI
+                );
+                let gradient;
+                switch (i) {
+                    case 0:
+                        gradient = ctx.createConicGradient(
+                            0,
+                            viewX + TILE_SIZE / 2, 
+                            viewY + TILE_SIZE / 2
+                        );
+                        gradient.addColorStop(0, '#567C46');
+                        gradient.addColorStop(0.4, '#567C46');
+                        gradient.addColorStop(0.5, '#F1A064');
+                        gradient.addColorStop(0.6, '#68D595');
+                        gradient.addColorStop(1, '#68D595');
+                        // ctx.strokeStyle = '#68D595';
+                        break;
+                    case 1:
+                        gradient = ctx.createConicGradient(
+                            0,
+                            viewX + TILE_SIZE / 2, 
+                            viewY + TILE_SIZE / 2
+                        );
+                        gradient.addColorStop(0, '#D0362E');
+                        gradient.addColorStop(1, '#D0362E');
+                        // ctx.strokeStyle = '#D0362E';
+                        break;
+                    case 2:
+                        gradient = ctx.createConicGradient(
+                            0,
+                            viewX + TILE_SIZE / 2, 
+                            viewY + TILE_SIZE / 2
+                        );
+                        gradient.addColorStop(0, '#656FD1');
+                        gradient.addColorStop(0.5, '#656FD1');
+                        gradient.addColorStop(0.8, '#FFFF6D');
+                        gradient.addColorStop(1, '#FFFF6D');
+                        // ctx.strokeStyle = '#656FD1';
+                        break;
+                }
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = 3 * scaleFactor;
+                ctx.closePath();
+                ctx.stroke();
+
+                ctx.fillStyle = '#666';
+                ctx.beginPath();
+                ctx.arc(
+                    viewX + TILE_SIZE / 2 + TILE_SIZE * 0.27 * Math.cos(i / 3 * Math.PI * 2 - Math.PI / 2),
+                    viewY + TILE_SIZE / 2 + TILE_SIZE * 0.27 * Math.sin(i / 3 * Math.PI * 2 - Math.PI / 2), 
+                    TILE_SIZE * 0.20 / 4,
+                    0, 
+                    2 * Math.PI
+                );
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.arc(
+                    viewX + TILE_SIZE / 2 + TILE_SIZE * 0.27 * Math.cos(i / 3 * Math.PI * 2 - Math.PI / 2) - TILE_SIZE * 0.20 / 4 * 2 / 3 / 3,
+                    viewY + TILE_SIZE / 2 + TILE_SIZE * 0.27 * Math.sin(i / 3 * Math.PI * 2 - Math.PI / 2) - TILE_SIZE * 0.20 / 4 * 2 / 3 / 3, 
+                    TILE_SIZE * 0.20 / 4 * 2 / 3,
+                    0, 
+                    2 * Math.PI
+                );
+                ctx.closePath();
+                ctx.fill();
+            }
+        }
+
+        // 텍스트와 그림자 그리기
+        function drawExit(x, y, size) {
+            let lineWidth = 0;
+            // 노란색 사각형 그리기
+            ctx.fillStyle = '#E99953';
+            ctx.fillRect(x, y, size, size);
+
+            // lower shadow
+            ctx.fillStyle = '#DF3429';
+            lineWidth = size / 15;
+            ctx.beginPath();
+            ctx.moveTo(x + size, y + size);
+            ctx.lineTo(x + size, y);
+            ctx.lineTo(x + size - lineWidth, y);
+            ctx.lineTo(x + size - lineWidth, y + size - lineWidth);
+            ctx.lineTo(x, y + size - lineWidth);
+            ctx.lineTo(x, y + size);
+            ctx.closePath();
+            ctx.fill();
+
+            // upper shadow
+            ctx.fillStyle = '#FFFF5D';
+            lineWidth = size / 15;
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + size, y);
+            ctx.lineTo(x + size, y + lineWidth);
+            ctx.lineTo(x + lineWidth, y + lineWidth);
+            ctx.lineTo(x + lineWidth, y + size);
+            ctx.lineTo(x, y + size);
+            ctx.closePath();
+            ctx.fill();
+
+            // 글씨의 그림자 그리기
+            ctx.font = `${size * 0.9}px Arial`; // 폰트 크기 설정 (사각형 크기의 40%)
+            ctx.textAlign = 'center'; // 텍스트 중앙 정렬
+            ctx.textBaseline = 'middle'; // 텍스트 세로 정렬
+
+            // 그림자 위치 조정 (사각형 중앙)
+
+            ctx.fillStyle = 'rgba(0, 0, 0, 1)'; // 그림자 색상 (검정)
+            ctx.fillText('E', x + size * (1 / 2 + 1 / 20), y + size * (1 / 2 + 1 / 18 + 1 / 20)); // 그림자 위치 (오른쪽 아래로 이동)
+
+            // 흰색 글씨 그리기
+            ctx.fillStyle = 'white'; // 글씨 색상
+            ctx.fillText('E', x + size / 2, y + size * (1 / 2 + 1 / 18)); // 글씨 위치 (사각형 중앙)
+        }
+
+        // 게임 초기화
+        generateLevels();
+        gameLoop();
+        initController();
+
+        // 사용자 입력 처리
+        window.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+            if (['Spacebar', ' ', 32].includes(e.key)) {
+                keys[' '] = true;
+            }
+            console.log(e.key)
+        });
+
+        window.addEventListener('keyup', (e) => {
+            keys[e.key] = undefined;
+            if (['Spacebar', ' ', 32].includes(e.key)) {
+                keys[' '] = undefined;
+            }
+        });
+
+        function initController() {
+            const wrapper = document.querySelector('.controller.wrapper');
+            if (wrapper === null) return;
+            if (navigator.userAgentData.mobile) {
+                wrapper.style = "";
+            } else {
+                wrapper.style = "display: none;";
+                return;
+            }
+            const left = document.querySelector('.controller.left');
+            const right = document.querySelector('.controller.right');
+            const up = document.querySelector('.controller.up');
+            const down = document.querySelector('.controller.down');
+            const list = [
+                [left, "ArrowLeft"],
+                [right, "ArrowRight"],
+                [up, "ArrowUp"],
+                [down, "ArrowDown"],
+            ];
+            list.forEach(([item, key]) => {
+                item.addEventListener('pointerdown', (e) => {
+                    keys[key] = true;
+                });
+                item.addEventListener('pointerup', (e) => {
+                    keys[key] = undefined;
+                });
+                item.addEventListener('mousedown', (e) => {
+                    keys[key] = true;
+                });
+                item.addEventListener('mouseup', (e) => {
+                    keys[key] = undefined;
+                });
+            });
+            
+        }
+    </script>
+</body>
+</html>
