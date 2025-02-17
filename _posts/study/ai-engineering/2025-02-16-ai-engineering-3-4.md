@@ -117,6 +117,7 @@ p-159
 
 -->
 
+<!--
 <br/><br/>
 
 ## Chapter 4
@@ -124,4 +125,5 @@ Evaluate AI Systems: AI 시스템 평가
 
 ### 평가 기준
 
+-->
 
