@@ -5,10 +5,8 @@ header_pages:
 - _pages/app.md
 ---
 <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
-    <div class="prev">
-        <a class="prev" href="/">&laquo; back</a>
-    </div>
     <div class="post-categories">
+        <a class="prev" href="javascript:window.history.back();">&larr;</a>
         {% assign link = '/category/' %}
         {% for category in page.categories %}
         {% assign link = link | append: category | append: '/' %}
@@ -54,6 +52,7 @@ header_pages:
         {{ content }}
     </div>
     
+    <!--
     <div class="post-page-navigation">
         <div class="prev">
             {% if page.previous.url %}
@@ -66,6 +65,8 @@ header_pages:
             {% endif %}
         </div>
     </div>
+    -->
+    <div style="margin-bottom: 3rem; display: block;"></div>
 
     <script src="https://utteranc.es/client.js"
         repo="trouvaillle/trouvaillle.github.io"

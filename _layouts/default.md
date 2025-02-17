@@ -10,12 +10,31 @@ layout: default
   <script src="/assets/js/post.js"></script>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-3VSF418X77"></script>
-  <script>
+  <!-- MathJax -->
+  <script type="text/javascript" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <script type="text/javascript">
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
 
     gtag('config', 'G-3VSF418X77');
+
+    window.onload = () => {
+      let hide = document.querySelector('.sidebar .header .page-heading .hide');
+      hide.addEventListener('click', () => {
+        let sidebar = document.querySelector('.sidebar');
+        if (sidebar) {
+          sidebar.classList.toggle('hidden');
+          if (sidebar.classList.contains('hidden')) {
+            hide.innerHTML = '&#x276F;';
+          } else {
+            hide.innerHTML = '&#x276E;';
+          }
+        }
+      });
+    };
   </script>
 
   <!-- Google adsense-->
@@ -45,8 +64,9 @@ layout: default
       <div class="header">
           <h1 class="page-heading">
             <a href="{{ site.url }}">
-              {{ site.title }}
+              {{- site.title -}}
             </a>
+            <div class="hide"><span>&#x276E;</span></div>
           </h1>
         </div>
       {%- include category-list-sidebar.html -%}

@@ -3,9 +3,13 @@ a {
 }
 
 .home {
-    max-width: 960px;
+    max-width: 720px;
     width: 100%;
     margin: 0 auto;
+
+    & .recent_posts__subtitle {
+        margin: 0 0 4rem 0;
+    }
 }
 
 .pager {

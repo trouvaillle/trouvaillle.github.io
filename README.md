@@ -34,3 +34,8 @@ $ bundle exec jekyll build
 # serve
 $ bundle exec jekyll serve --livereload
 ```
+
+<br/>
+
+## Useful sites
+- https://www.toptal.com/designers/htmlarrows/
