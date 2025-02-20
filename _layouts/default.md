@@ -5,6 +5,7 @@ layout: default
   <meta name="google-site-verification" content="Up4NMaytjs0u212Seq63B4_XdJdBWrvUOVROrWpg5cc" />
   <meta name="naver-site-verification" content="ca101c91aa6dd3f888eefb8a4894a628c9c75ff4" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trouvaillle log.</title>
   <link rel="stylesheet" type="text/css" href="/assets/css/style.css"/>
   <link rel="icon" type="image/png" href="/favicon.png" />
   <script src="/assets/js/post.js"></script>
