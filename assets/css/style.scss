@@ -382,9 +382,16 @@ blockquote {
   margin-inline-end: 0;
   overflow-x: scroll;
   overflow-y: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
   p {
     margin: 0;
   }
+}
+
+blockquote::-webkit-scrollbar {
+  display: none;
 }
 
 kbd {
