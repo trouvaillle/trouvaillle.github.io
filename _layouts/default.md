@@ -51,6 +51,9 @@ layout: default
       </a>
     </h1>
     <div id="menu" class="menu">
+      <div class="center">
+      <i class="bi bi-list"></i>
+      </div>
     </div>
   </div>
   <div class="floating-sidebar">
