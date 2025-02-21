@@ -145,7 +145,7 @@ author_profile: true
       <div id="play-button" class="play-button">&#x25B6;</div>
       <div id="pause-button" class="pause-button" style="display: none;">&#x2759;&#x2759;</div>
       <div id="next-button" class="next-button">&#x25B6;&#x25B6;</div>
-      <div id="repeat-button" class="repeat-button">&#x279E;</div>
+      <div id="repeat-button" class="repeat-button"><i class="bi bi-repeat"></i></div>
     </div>
   </div>
 </div>
@@ -164,7 +164,21 @@ author_profile: true
     const currentTimeDisplay = document.getElementById('current-time');
     const totalTimeDisplay = document.getElementById('total-time');
     let repeatMode = 0; // 0: no repeat, 1: one repeat, 2: all repeat
-    
+
+    document.onvisibilitychange = function() { 
+      togglePlayPauseButtons(!audioPlayer.paused);
+    };
+
+    function togglePlayPauseButtons(isPlaying) {
+      if (isPlaying) {
+        playButton.style.display = 'none';
+        pauseButton.style.display = 'block';
+      } else {
+        playButton.style.display = 'block';
+        pauseButton.style.display = 'none';
+      }
+    }
+
     const firstSong = musicList.querySelector('.song-item');
     if (firstSong) {
       firstSong.classList.add('playing');
@@ -180,21 +194,18 @@ author_profile: true
         e.target.classList.add('playing');
         audioPlayer.src = e.target.getAttribute('data-src');
         audioPlayer.play();
-        playButton.style.display = 'none';
-        pauseButton.style.display = 'block';
+        togglePlayPauseButtons(true);
       }
     });
 
     playButton.addEventListener('click', function() {
       audioPlayer.play();
-      playButton.style.display = 'none';
-      pauseButton.style = 'display: block; font-size: 2.8rem; overflow: hidden;';
+      togglePlayPauseButtons(true);
     });
 
     pauseButton.addEventListener('click', function() {
       audioPlayer.pause();
-      playButton.style.display = 'block';
-      pauseButton.style.display = 'none';
+      togglePlayPauseButtons(false);
     });
 
     prevButton.addEventListener('click', function() {
@@ -229,19 +240,19 @@ author_profile: true
       repeatMode = (repeatMode + 1) % 3;
       switch (repeatMode) {
         case 0:
-          repeatButton.innerHTML = '&#x279E;';
+          repeatButton.innerHTML = '<i class="bi bi-repeat"></i>';
           repeatButton.style = '';
           audioPlayer.loop = false;
           break;
         case 1:
-          repeatButton.innerHTML = '&#x2673;';
-          repeatButton.style = '';
-          audioPlayer.loop = true;
+          repeatButton.innerHTML = '<i class="bi bi-repeat"></i>';
+          repeatButton.style = 'color: #8e2de2;';
+          audioPlayer.loop = false;
           break;
         case 2:
-          repeatButton.innerHTML = '<span>&#x21ba;<span>';
-          repeatButton.style = 'font-size: 3rem;'
-          audioPlayer.loop = false;
+          repeatButton.innerHTML = '<i class="bi bi-repeat-1"></i>';
+          repeatButton.style = 'color: #8e2de2;';
+          audioPlayer.loop = true;
           break;
       }
     });
@@ -286,19 +297,14 @@ author_profile: true
     });
 
     audioPlayer.addEventListener('ended', function() {
-      /*
-      if (repeatMode === 1) {
-        audioPlayer.currentTime = 0;
-        audioPlayer.play();
-      }
-      */
+      // no repeat
       if (repeatMode === 0) {
         audioPlayer.currentTime = 0;
         updateProgress();
-        playButton.style.display = 'block';
-        pauseButton.style.display = 'none';
+        togglePlayPauseButtons(false);
       }
-      if (repeatMode === 2) {
+      // repeat all
+      if (repeatMode === 1) {
         const nextSong = document.querySelector('.song-item.playing').nextElementSibling || musicList.firstElementChild;
         if (nextSong) {
           const currentlyPlaying = document.querySelector('.song-item.playing');
@@ -310,6 +316,13 @@ author_profile: true
           audioPlayer.play();
         }
       }
+      /*
+      // repeat one
+      if (repeatMode === 1) {
+        audioPlayer.currentTime = 0;
+        audioPlayer.play();
+      }
+      */
     });
   });
 </script>

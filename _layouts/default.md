@@ -8,6 +8,7 @@ layout: default
   <title>Trouvaillle log.</title>
   <link rel="stylesheet" type="text/css" href="/assets/css/style.css"/>
   <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
   <script src="/assets/js/post.js"></script>
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-3VSF418X77"></script>
