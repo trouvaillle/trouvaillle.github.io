@@ -7,45 +7,54 @@ header_pages:
 <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
     <div class="post-categories">
         <a class="prev" href="javascript:window.history.back();">&larr;</a>
-        {% assign link = '/category/' %}
-        {% for category in page.categories %}
-        {% assign link = link | append: category | append: '/' %}
-        <span class="link">
-            <a href={{link}}>{{ category }}</a>
-        </span>
-        {% unless forloop.last %}
-        <span class="divider">/</span>
-        {% endunless %}
-        {% endfor %}
+        <div class="links">
+            {% assign link = '/category/' %}
+            {% for category in page.categories %}
+            {% assign link = link | append: category | append: '/' %}
+            <span class="link">
+                <a href={{link}}>{{ category }}</a>
+            </span>
+            {% unless forloop.last %}
+            <span class="divider">/</span>
+            {% endunless %}
+            {% endfor %}
+        </div>
         <br/>
     </div>
     <header class="post-header">
         <h1 class="post-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
-        <p class="post-meta">
-            {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-            {%- assign words = content | number_of_words -%}
-            <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
-                {{ page.date | date: date_format }}
-            </time>
-            {%- if page.modified_date -%}
-            ~
-            {%- assign mdate = page.modified_date | date_to_xmlschema -%}
-            <time class="dt-modified" datetime="{{ mdate }}" itemprop="dateModified">
-                {{ mdate | date: date_format }}
-            </time>
-            {%- endif -%}
-            {%- if page.author -%}
-            • {% for author in page.author %}
-            <span itemprop="author" itemscope itemtype="http://schema.org/Person">
-                <span class="p-author h-card" itemprop="name">
-                    {{- author -}}
+        <div class="post-meta">
+            <div class="left">
+                {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+                {%- assign words = content | number_of_words -%}
+                <time class="dt-published" datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
+                    {{ page.date | date: date_format }}
+                </time>
+                {%- if page.modified_date -%}
+                ~
+                {%- assign mdate = page.modified_date | date_to_xmlschema -%}
+                <time class="dt-modified" datetime="{{ mdate }}" itemprop="dateModified">
+                    {{ mdate | date: date_format }}
+                </time>
+                {%- endif -%}
+                {%- if page.author -%}
+                • {% for author in page.author %}
+                <span itemprop="author" itemscope itemtype="http://schema.org/Person">
+                    <span class="p-author h-card" itemprop="name">
+                        {{- author -}}
+                    </span>
                 </span>
-            </span>
-            {%- if forloop.last == false %}, {% endif -%}
-            {%- endfor -%}
-            {%- endif -%}
-            &middot; {{ words | divided_by:180 }} min &middot; written by <a href="https://github.com/trouvaillle">trouvaillle</a>
-        </p>
+                {%- if forloop.last == false %}, {% endif -%}
+                {%- endfor -%}
+                {%- endif -%}
+                <span>&middot; {{ words | divided_by:180 }} min</span>
+                <!--<span> &middot; </span>
+                <span>written by <a href="https://github.com/trouvaillle">trouvaillle</a></span>-->
+            </div>
+            <div class="right">
+                <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?&title_bg=%23555555&count_bg=%23787878&url={{ site.url | uri_escape }}{{ page.url | replace: '.html', '' | uri_escape }}"></img>
+            </div>
+        </div>
     </header>
 
     <div class="post-content e-content" itemprop="articleBody">

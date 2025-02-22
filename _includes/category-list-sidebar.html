@@ -27,7 +27,7 @@
 {% assign categories = categories | sort %}
 
 <h3>Categories</h3>
-<div class="categories">
+<div class="categories scrollable">
 {% for category in categories %}
     <a class="item" href={{ "/category/" | append: category[0] }}>
         <div class="title">
@@ -42,6 +42,10 @@
 
 <div class="apps">
 
+</div>
+
+<div class="hits">
+    <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?&title_bg=%23555555&count_bg=%23787878&url={{ site.url | uri_escape }}"></img>
 </div>
 
 <!-- https://shopify.dev/docs/api/liquid/tags/break -->
