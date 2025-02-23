@@ -40,7 +40,7 @@ Llama 3 같은 일부 모델은 마지막에 제시하는 것이 효과적.
 - 모델을 바람직한 행동을 프롬프트의 예제로부터 배울 수 있음. 기존에 훈련된 방식과 다르게도 가능. 가중치 업데이트는 필요 없음
 - 문맥 내 학습은 모델이 새로운 정보를 지속적으로 통합하여 결정을 내릴 수 있게 하여 모델이 구식이 되지 않도록 방지
 - <mark>shot</mark>: 프롬프트에 제시된 예제를 의미
-    - *few-shot learning*: 프름포트의 예제로부터 모델이 학습하도록 가르치는 것
+    - *few-shot learning*: 프롬프트의 예제로부터 모델이 학습하도록 가르치는 것
     - *5-shot learning*: 에제가 5개인 경우
     - *zero-shot learning*: 예제가 제공되지 않는 경우
 - 일반적으로 예제가 많을 수록 모델은 더 잘 배움
@@ -62,12 +62,44 @@ Llama 3 같은 일부 모델은 마지막에 제시하는 것이 효과적.
     - <span title="ML 프레임워크 Keras의 창시자">François Chollet</span>이 [파운데이션 모델을 여러 프로그램의 라이브러리로 비유](https://fchollet.substack.com/p/how-i-think-about-llm-prompt-engineering)한데서 유래
 
 #### 시스템 프롬프트와 유저 프롬프트
+- 많은 모델 API는 프롬프트를 시스템 프롬프트와 유저 프롬프트로 나누어 입력하는 선택지를 제공
+- 시스템 프롬프트는 작업 정의, 유저 프롬프트는 작업으로 생각할 수 있음
+
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter5-6/sys-user-pmt.png" | relative_url }}" width="540px"/></div>
+{% raw %}
+- 모델은 주어진 시스템 프롬프트와 유저 프롬프트를 하나의 프롬프트를 템플릿에 따라 결합함
+    - Llama 2 chat model prompt template
+        ```js
+        <s>[INST] <<SYS>>
+        {{ system_prompt }}
+        <</SYS>>
+        {{ user_message }} [/INST]
+        ```
+    - 예시
+        ```js
+        <s>[INST] <<SYS>>
+        Translate the text below into French
+        <</SYS>>
+        How are you? [/INST]
+        ```
+    - 모델의 chat template: 모델 개발자가 정의하는 양식(모델의 문서에서 찾을 수 있음)
+    - prompt template: 앱 개발자가 정의하는 양식
+    - Llama 3 chat model prompt template
+        ```js
+        <|begin_of_text|><|start_header_id|>system<|end_header_id|>
+        {{ system_prompt }}<|eot_id|><|start_header_id|>user<|end_header_id|>
+        {{ user_message }}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
+        ```
+    - `<|`와 `|>`를 포함하는 사이의 단어는 모델에서 하나의 토큰으로 처리됨(e.g. `<|begin_of_text|>`)
+
+{% endraw %}
+
 #### 컨텍스트 길이와 컨텍스트 효율화
 
 ### 프롬프트 엔지니어링 모범 사례
 #### 쉽고 명확한 지시를 작성하라
 #### 충분한 켄텍스트를 제공하라
-#### 복잡한 작업을 세부 작업으로 나누어라
+#### 복잡한 작업을 하위 작업으로 나누어라
 #### 모델이 생각할 시간을 제공하라
 #### 프롬프트를 반복적으로 개선하라
 #### 프롬프트 엔지니어링 도구 평가하기
