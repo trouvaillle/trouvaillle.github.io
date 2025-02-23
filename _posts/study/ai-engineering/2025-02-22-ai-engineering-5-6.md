@@ -91,24 +91,97 @@ Llama 3 같은 일부 모델은 마지막에 제시하는 것이 효과적.
         {{ user_message }}<|eot_id|><|start_header_id|>assistant<|end_header_id|>
         ```
     - `<|`와 `|>`를 포함하는 사이의 단어는 모델에서 하나의 토큰으로 처리됨(e.g. `<|begin_of_text|>`)
-
 {% endraw %}
 
-#### 컨텍스트 길이와 컨텍스트 효율화
+- 새 줄을 추가한 것과 같은 사소한 실수를 포함해 잘못된 템플릿을 사용할 경우 모델의 행동을 크게 변화시킬 수 있음
+    - 파운데이션 모델의 입력을 구성할 때 모델의 chat etmplate을 정확히 준수
+    - 서드파티 도구를 프롬프트 구성에 사용시 해당 도구의 오류 검증이 필수
+    - 모델에 쿼리를 전송하기 전 최종 프롬프트를 출력하고 이중 확인하는 것이 필요
+- 잘 구성된 시스템 프롬프트는 성능 향상에 기여할 수 있음을 많은 모델 제공자가 강조함
+- 내부 구조에서는 시스템 프롬프트와 유저 프롬프트가 하나의 최종 프롬프트로 합쳐서 모델로 전달됨
+- 시스템 프롬프트가 성능에 더 영향을 주는 이유는 다음 요소들이 작용
+    - <mark>시스템 프롬프트가 최종 프롬프트 앞단에 위치해서 먼저 나온 지시를 더 잘 처리함</mark>
+    - <mark>모델이 시스템 프롬프트에 더 주의를 기울이도록 사후 학습<small>post-trained</small>됨</mark>
+        - OpenAI paper [*The Instruction Hierarchy: Training
+LLMs to Prioritize Privileged Instructions*](https://arxiv.org/abs/2404.13208)
+
+#### 컨텍스트 길이와 컨텍스트 효율성
+- 프롬프트에 얼마나 많은 정보가 포함될 수 있는가는 모델의 컨텍스트 길이 제한에 의존함
+- 5년동안 GPT-2의 1K 컨텍스트 길이에서 Gemini-1.5 Pro의 2M 컨텍스트 길이로 2,000배 증가함
+- 2M 컨텍스트 길이는 2,000개의 위키피디아 페이지나 PyTorch와 같은 복잡한 코드베이스를 담을 수 있음
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter5-6/figure5-2.png" | relative_url }}" width="540px"/></div>
+- <mark>모델은 프롬프트의 시작과 끝 부분에 제시된 지시를 중간 부분보다 더 잘 이해함</mark>
+- 프롬프트의 각 부분에 대한 효과성을 시험하는 대표적인 방법은 *neeldle in a haystack*(NIAH)가 있음
+    - 임의의 정보 조각(the needle)을 프롬프트(the haystack)의 다른 장소에 배치하고 모델에게 찾도록 요청
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter5-6/figure5-3.png" | relative_url }}" width="540px"/></div>
+- <mark>대부분의 모델은 프롬프트의 시작과 끝 부분에 있는 정보를 중간에 있는 정보보다 잘 찾아냄</mark>(정량적인 증명)
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter5-6/figure5-4.png" | relative_url }}" width="540px"/></div>
 
 ### 프롬프트 엔지니어링 모범 사례
+- 약한 모델일수록 프롬프트 엔지니어링은 더 어려움
+- "Q:" 대신 "Questions:"를 쓰거나 "올바른 답에 $300 팁"을 제안하는 것과 같은 초기 팁이 있었음
+- [OpenAI](https://platform.openai.com/docs/guides/prompt-engineering/six-strategies-for-getting-better-results), [Anthropic](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview), [Meta](https://www.llama.com/docs/how-to-guides/prompting/), [Google](https://services.google.com/fh/files/misc/gemini-for-google-workspace-prompting-guide-101.pdf)의 튜토리얼을 바탕으로 작성함
+
 #### 쉽고 명확한 지시를 작성하라
-#### 충분한 켄텍스트를 제공하라
+- AI와의 소통은 사람과 동일하게 *명확함*이 중요함
+
+##### 모호하지 않게 모델이 수행하기 원하는 일을 설명하라
+- 에세이를 점수 매긴다면 점수 체계를 설명
+- 모델이 확신할 수 없는 경우 최대한 점수를 내야하는지 "모르겠음"이라고 해야하는지 결정
+
+##### 모델이 페르소나를 적용하도록 요청
+- 페르소나는 모델이 응답을 생성할 때 어떤 관점을 지녀야하는지 이해하는데 도움
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter5-6/figure5-5.png" | relative_url }}" width="540px"/></div>
+
+##### 예제 제공
+- 예제는 모델이어떻게 응답해야하는가에 대한 모호함을 줄일 수 있음
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter5-6/table5-1.png" | relative_url }}" width="540px"/></div>
+- <mark>가능하면 적은 토큰을 사용하는 예제 형식을 사용</mark>
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter5-6/table5-2.png" | relative_url }}" width="400px"/></div>
+
+##### 출력 형식을 구체화
+- 모델이 간결하게 응답하길 원하면 간결하게 응답하도록 명시
+- 하위 앱에서 해당 모델의 응답을 활용하면 JSON과 같은 형식을 반드시 준수해야함
+- 분류와 같이 구조화된 응답을 기대하는 경우 프롬프트가 끝나고 모델의 <mark>구조화된 응답이 시작되는 곳을 마킹</mark>
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter5-6/table5-3.png" | relative_url }}" width="540px"/></div>
+
+#### 충분한 문맥을 제공하라
+<!-- a review required -->
+- 문맥<small>context</small>은 할루시네이션을 줄일 수 있음
+- 필요한 정보가 제공되지 않으면 모델은 믿을 수 없는 내부 지식에 의존하여 할루시네이션을 유발할 수 있음
+- 주어진 질문<small>query</small>에 필요한 문맥을 모으는 과정은 *문맥 구성*<small>context construction</small>이라고 함
+- 문맥 구성 도구는 RAG 파이프라인과 같은 데이터 조회<small>data retrieval</small>와 웹검색을 포함
+
 #### 복잡한 작업을 하위 작업으로 나누어라
 #### 모델이 생각할 시간을 제공하라
 #### 프롬프트를 반복적으로 개선하라
 #### 프롬프트 엔지니어링 도구 평가하기
 #### 프롬프트 정리 및 버전 관리
 
-
-
+### 방어적 프롬프트 엔지니어링
+#### 사적 프롬프트와 리버스 프롬프트 엔지니어링
+#### 탈옥과 프롬프트 삽입
+#### 정보 추출
+#### 프롬프트 공격에 대한 방어
+### 요약
 
 <br/><br/>
 
 ## Chapter 6
 RAG and Agents: RAG와 에이전트
+
+### RAG
+
+#### RAG 구조
+#### 조회 알고리즘
+#### 조회 최적화
+#### 문자 외 RAG
+
+### 에이전트
+#### 에이전트 톺아보기
+#### 도구
+#### 기획
+#### 에이전트 실패 유형 및 평가
+### 기억하기
+### 요약
+
