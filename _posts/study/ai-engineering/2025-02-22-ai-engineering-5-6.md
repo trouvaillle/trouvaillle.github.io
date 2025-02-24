@@ -122,7 +122,7 @@ LLMs to Prioritize Privileged Instructions*](https://arxiv.org/abs/2404.13208)
 - "Q:" 대신 "Questions:"를 쓰거나 "올바른 답에 $300 팁"을 제안하는 것과 같은 초기 팁이 있었음
 - [OpenAI](https://platform.openai.com/docs/guides/prompt-engineering/six-strategies-for-getting-better-results), [Anthropic](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview), [Meta](https://www.llama.com/docs/how-to-guides/prompting/), [Google](https://services.google.com/fh/files/misc/gemini-for-google-workspace-prompting-guide-101.pdf)의 튜토리얼을 바탕으로 작성함
 
-#### 쉽고 명확한 지시를 작성하라
+#### 명확한 지시를 작성하라
 - AI와의 소통은 사람과 동일하게 *명확함*이 중요함
 
 ##### 모호하지 않게 모델이 수행하기 원하는 일을 설명하라
@@ -147,13 +147,61 @@ LLMs to Prioritize Privileged Instructions*](https://arxiv.org/abs/2404.13208)
 
 #### 충분한 문맥을 제공하라
 <!-- a review required -->
-- 문맥<small>context</small>은 할루시네이션을 줄일 수 있음
+- <mark>문맥<small>context</small>은 할루시네이션을 줄일 수 있음</mark>
 - 필요한 정보가 제공되지 않으면 모델은 믿을 수 없는 내부 지식에 의존하여 할루시네이션을 유발할 수 있음
 - 주어진 질문<small>query</small>에 필요한 문맥을 모으는 과정은 *문맥 구성*<small>context construction</small>이라고 함
 - 문맥 구성 도구는 RAG 파이프라인과 같은 데이터 조회<small>data retrieval</small>와 웹검색을 포함
 
+<aside mark="💡">
+<strong>모델의 지식을 문맥 내로 제한하기</strong><br/>
+<ul>
+<li>"answer using only the provided context"와 같은 명확한 지시를 사용</li>
+<li>답변할 수 없는 예시를 같이 제공</li>
+<li>"quote where in the provided corpus it draws its answer from"와 같이 답변을 인용한 출처를 구체적으로 제시하도록 지시</li>
+<li>파인튜닝도 하나의 선택지이나 사전 학습된 데이터가 여전히 답변에 노출 가능</li>
+<li>가장 안전한 방법은 허용된 지식 뭉치로만 모델을 훈련하는 것인데 대부분의 사례에서 실현 불가능하고, 고품질 모델을 훈련하기에 해당 뭉치가 너무 제한적일 수 있음</li>
+</ul>
+</aside>
+
 #### 복잡한 작업을 하위 작업으로 나누어라
+- 여러 단계를 필요로 하는 복잡한 작업의 경우, 작업을 하위 작업으로 나누어라
+- 전체 작업이 거대한 하나의 프롬프트를 지니는 것이 아닌, 하위 작업이 각자의 프롬프트를 지님
+- 고객 요청에 응답하는 경우 *1. 의도 분류*, *2. 응답 생성* 과정으로 나눌 수 있음
+- OpenAI의 프롬프트 엔지니어링 가이드 예시
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter5-6/openai-prompt-engineering-guide-1.png" | relative_url }}" width="540px"/></div>
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter5-6/openai-prompt-engineering-guide-2.png" | relative_url }}" width="540px"/></div>
+- 실험을 통해 최적의 작업 분리와 연쇄를 찾아내야 함
+- 프롬프트 분리는 성능 향상 뿐만 아니라 여러 이점이 있음:
+    - 모니터링: 중간 결과물을 관찰할 수 있음
+    - 디버깅: 각 단계를 격리하고 수정할 수 있음
+    - 병렬화: 독립된 단계를 동시에 실행해서 시간 단축
+    - 노력: 복잡한 프롬프트보다 간단한 프롬프트 작성하는 게 쉬움
+- 중간 단계가 많을수록 마지막 단계 결과물의 첫 토큰을 보기까지 사용자는 더 많이 기다려야함
+- 프롬프트 분리는 토큰을 적게 사용하고 API 사용 시 비용 절약면에서 유리
+- <mark>간단한 단계는 더 저렴한 모델을 사용 가능</mark>
+- 작업 분리로 비용이 증가하더라도 성능과 안정성이 개선되면 가치가 있음
+- [GoDaddy(2024)](https://www.godaddy.com/resources/news/llm-from-the-trenches-10-lessons-learned-operationalizing-models-at-godaddy) 사례에서 고객 지원 챗봇이 1회에 1,500 토큰을 사용하는 것을 발견하고, <mark>작은 하위 작업으로 나누어 프롬프트를 분리한 결과 모델의 성능 개선과 비용 절약을 동시에 달성</mark>
+
 #### 모델이 생각할 시간을 제공하라
+- <mark><i>chain-of-thought</i>(CoT)와 자기 비평<small>self-critic</small></mark>을 사용하면 성능이 개선됨
+- CoT는 [Chain-of-Thought Prompting Elicits Reasoning in Large Language Models](https://arxiv.org/abs/2201.11903)에서 ChatGPT 출시 1년 전에 소개됨
+- [LinkedIn](https://www.linkedin.com/blog/engineering/generative-ai/musings-on-building-a-generative-ai-product)은 CoT가 모델의 할루시네이션을 줄이는 것을 발견함
+
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter5-6/figure5-6.png" | relative_url }}" width="540px"/></div>
+
+- CoT의 간단한 사용법은 아래를 프롬프트에 추가하는 것
+    - <mark>"think step by step"</mark> 지시
+    - <mark>"explain your decision"</mark> 지시
+- 다른 방법으로는 모델이 수행해야할 <mark>단계를 구체적으로 제시하거나 예제를 제공</mark>하는 것
+
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter5-6/table5-4.png" | relative_url }}" width="540px"/></div>
+
+- 자기 비평<small>self-critic</small>의 뜻은 모델의 본인의 결과물을 확인하도록 요청하는 것
+    - 챕터 3의 self-eval과 동일
+    - 자기 비평은 모델이 문제에 대해 비판적으로 생각하도록 유도함
+- 프롬프트 분리와 마찬가지로 CoT와 자기 비평은 사용자에게 인지되는 지연을 증가시킴
+    - 정해진 단계가 아닌 모델이 스스로의 단계를 구성하면 얼마나 지연이 될지 예상하기 어려움
+
 #### 프롬프트를 반복적으로 개선하라
 #### 프롬프트 엔지니어링 도구 평가하기
 #### 프롬프트 정리 및 버전 관리
