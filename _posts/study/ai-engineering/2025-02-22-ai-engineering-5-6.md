@@ -203,26 +203,79 @@ LLMs to Prioritize Privileged Instructions*](https://arxiv.org/abs/2404.13208)
     - 정해진 단계가 아닌 모델이 스스로의 단계를 구성하면 얼마나 지연이 될지 예상하기 어려움
 
 #### 프롬프트를 반복적으로 개선하라
+- 모델을 잘 이해할 수록 프롬프트를 작성하는 요령이 생김
+- 모델마다 특징이 다름
+    - 숫자를 다루거나, 역할극을 하는 것에 강점이 다름
+    - 프롬프트의 시작 부분과 끝 부분에 대한 집중도가 다름
+- 모델 개발자가 제공한 프롬프트 가이드를 확인
+- 온라인 상의 다른 사용자들의 경험을 살펴보기
+- 모델 플레이그라운드가 있다면 사용하기
+- 같은 프롬프트를 서로 다른 모델에 사용해보고 응답 변화를 관찰하기
+- <mark>프롬프트 버전 관리<mark>하기
+- 실험 추적 도구 사용하기
+- 평가 지표와 데이터를 표준화하여 서로 다른 프롬프트의 성능을 비교하기
+- 전체 시스템 관점에서 각 프롬프트를 평가하기
+    - 어떤 프롬프트는 하위 작업을 개선하지만 전체 시스템 성능을 악화할 수 있음
+
 #### 프롬프트 엔지니어링 도구 평가하기
+
 #### 프롬프트 정리 및 버전 관리
 
 ### 방어적 프롬프트 엔지니어링
-#### 사적 프롬프트와 리버스 프롬프트 엔지니어링
+
+#### 독점 프롬프트와 리버스 프롬프트 엔지니어링
+
 #### 탈옥과 프롬프트 삽입
+
 #### 정보 추출
+
 #### 프롬프트 공격에 대한 방어
+
 ### 요약
 
 <br/><br/>
 
 ## Chapter 6
 RAG and Agents: RAG와 에이전트
+- 작업을 해결하기 위해서는 지시 뿐만 아니라 필요한 정보가 제공되어야 함
+- <mark>문맥 구성<small>context construction</small>의 두가지 주요 패턴은 RAG<small>retrieval-augmented generation</small>과 에이전트<small>agents</small></mark>
+    - <mark>RAG 패턴은 모델이 외부 데이터 소스로부터 관련 정보를 가져올<small>retrieve</small> 수 있도록 함</mark>
+    - <mark>에이전틱<small>agentic</small> 패턴은 모델이 정보를 가져오기 위해 웹 검색과 뉴스 API와 같이 도구<small>tool</small>를 사용할 수 있도록 함</mark>
+- RAG와 에이전트는 모델에 세계와 직접적으로 상호작용할 수 있는 능력을 부여하고 우리 삶의 다양한 면들을 자동화할 수 있도록 함
 
 ### RAG
+- <mark>RAG는 외부 기억 장소로부터 관련된 정보를 가져와서 모델의 생성을 개선시키는 기술</mark>을 의미
+- *retrieve-then-generate* 패턴은 [Reading Wikipedia to Answer Open-Domain Questions](https://arxiv.org/abs/1704.00051)에서 처음 소개됨
+- RAG라는 용어는 [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401)(Lewis et al. 2020)에서 제안됨
+- Lewis et al.은 <mark>모델이 관련 정보에 대한 접근을 통해 보다 자세한 답변을 생성하고 할루시네이션을 줄이는데 도움을 줄 수 있음을 발견함</mark>
+    - 페이스북도 [How Context Affects Language Models' Factual Predictions](https://arxiv.org/abs/2005.04611)에서 사전 학습된 언어 모델을 retrieval system을 통해 강화하면 모델의 사실 확인 질문에 대한 성능을 향상시킬 수 있음을 보여줬음
+- 파운데이션 모델에서 문맥 구성<small>context construction</small>은 고전적 ML 모델의 피처 엔지니어링<small>feature engineering</small>과 동일
+    - <mark>입력을 처리하기 위해 모델에 필요한 정보를 제공</mark>한다는 동일한 목적을 지님
+- RAG의 종착지가 충분히 긴 컨텍스트 길이라고 생각하는 경우가 있으나 앱을 지속적으로 더 긴 컨텍스트 길이를 요구할 것
+- 모델이 긴 컨텍스트를 처리하더라도 잘 이용하는지와는 별개
+    - 컨텍스트가 길수록 모델은 컨텍스트의 잘못된 부분에 집중할 수 있음
 
 #### RAG 구조
-#### 조회 알고리즘
-#### 조회 최적화
+- RAG는 2가지 요소로 구성됨
+    - <mark><i>리트리버</i><small>retriever</small>: 외부 메모리 저장소로부터 정보를 가져옴</mark>
+    - <mark><i>생성기</i><small>generator</small>: 가져온 정보를 바탕으로 답변을 생성</mark>
+
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter5-6/figure6-2.png" | relative_url }}" width="540px"/></div>
+
+- 많은 팀이 기성 리트리버나 모델을 사용하지만 전체 <mark>RAG 시스템을 파인튜닝하면 성능을 확연히 개선</mark>시킬 수 있음
+- RAG 시스템의 성공은 리트리버의 품질에 의존함
+- 리트리버의 두 가지 주요 기능:
+    - <mark>인덱싱<small>indexing</small>: 추후 데이터를 빠르게 가져올 수 있도록 데이터를 처리하는 과정</mark>
+    - <mark>질의하기<small>querying</small>: 관련된 데이터를 가져오기 위해 질의를 호출하는 과정</mark>
+- 인덱싱은 추후 데이터를 어떻게 가져오고자 하느냐에 따라 방법이 달라짐
+- 문서를 처리 가능한 청크<small>chunks</small>로 나눌 필요가 있음
+    - 문서를 한 번에 가져오기엔 컨텍스트 길이가 충분하지 않을 수 있음
+- 우리의 목표는 매 질의마다 관련된 데이터 청크를 가져오는 것
+    - 유저 프롬프트로부터 최종 프롬프트를 만들기 위해 사소한 사후 처리가 필요할 수 있음
+    - 최종 프롬프트는 생성형 모델에 전달됨
+
+#### retrieval 알고리즘
+#### retrieval 최적화
 #### 문자 외 RAG
 
 ### 에이전트
