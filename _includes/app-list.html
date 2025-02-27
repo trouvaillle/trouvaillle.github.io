@@ -5,12 +5,12 @@
     {%- for app in apps -%}
         {%- if  app.visible == true or app.visible == "true" or app.visible == nul -%}
             <li class="site-app" style="background: var(--background-brigther); padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
-                <span class="post-meta" style="font-size: 1rem;">{{- app.date | date: date_format }}</span>
                 <h2 style="margin: 0;">
                     <a class="site-app-text" href="{{ app.permalink }}" style="color: var(--color); border: none; font-size: 1rem;">
                         {{ app.title }}
                     </a>
                 </h2>
+                <span class="post-meta" style="font-size: 1rem;">{{- app.date | date: date_format }}</span>
             </li>
         {%- endif -%}
     {%- endfor -%}

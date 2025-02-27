@@ -26,12 +26,12 @@ layout: default
       <li>
         <a class="post-link" href="{{ post.url | relative_url }}">
           <div><h1>{{ post.title | escape }}</h1></div>
-          <div class="post-meta-wrapper">
-            <span class="post-meta">{{ post.categories | join: ' / ' }} &middot; {{ post.date | date: date_format }} &middot; {{ words | divided_by:180 }} min</span>
-          </div>
           {%- if site.show_excerpts -%}
           <div class="excerpt">{{ post.content | strip_html | truncate: 200 }}</div>
           {%- endif -%}
+          <div class="post-meta-wrapper">
+            <span class="post-meta">{{ post.categories | join: ' / ' }} &middot; {{ post.date | date: date_format }} &middot; {{ words | divided_by:180 }} min</span>
+          </div>
         </a>
       </li>
       {%- endif -%}
