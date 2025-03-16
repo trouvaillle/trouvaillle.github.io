@@ -120,19 +120,129 @@ $$ (\text{parameter count} × \text{bytes/param} × \text{tokens/s}) / (\text{th
 
 <div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter9-10/figure9-5.png" | relative_url }}" width="540px"/></div>
 
+- 사용량<small>Utilization<small> 지표는 시스템 효율성 측정에 도움을 줌
+- 최고의 사용량을 지닌 칩을 구매하는게 목표가 아님. 작업을 빠르게 저렴하게 하는게 목표. 높은 사용량 비율은 비용과 지연 시간이 모두 증가하면 의미가 없음
+
 #### AI 가속기
 
 ### 추론 최적화
+- 추론 최적화는 모델, 하드웨어, 서비스 수준에서 수행할 수 있음
+- 이상적으로 모델의 품질에 변화없이 속도와 비용을 최적화해야하지만, 많은 실제 기술들은 모델 품질 저하를 유발할 수 있음
+
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter9-10/figure9-8.png" | relative_url }}" width="540px"/></div>
 
 #### 모델 최적화
+- 모델 수준 최적화는 모델 자체를 수정해 효율적으로 만드는 것이 목표
+- 파운데이션 모델을 주로 트랜스포머 아키텍처를 따르고, 자기회귀적 언어 모델 요소를 지님
+- 파운데이션 모델을 자원 집약적으로 만드는 특징 3가지
+    - 모델 크기<small>model size</small>
+    - 자기회귀적 디코딩<small>autoregressive decoding</small>
+    - 어텐션 메커니즘<small>attention mechanism</small>
+
+##### 모델 압축
+- <mark>모델 압축: 모델 크기를 줄여서 속도를 빠르게 만드는 기술들</mark>
+    - <mark>양자화<small>quantization</small>: 정밀도를 줄여 메모리 발자국을 감소시키고 처리량을 증가시키는 방법</mark>
+    - <mark>증류<small>distillation</small>: 작은 모델이 대형 모델의 행동을 모방하도록 훈련시키는 방법
+- 가지치기<small>pruning</small>은 2가지 의미</mark>
+    1. 필요없는 노드를 신경망에서 제거. 아키텍처를 변화시키고 파라미터 수를 줄임
+    2. 예측에 덜 사용되는 파라미터를 0으로 설정. 총 파라미터 수를 줄이지 않고 모델을 희박하게<small>sparse</small>만들어 모델의 저장소 사용량을 줄이고 연산을 빠르게 만듦
+- 가지치기된 모델은 그대로 사용되거나 추가 파인튜닝될 수 있음. 파인튜닝은 가지치기 과정에서 유발된 성능 저하를 조정하기 위함
+- 가지치기된 아키텍처는 이전보다 작기 때문에 밑바닥부터<small>from scratch</small> 훈련될 수 있음
+- [Frankle and Carbin, 2019](https://openreview.net/forum?id=rJl-b3RcF7)은 가지치기로 0이 아닌 파라미터 수를 90% 줄여 메모리 발자국을 줄이고, 속도는 증가시키며, 정확도는 크게 변화시키지 않는 연구를 보임
+- 가지치기는 현실에서는 덜 사용되는 방법. 다른 방법에 비해 성능 향상이 훨씬 적고, 드묾<small>sparsity</small>으로 이점을 가질 수 있는 하드웨어 아키텍처가 한정적이기 때문
+- <mark>가중치만 양자화<small>weight-only quantization</small>이 훨씬 인기있는 방법.</mark> 사용하기 쉽고, 많은 모델에 적용할 수 있고, 극적으로 효과적이기 때문
+
+##### 자기회귀적 디코딩 병목 극복하기
+- 자기회귀적 과정은 느리고 비쌈
+
+##### 추측적 디코딩<small>Speculative decoding</small>
+- <mark>추측적 디코딩<small>Speculative decoding</small>은 더 빠르지만 덜 강력한 모델을 사용하여 토큰의 시퀀스를 생성한 후, 이를 목표 모델에 의해 검증하는 방식.</mark> speculative sampling이라고도 함
+- 빠른 모델은 초안 또는 제안<small>draft or proposal</small> 모델로 불림
+- 초안 모델이 K 토큰을 생성, 목표 모델이 생성된 K 토큰을 병렬적으로 검증함. 목표 모델이 초안 토큰의 가장 긴 부분 시퀀스를 수용함
+- 현대 파이프라인된 CPU의 [분기 예측](https://en.wikipedia.org/wiki/Branch_predictor)과 유사
+- [Stern et al., 2018](https://arxiv.org/abs/1811.03115)의 도표
+
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter9-10/figure9-9.png" | relative_url }}" width="540px"/></div>
+- <a href="https://research.google/blog/looking-back-at-speculative-decoding/">Google Research: Looking back at speculative decoding</a>의 도표
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter9-10/speculative-decoding.gif" | relative_url }}" width="540px"/></div>
+- Google's AI overview, [Fast Inference from Transformers via Speculative Decoding](https://arxiv.org/abs/2211.17192)
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter9-10/google-ai-overview.gif" | relative_url }}" width="540px"/></div>
+- [Speculative Decoding with Big Little Decoder](https://arxiv.org/abs/2302.07863)
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter9-10/bild.png" | relative_url }}" width="540px"/></div>
+- [A Hitchhiker’s Guide to Speculative Decoding](https://pytorch.org/blog/hitchhikers-guide-speculative-decoding/)
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter9-10/hitchhikers-guide-speculative-decoding.gif" | relative_url }}" width="540px"/></div>
+
+- 추측적 디코딩이 추가 지연 시간을 줄일 수 있는 특징:
+    1. 토큰 시퀀스 검증은 병렬화될 수 있고, 생성은 직렬적임. <mark>추측적 디코딩은 디코딩을 prefilling으로 연산 특성을 바꿈</mark>
+    2. 출력 토큰 시퀀스에서 어떤 토큰을 예측하기 더 쉬움. <mark>약한 초안 모델도 예측하기 쉬운 토큰을 잘 생성하므로 수용률이 높아질 수 있음.</mark>
+    3. <mark>디코딩은 메모리 대역폭 병목을 지니므로 남는 FLOPs로 검증(prefill처럼)을 수행할 수 있음</mark>
+- 수용률은 도메인 의존적. 특정 구조를 따르는 코드와 같은 경우 수용률이 대개 높음.
+- [vLLM](https://docs.vllm.ai/en/latest/features/spec_decode.html), [TensorRT-LLM](https://github.com/NVIDIA/TensorRT-LLM), [llama.cpp](https://github.com/ggml-org/llama.cpp/pull/2926)에서 지원함
+
+##### 인용을 통한 추론<small>Inference with reference</small>
+- <mark>추측적 디코딩과 유사하지만, 초안 토큰을 입력에서 선택하는 점이 다름</mark>
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter9-10/figure9-10.png" | relative_url }}" width="540px"/></div>
+
+
+##### 병렬 디코딩<small>Parallel decoding</small>
+<!-- p432 -->
+- 존재하는 토큰 시퀀스에 대해 한 개가 아닌 여러 토큰을 동시에 예측하는 방법
+- [Medusa (Cai et al., 2024)](https://arxiv.org/abs/2401.10774)는 다수의 디코딩 헤드를 확장해 각 헤드에 작은 신경망 모델을 더해 특정 위치의 미래 토큰을 예측하도록 훈련함.
+    - 원본 모델은 고정한채, 새로운 신경망만 학습
+    - Llama 3.1 토큰 생성을 1.9배 빠르게 함
+- 생성된 토큰들은 검증 및 통합되어야 함
+    1. 미래 토큰 K개 병렬로 생성
+    2. 토큰 K개에 대해 컨텍스트에 대한 문맥적, 논리적 일관성을 검증
+    3. 하나 이상의 토큰이 검증 실패하면, 모델이 재생성하거나 실패한 토큰만 조정함
+- Lookahead 디코딩은 [Jacobi method](https://en.wikipedia.org/wiki/Jacobi_method)를 사용해 생성된 토큰을 검증함
+- 모델은 모든 토큰이 검증을 통과할때까지 정제하고, 그 후 최종 출력에 통합됨
+    - 이러한 병렬 디코딩 알고리즘을 Jacobi decoding이라고 함
+- Medusa는 트리 기반 어텐션 메커니즘 사용
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter9-10/figure9-11.png" | relative_url }}" width="540px"/></div>
+
+##### 어텐션 메커니즘 최적화
+- <mark>KV cache: KV 행렬을 매 입력마다 계산하지 않고 이전 계산값을 저장. 새롭게 계산된 KV 벡터는 KV Cache에 추가됨</mark>
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter9-10/figure9-12.png" | relative_url }}" width="540px"/></div>
+- KV 캐시는 추론에만 사용됨
+- KV 캐시는 시퀀스 길이에 따라 선형 증가함. 어텐션 연산량은 다항함수적으로 증가(n^2 등)
+- 어텐션 메커니즘의 연산 및 메모리 요구량이 긴 컨텍스트를 가지기 어려운 원인
+- 어텐션 메커니즘을 효율적으로 만드는 3가지 방법
+    1. 어텐션 메커니즘 재설계
+    2. KV 캐시 최적화
+    3. 어텐션 연산 커널 작성
+
+<aside mark="💡">
+KV 캐시 크기 계산<br/>
+$$ 2 \times B \times S \times L \times H \times M $$
+<ul>
+<li>B: 배치 크기</li>
+<li>S: 시퀀스 길이</li>
+<li>L: 트랜스포머 레이어 수</li>
+<li>H: 모델 차원</li>
+<li>M: 캐시의 수치 표현(FP16 또는 FP32)에 필요한 메모리</li>
+</ul>
+</aside>
+
+###### 어텐션 메커니즘 재설계
+<!-- p435 -->
 
 #### 추론 서비스 최적화
 
+##### 배치<small>Batching</small>
+
+##### 프리필과 디코딩 분리<small>Decoupling prefill and decode</small>
+
+##### 프롬프트 캐싱<small>Prompt caching</small>
+- 프롬프트 캐시는 중복된 문구를 재사용을 위해 저장
+    - 컨텍스트 캐시, prefix 캐시라고도 불림
+- [Prompt Cache: Modular Attention Reuse for Low-Latency Inference](https://arxiv.org/abs/2311.04934)
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter9-10/prompt-cache.png" | relative_url }}" width="720px"/></div>
+- [TensorRT LLM: KV cache reuse](https://nvidia.github.io/TensorRT-LLM/advanced/kv-cache-reuse.html)
 
 ## Chapter 10
-AI 엔지니어링 구성 체계와 사용자 피드백
+AI 엔지니어링 아키텍처와 사용자 피드백: AI Engineering Archiecture and User Feedback
 
-### AI 엔지니어링 구성 체계<small>AI Engineering Architecture</small>
+### AI 엔지니어링 아키텍처<small>AI Engineering Architecture</small>
 
 #### 1단계. 컨텍스트 개선
 
@@ -143,6 +253,8 @@ AI 엔지니어링 구성 체계와 사용자 피드백
 #### 4단계. 캐시로 지연 시간 축소
 
 #### 5단계. 에이전트 패턴 추가
+
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter9-10/figure10-10.png" | relative_url }}" width="540px"/></div>
 
 #### 모니터링과 관찰 가능성<small>Monitoring and Observability</small>
 
