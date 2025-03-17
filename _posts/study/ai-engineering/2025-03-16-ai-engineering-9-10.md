@@ -239,6 +239,21 @@ $$ 2 \times B \times S \times L \times H \times M $$
 <div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter9-10/prompt-cache.png" | relative_url }}" width="720px"/></div>
 - [TensorRT LLM: KV cache reuse](https://nvidia.github.io/TensorRT-LLM/advanced/kv-cache-reuse.html)
 
+##### 병렬화
+- 2가지 종류: 데이터 병렬화, 모델 병렬화
+- LLM 병렬화: 컨텍스트 및 시퀀스 병렬화
+- 레플리카 병렬화: 가장 구현 간단
+- 모델 병렬화: 동일 모델을 여러 장비로 분할하는 관행을 의미. 대표적인 방법이 텐서 병렬화
+- <mark>텐서 병렬화(오페레이터 내 병렬화): 오퍼레이터 내 텐서를 분할하여 여러 장비에서 나누어서 연산</mark><br/>
+    두 가지 장점을 지님:
+    1. 단일 장비로 서빙하기 어려운 대형 모델 서빙 가능
+    2. 지연 시간 감소. 추가적인 커뮤케이션 오버헤드로 효과가 적을 수 있음
+
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter9-10/figure9-18.png" | relative_url }}" width="540px"/></div>
+
+- 파이프라인 병렬화
+<div style="text-align: center;"><img src="{{ "/assets/img/posts/study/ai-engineering/chapter9-10/figure9-19.png" | relative_url }}" width="540px"/></div>
+
 ## Chapter 10
 AI 엔지니어링 아키텍처와 사용자 피드백: AI Engineering Archiecture and User Feedback
 
