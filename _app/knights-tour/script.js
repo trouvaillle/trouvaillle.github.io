@@ -1,8 +1,127 @@
 ---
-permalink: /app/knights-journey/script.js
+permalink: /app/knights-tour/script.js
+visible: false
 ---
-class KnightJourney3D {
+class KnightTour3D {
     constructor() {
+        // 기본 색상 시스템 정의
+        this.colors = {
+            // 기본 색상 팔레트
+            primary: {
+                base: 0x9A9A9A,
+                light: 0xBCBCBC,
+                dark: 0x727272
+            },
+            secondary: {
+                base: 0x444444,
+                light: 0x666666,
+                dark: 0x222222
+            },
+            accent: {
+                base: 0x4CAF50,
+                light: 0x81D4FA,
+                dark: 0x2E7D32
+            },
+            // 테마별 배경색
+            background: {
+                light: 0xf0f0f0,
+                dark: 0x1a1a1a
+            },
+            // 보드 색상
+            board: {
+                base: 0x727272,
+                light: 0xBCBCBC,
+                dark: 0x7A7A7A
+            },
+            // 나이트 색상
+            knight: {
+                base: 0x7A7A7A,
+                specular: 0xD1D1D1,
+                metal: 0x808080
+            },
+            // 조명 색상
+            light: {
+                ambient: 0xffffff,
+                directional: 0xffffff,
+                hemisphere: {
+                    sky: 0xffffff,
+                    ground: 0x444444
+                }
+            },
+            // 인디케이터 색상
+            indicator: {
+                visited: {
+                    base: 0x21749A,
+                    emissive: 0x2FA3D7,
+                    opacity: 0.5
+                },
+                possible: {
+                    base: 0x0C6F10,
+                    opacity: 0.5
+                },
+                gameOver: {
+                    base: 0xFF0000,
+                    opacity: 0.3
+                }
+            }
+        };
+
+        // 머티리얼 설정
+        this.materials = {
+            // 공통 머티리얼 속성
+            common: {
+                shininess: 20,
+                // envMapIntensity: 0.8,
+                // roughness: 0.2,
+                // metalness: 0.8
+            },
+            // 보드 머티리얼 속성
+            board: {
+                shininess: 20,
+                // envMapIntensity: 0.8
+            },
+            // 나이트 머티리얼 속성
+            knight: {
+                shininess: 80,
+                // envMapIntensity: 0.8,
+                // metalness: 0.8,
+                // roughness: 0.2
+            },
+            // 인디케이터 머티리얼 속성
+            indicator: {
+                visited: {
+                    transparent: true,
+                    side: THREE.DoubleSide,
+                    emissiveIntensity: 0.2
+                },
+                possible: {
+                    transparent: true,
+                    side: THREE.DoubleSide
+                }
+            }
+        };
+
+        // 조명 설정
+        this.lights = {
+            ambient: {
+                intensity: 0.22
+            },
+            hemisphere: {
+                intensity: 0.38
+            },
+            directional: {
+                intensity: 0.54
+            },
+            fill: {
+                intensity: 0.14
+            }
+        };
+
+        // 렌더러 설정
+        this.renderer = {
+            toneMappingExposure: 0.8
+        };
+
         this.scene = new THREE.Scene();
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -35,6 +154,21 @@ class KnightJourney3D {
         this.init();
     }
 
+    // 색상 변환 유틸리티 함수
+    createColor(hex) {
+        return new THREE.Color(hex);
+    }
+
+    // 머티리얼 생성 유틸리티 함수
+    createMaterial(type, options = {}) {
+        const baseOptions = {
+            ...this.materials.common,
+            ...this.materials[type],
+            ...options
+        };
+        return new THREE.MeshPhongMaterial(baseOptions);
+    }
+
     init() {
         // Renderer 설정
         const container = document.getElementById('board-container');
@@ -44,9 +178,16 @@ class KnightJourney3D {
         
         const width = container.clientWidth;
         const height = container.clientHeight;
+        
+        // 렌더러 품질 설정
         this.renderer.setSize(width, height);
-        this.renderer.setClearColor(this.isDarkTheme ? 0x1a1a1a : 0xf0f0f0);
+        this.renderer.setPixelRatio(window.devicePixelRatio);
+        this.renderer.setClearColor(this.isDarkTheme ? this.colors.background.dark : this.colors.background.light);
         this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        this.renderer.outputEncoding = THREE.sRGBEncoding;
+        this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+        this.renderer.toneMappingExposure = this.renderer.toneMappingExposure;
         
         // Canvas 모서리 둥글게 설정
         this.renderer.domElement.style.borderRadius = '20px';
@@ -61,7 +202,7 @@ class KnightJourney3D {
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
 
-        // OrbitControls 설정 - 모바일 환경 고려
+        // OrbitControls 설정
         this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
         this.controls.enableDamping = true;
         this.controls.dampingFactor = 0.05;
@@ -70,17 +211,53 @@ class KnightJourney3D {
         this.controls.enablePan = false;
         this.controls.rotateSpeed = isMobile ? 0.5 : 1;
 
-        // 카메라 위치 초기화 (controls 생성 이후에 호출)
+        // 카메라 위치 초기화
         this.initializeCameraPosition();
 
         // 조명 설정
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        const ambientLight = new THREE.AmbientLight(
+            this.colors.light.ambient,
+            this.lights.ambient.intensity
+        );
         this.scene.add(ambientLight);
 
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        // 주변광 추가
+        const hemisphereLight = new THREE.HemisphereLight(
+            this.colors.light.hemisphere.sky,
+            this.colors.light.hemisphere.ground,
+            this.lights.hemisphere.intensity
+        );
+        this.scene.add(hemisphereLight);
+
+        // 메인 조명
+        const directionalLight = new THREE.DirectionalLight(
+            this.colors.light.directional,
+            this.lights.directional.intensity
+        );
         directionalLight.position.set(5, 5, 5);
         directionalLight.castShadow = true;
+        
+        // 그림자 품질 설정
+        directionalLight.shadow.mapSize.width = 2048;
+        directionalLight.shadow.mapSize.height = 2048;
+        directionalLight.shadow.camera.near = 0.5;
+        directionalLight.shadow.camera.far = 50;
+        directionalLight.shadow.camera.left = -10;
+        directionalLight.shadow.camera.right = 10;
+        directionalLight.shadow.camera.top = 10;
+        directionalLight.shadow.camera.bottom = -10;
+        directionalLight.shadow.bias = -0.0001;
+        
         this.scene.add(directionalLight);
+
+        // 보조 조명
+        const fillLight = new THREE.DirectionalLight(
+            this.colors.light.directional,
+            this.lights.fill.intensity
+        );
+        fillLight.position.set(-5, 3, -5);
+        fillLight.castShadow = true;
+        this.scene.add(fillLight);
 
         // UI 요소 스타일 설정
         this.setupMobileFriendlyUI();
@@ -99,14 +276,6 @@ class KnightJourney3D {
         
         // 애니메이션 시작
         this.animate();
-
-        // confetti.js 초기화
-        try {
-            this.confetti = window.confetti;
-            console.log('Confetti initialized successfully');
-        } catch (error) {
-            console.error('Failed to initialize confetti:', error);
-        }
     }
 
     createThemeButton() {
@@ -131,7 +300,7 @@ class KnightJourney3D {
         button.addEventListener('click', () => {
             this.isDarkTheme = !this.isDarkTheme;
             button.textContent = this.isDarkTheme ? '☀️' : '🌙';
-            this.renderer.setClearColor(this.isDarkTheme ? 0x1a1a1a : 0xf0f0f0);
+            this.renderer.setClearColor(this.isDarkTheme ? this.colors.background.dark : this.colors.background.light);
             localStorage.setItem('theme', this.isDarkTheme ? 'dark' : 'light');
             this.updateBoardColors();
         });
@@ -148,9 +317,9 @@ class KnightJourney3D {
             const isEven = (i + j) % 2 === 0;
             
             if (this.isDarkTheme) {
-                square.material.color.setHex(isEven ? 0xE8E8E8 : 0xC0C0C0);
+                square.material.color.setHex(isEven ? this.colors.board.light : this.colors.board.dark);
             } else {
-                square.material.color.setHex(isEven ? 0xF5F5F5 : 0xD3D3D3);
+                square.material.color.setHex(isEven ? this.colors.board.light : this.colors.board.dark);
             }
         });
     }
@@ -219,7 +388,7 @@ class KnightJourney3D {
         const existingBoard = this.scene.children.find(child => 
             child.geometry && 
             child.geometry.type === 'BoxGeometry' && 
-            child.material.color.getHex() === 0x909090
+            child.material.color.getHex() === this.colors.board.base
         );
         if (existingBoard) {
             this.scene.remove(existingBoard);
@@ -227,14 +396,13 @@ class KnightJourney3D {
 
         // 배경 큐브 크기 계산
         const boardGeometry = new THREE.BoxGeometry(this.boardSize, 0.2, this.boardSize);
-        const boardMaterial = new THREE.MeshPhongMaterial({ 
-            color: 0x909090,
-            specular: 0x111111,
-            shininess: 30
+        const boardMaterial = this.createMaterial('board', {
+            color: this.createColor(this.colors.board.base),
+            specular: this.createColor(this.colors.secondary.dark)
         });
         const board = new THREE.Mesh(boardGeometry, boardMaterial);
         board.receiveShadow = true;
-        board.position.y = 0;
+        board.position.y = -0.05;
         this.scene.add(board);
 
         // 체스판 패턴 생성
@@ -242,10 +410,9 @@ class KnightJourney3D {
         for (let i = -halfSize; i < halfSize; i++) {
             for (let j = -halfSize; j < halfSize; j++) {
                 const squareGeometry = new THREE.BoxGeometry(1, 0.1, 1);
-                const squareMaterial = new THREE.MeshPhongMaterial({ 
-                    color: (i + j) % 2 === 0 ? 0xE8E8E8 : 0xC0C0C0,
-                    specular: 0x111111,
-                    shininess: 30
+                const squareMaterial = this.createMaterial('board', {
+                    color: this.createColor((i + j) % 2 === 0 ? this.colors.board.light : this.colors.board.dark),
+                    specular: this.createColor(this.colors.secondary.dark)
                 });
                 const square = new THREE.Mesh(squareGeometry, squareMaterial);
                 square.position.set(i + 0.5, 0.1, j + 0.5);
@@ -264,16 +431,28 @@ class KnightJourney3D {
         document.getElementById('moves-count').textContent = `0 / ${this.boardSize * this.boardSize}`;
     }
 
-    createPossibleMoveIndicator() {
+    createVisitedIndicator() {
         const geometry = new THREE.CylinderGeometry(0.4, 0.4, 0.05, 32);
-        const material = new THREE.MeshPhongMaterial({
-            color: 0x4CAF50,
-            transparent: true,
-            opacity: 0.5,
-            side: THREE.DoubleSide // 양면 렌더링 추가
+        const material = this.createMaterial('indicator', {
+            color: this.createColor(this.colors.indicator.visited.base),
+            emissive: this.createColor(this.colors.indicator.visited.emissive),
+            opacity: this.colors.indicator.visited.opacity,
+            ...this.materials.indicator.visited
         });
         const indicator = new THREE.Mesh(geometry, material);
-        indicator.userData.isPossibleMove = true; // 사용자 데이터 추가
+        indicator.rotation.x = 0;
+        return indicator;
+    }
+
+    createPossibleMoveIndicator() {
+        const geometry = new THREE.CylinderGeometry(0.4, 0.4, 0.05, 32);
+        const material = this.createMaterial('indicator', {
+            color: this.createColor(this.colors.indicator.possible.base),
+            opacity: this.colors.indicator.possible.opacity,
+            ...this.materials.indicator.possible
+        });
+        const indicator = new THREE.Mesh(geometry, material);
+        indicator.userData.isPossibleMove = true;
         return indicator;
     }
 
@@ -295,43 +474,34 @@ class KnightJourney3D {
     }
 
     loadKnightModel() {
-        // ColladaLoader가 없을 경우 기본 나이트 모델 생성
         if (typeof THREE.ColladaLoader === 'undefined') {
             console.warn('ColladaLoader not found, using default knight model');
             this.createDefaultKnight();
             return;
         }
         
-        // model reference: https://3dwarehouse.sketchup.com/model/225e2fa57e583bb82f38c0d2792fb5e/Chess-knight
         const loader = new THREE.ColladaLoader();
         loader.load(
-            'knights-journey/model.dae',
+            'knights-tour/model.dae',
             (collada) => {
                 this.knight = collada.scene;
-                // 모델 크기를 체스판 cell 사이즈에 맞게 대폭 축소
                 this.knight.scale.set(0.025, 0.025, 0.025);
                 this.knight.position.set(-3.5, 0.3, -3.5);
                 this.knight.visible = false;
 
                 // 새로운 material 생성
-                const knightMaterial = new THREE.MeshPhongMaterial({
-                    color: 0xC0C0C0,
-                    flatShading: false,
-                    wireframe: false,
-                    side: THREE.FrontSide,
-                    shininess: 100,
-                    specular: 0x111111
+                const knightMaterial = this.createMaterial('knight', {
+                    color: this.createColor(this.colors.knight.base),
+                    specular: this.createColor(this.colors.knight.specular)
                 });
 
                 this.knight.traverse((node) => {
-                    // lines 제거
                     if (node.type === 'Line' || node.type === 'LineSegments') {
                         this.knight.remove(node);
                         return;
                     }
 
                     if (node.isMesh) {
-                        // 기존 material 제거
                         if (node.material) {
                             if (Array.isArray(node.material)) {
                                 node.material.forEach(mat => {
@@ -342,10 +512,7 @@ class KnightJourney3D {
                             }
                         }
 
-                        // 새로운 material 적용
                         node.material = knightMaterial.clone();
-                        
-                        // 그림자 설정
                         node.castShadow = true;
                         node.receiveShadow = true;
                     }
@@ -364,17 +531,13 @@ class KnightJourney3D {
     }
 
     createDefaultKnight() {
-        // 더 복잡한 나이트 모델 생성
         const group = new THREE.Group();
         
         // 나이트의 몸체
         const bodyGeometry = new THREE.CylinderGeometry(0.2, 0.3, 0.4, 8);
-        const bodyMaterial = new THREE.MeshPhongMaterial({ 
-            color: 0xC0C0C0, // 실버 색상
-            specular: 0xFFFFFF, // 반사광 색상
-            shininess: 100, // 반사도 증가
-            metalness: 0.9, // 금속성
-            roughness: 0.1 // 거칠기 감소
+        const bodyMaterial = this.createMaterial('knight', {
+            color: this.createColor(this.colors.knight.base),
+            specular: this.createColor(this.colors.knight.specular)
         });
         const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
         body.position.y = 0.3;
@@ -382,12 +545,9 @@ class KnightJourney3D {
 
         // 나이트의 머리
         const headGeometry = new THREE.SphereGeometry(0.2, 16, 16);
-        const headMaterial = new THREE.MeshPhongMaterial({ 
-            color: 0xC0C0C0, // 실버 색상
-            specular: 0xFFFFFF, // 반사광 색상
-            shininess: 100, // 반사도 증가
-            metalness: 0.9, // 금속성
-            roughness: 0.1 // 거칠기 감소
+        const headMaterial = this.createMaterial('knight', {
+            color: this.createColor(this.colors.knight.base),
+            specular: this.createColor(this.colors.knight.specular)
         });
         const head = new THREE.Mesh(headGeometry, headMaterial);
         head.position.y = 0.6;
@@ -395,12 +555,9 @@ class KnightJourney3D {
 
         // 나이트의 말머리
         const maneGeometry = new THREE.ConeGeometry(0.15, 0.3, 8);
-        const maneMaterial = new THREE.MeshPhongMaterial({ 
-            color: 0xC0C0C0, // 실버 색상
-            specular: 0xFFFFFF, // 반사광 색상
-            shininess: 100, // 반사도 증가
-            metalness: 0.9, // 금속성
-            roughness: 0.1 // 거칠기 감소
+        const maneMaterial = this.createMaterial('knight', {
+            color: this.createColor(this.colors.knight.base),
+            specular: this.createColor(this.colors.knight.specular)
         });
         const mane = new THREE.Mesh(maneGeometry, maneMaterial);
         mane.position.set(0.2, 0.75, 0);
@@ -409,12 +566,9 @@ class KnightJourney3D {
 
         // 나이트의 다리
         const legGeometry = new THREE.CylinderGeometry(0.05, 0.05, 0.4, 8);
-        const legMaterial = new THREE.MeshPhongMaterial({ 
-            color: 0xC0C0C0, // 실버 색상
-            specular: 0xFFFFFF, // 반사광 색상
-            shininess: 100, // 반사도 증가
-            metalness: 0.9, // 금속성
-            roughness: 0.1 // 거칠기 감소
+        const legMaterial = this.createMaterial('knight', {
+            color: this.createColor(this.colors.knight.base),
+            specular: this.createColor(this.colors.knight.specular)
         });
         
         const leftLeg = new THREE.Mesh(legGeometry, legMaterial);
@@ -436,7 +590,7 @@ class KnightJourney3D {
     }
 
     setupMobileFriendlyUI() {
-        // Start Journey 버튼 스타일
+        // Start Tour 버튼 스타일
         const startBtn = document.getElementById('start-btn');
         startBtn.style.padding = '12px 24px';
         startBtn.style.fontSize = '16px';
@@ -508,7 +662,10 @@ class KnightJourney3D {
     setupEventListeners() {
         const startBtn = document.getElementById('start-btn');
         startBtn.addEventListener('click', () => {
-            this.reset();
+            // 게임이 진행 중이거나 종료된 상태라면 리셋
+            if (this.gameStarted || this.visited.size > 0) {
+                this.reset();
+            }
             this.startGame();
         });
 
@@ -535,6 +692,9 @@ class KnightJourney3D {
         if (!this.gameStarted) {
             this.selectingStartPosition = true;
             document.getElementById('status').textContent = 'Select starting position';
+            // 게임 시작 시 버튼 텍스트 변경
+            const startBtn = document.getElementById('start-btn');
+            startBtn.textContent = 'Restart Tour';
         }
     }
 
@@ -555,6 +715,7 @@ class KnightJourney3D {
         this.possibleMoves = [];
         this.gameStarted = false;
         this.selectingStartPosition = true;
+        this.isMoving = false;
         
         // 방문한 칸 표시 제거
         this.visitedSquares.forEach(square => {
@@ -607,11 +768,6 @@ class KnightJourney3D {
         // 카메라 위치 초기화
         this.initializeCameraPosition();
 
-        // 폭죽 효과 초기화
-        if (this.confetti) {
-            this.confetti.clearCanvas();
-        }
-
         // 게임 오버 오버레이 제거
         if (this.gameOverOverlay) {
             const container = document.getElementById('board-container');
@@ -624,6 +780,15 @@ class KnightJourney3D {
             this.scene.remove(indicator);
         });
         this.possibleMoveIndicators = [];
+
+        // 버튼 상태 초기화
+        const startBtn = document.getElementById('start-btn');
+        startBtn.style.display = 'block';
+        startBtn.disabled = false;
+        startBtn.style.opacity = '1';
+        startBtn.style.cursor = 'pointer';
+        // 버튼 텍스트를 Start Tour로 변경
+        this.updateButtonText('Start Tour');
     }
 
     onMouseClick(event) {
@@ -736,21 +901,6 @@ class KnightJourney3D {
         document.getElementById('status').textContent = 'Select a move';
     }
 
-    createVisitedIndicator() {
-        const geometry = new THREE.CylinderGeometry(0.4, 0.4, 0.05, 32);
-        const material = new THREE.MeshPhongMaterial({
-            color: 0x81D4FA,
-            transparent: true,
-            opacity: 0.5,
-            side: THREE.DoubleSide,
-            emissive: 0x4FC3F7,
-            emissiveIntensity: 0.2
-        });
-        const indicator = new THREE.Mesh(geometry, material);
-        indicator.rotation.x = 0; // 체스판과 평행하도록 회전
-        return indicator;
-    }
-
     markSquareAsVisited(x, y) {
         const visitedIndicator = this.createVisitedIndicator();
         const halfSize = this.boardSize / 2;
@@ -773,7 +923,7 @@ class KnightJourney3D {
         const targetX = -halfSize + 0.5 + move.x;
         const targetZ = -halfSize + 0.5 + move.y;
 
-        // Start Journey 버튼 비활성화
+        // Start Tour 버튼 비활성화
         const startBtn = document.getElementById('start-btn');
         startBtn.disabled = true;
         startBtn.style.opacity = '0.5';
@@ -792,7 +942,7 @@ class KnightJourney3D {
                 this.checkGameStatus();
                 this.isMoving = false;
 
-                // Start Journey 버튼 다시 활성화
+                // Start Tour 버튼 다시 활성화
                 startBtn.disabled = false;
                 startBtn.style.opacity = '1';
                 startBtn.style.cursor = 'pointer';
@@ -848,10 +998,10 @@ class KnightJourney3D {
         if (this.possibleMoves.length === 0) {
             if (this.visited.size === this.boardSize * this.boardSize) {
                 const status = document.getElementById('status');
-                status.textContent = '🎉 Congratulations! You completed the journey! 🎉';
+                status.textContent = '🎉 Congratulations! You completed the tour! 🎉';
                 // 상태 메시지가 길 경우 줄임
                 if (window.innerWidth < 768) {
-                    status.textContent = '🎉 Journey Complete! 🎉';
+                    status.textContent = '🎉 Tour Complete! 🎉';
                 }
                 this.victoryAnimation();
             } else {
@@ -865,6 +1015,8 @@ class KnightJourney3D {
             }
             this.gameStarted = false;
             document.getElementById('start-btn').style.display = 'block';
+            // 게임 종료 시 버튼 텍스트를 Start Tour로 변경
+            document.getElementById('start-btn').textContent = 'Start Tour';
         } else {
             document.getElementById('status').textContent = 'Select a move';
         }
@@ -873,7 +1025,7 @@ class KnightJourney3D {
     victoryAnimation() {
         console.log('Victory animation started');
         
-        // Start Journey 버튼 활성화
+        // Start Tour 버튼 활성화
         const startBtn = document.getElementById('start-btn');
         startBtn.disabled = false;
         startBtn.style.opacity = '1';
@@ -881,15 +1033,15 @@ class KnightJourney3D {
         startBtn.style.display = 'block';
         
         // 1. 폭죽 효과
-        if (this.confetti) {
+        if (window.confetti) {
             console.log('Triggering confetti effect');
-            this.confetti({
+            window.confetti({
                 particleCount: 100,
                 spread: 70,
                 origin: { y: 0.6 }
             });
         } else {
-            console.error('Confetti instance not initialized');
+            console.error('Confetti not available');
         }
 
         // 2. 카메라 회전 애니메이션
@@ -921,16 +1073,25 @@ class KnightJourney3D {
 
         // 3. 나이트 승리 애니메이션
         if (this.knight) {
+            // 올라가는 애니메이션
             gsap.to(this.knight.position, {
                 y: 1,
                 duration: 0.5,
-                ease: "bounce.out"
+                ease: "bounce.out",
+                onComplete: () => {
+                    // 내려오는 애니메이션
+                    gsap.to(this.knight.position, {
+                        y: 0.3,
+                        duration: 0.5,
+                        ease: "power2.in"
+                    });
+                }
             });
         }
     }
 
     gameOverAnimation() {
-        // Start Journey 버튼 비활성화
+        // Start Tour 버튼 비활성화
         const startBtn = document.getElementById('start-btn');
         startBtn.disabled = true;
         startBtn.style.opacity = '0.5';
@@ -945,8 +1106,8 @@ class KnightJourney3D {
         // 1. Visited indicators 색상 변경
         this.visitedSquares.forEach(square => {
             this.gameOverAnimationTimeline.to(square.material, {
-                color: 0xFF0000,
-                opacity: 0.3,
+                color: this.createColor(this.colors.indicator.gameOver.base),
+                opacity: this.colors.indicator.gameOver.opacity,
                 duration: 1,
                 ease: "power2.inOut"
             }, 0);
@@ -1029,7 +1190,7 @@ class KnightJourney3D {
             // 페이드 아웃 시작
             this.gameOverOverlay.style.opacity = '1';
             
-            // 모든 애니메이션이 완료된 후 Start Journey 버튼 활성화
+            // 모든 애니메이션이 완료된 후 Start Tour 버튼 활성화
             setTimeout(() => {
                 startBtn.disabled = false;
                 startBtn.style.opacity = '1';
@@ -1047,7 +1208,10 @@ class KnightJourney3D {
         // 카메라 비율 업데이트
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
+        
+        // 렌더러 크기 및 픽셀 비율 업데이트
         this.renderer.setSize(width, height);
+        this.renderer.setPixelRatio(window.devicePixelRatio);
 
         // 카메라 위치 초기화
         this.initializeCameraPosition();
@@ -1057,8 +1221,8 @@ class KnightJourney3D {
         if (this.possibleMoves.length === 0) {
             if (this.visited.size === this.boardSize * this.boardSize) {
                 status.textContent = window.innerWidth < 768 ? 
-                    '🎉 Journey Complete! 🎉' : 
-                    '🎉 Congratulations! You completed the journey! 🎉';
+                    '🎉 Tour Complete! 🎉' : 
+                    '🎉 Congratulations! You completed the tour! 🎉';
             } else {
                 status.textContent = window.innerWidth < 768 ? 
                     `Game Over! ${this.visited.size}/${this.boardSize * this.boardSize}` : 
@@ -1088,7 +1252,12 @@ class KnightJourney3D {
         this.controls.target.set(0, 0, 0);
         this.controls.update();
     }
+
+    updateButtonText(text) {
+        const startBtn = document.getElementById('start-btn');
+        startBtn.textContent = text;
+    }
 }
 
 // 게임 인스턴스 생성
-const game = new KnightJourney3D(); 
+const game = new KnightTour3D(); 
