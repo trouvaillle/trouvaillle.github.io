@@ -121,7 +121,7 @@ body {
 }
 
 #game-message {
-    position: static;
+    position: absolute;
     margin-top: 18px;
     text-align: center;
     font-size: 1.3em;
@@ -132,6 +132,8 @@ body {
     box-shadow: none;
     z-index: 1;
     padding: 0;
+    bottom: 8rem;
+    opacity: 0.9;
 }
 
 #game-message .message-content {
@@ -209,4 +211,9 @@ body {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+.board-win-bg {
+    background: #ffe5b2 !important;
+    transition: background 0.3s;
 } 

@@ -122,6 +122,8 @@ class OmokGame {
 
     startRound() {
         // 게임 보드 초기화
+        const boardContainer = document.querySelector('.board-container');
+        if (boardContainer) boardContainer.classList.remove('board-win-bg');
         const gameBoard = document.getElementById('game-board');
         gameBoard.innerHTML = '';
         this.initializeBoard();
@@ -395,6 +397,9 @@ class OmokGame {
         this.updateStatus();
         this.showMessage(`${isUserWin ? '유저' : 'AI'} 승리!`, isUserWin);
         this.redrawBoard(isUserWin); // 승리 강조
+        // 보드 배경 강조
+        const boardContainer = document.querySelector('.board-container');
+        if (boardContainer) boardContainer.classList.add('board-win-bg');
     }
 
     updateStatus() {
