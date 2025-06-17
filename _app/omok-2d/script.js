@@ -140,18 +140,16 @@ class OmokGame {
 
     makeMove(row, col) {
         if (!this.gameActive || this.board[row][col]) return;
-
         this.board[row][col] = this.currentPlayer;
         this.placeStone(row, col);
-
+        this.lastMoveRow = row;
+        this.lastMoveCol = col;
         if (this.checkWin(row, col)) {
             this.handleWin();
             return;
         }
-
         this.currentPlayer = this.currentPlayer === 'user' ? 'ai' : 'user';
         this.updateStatus();
-
         if (this.currentPlayer === 'ai') {
             setTimeout(() => this.makeAIMove(), 500);
         }
@@ -343,38 +341,33 @@ class OmokGame {
             [[1, 1], [-1, -1]], // 대각선
             [[1, -1], [-1, 1]] // 반대 대각선
         ];
-
         for (const direction of directions) {
             let count = 1;
-            let blocked = 0; // 양 끝이 막혀있는지 확인
-
-            // 양방향으로 돌 개수 세기
+            let blocked = 0;
+            let winCoords = [[row, col]];
             for (const [dx, dy] of direction) {
                 let r = row + dx;
                 let c = col + dy;
                 let consecutive = 0;
-
+                let tempCoords = [];
                 while (
                     r >= 0 && r < this.boardSize &&
                     c >= 0 && c < this.boardSize &&
                     this.board[r][c] === player
                 ) {
                     consecutive++;
+                    tempCoords.push([r, c]);
                     r += dx;
                     c += dy;
                 }
-
-                // 끝이 막혀있는지 확인
                 if (r >= 0 && r < this.boardSize && c >= 0 && c < this.boardSize && this.board[r][c] !== null) {
                     blocked++;
                 }
-
                 count += consecutive;
+                winCoords = winCoords.concat(tempCoords);
             }
-
-            // 정확히 5개이고 양 끝이 막혀있지 않을 때만 승리
             if (count === 5 && blocked < 2) {
-                return true;
+                return winCoords;
             }
         }
         return false;
@@ -383,7 +376,15 @@ class OmokGame {
     handleWin() {
         this.gameActive = false;
         this.stopTimer();
-        if (this.currentPlayer === 'user') {
+        let winCoords = null;
+        // 마지막 수로 승리한 5목 좌표 추적
+        if (this.lastMoveRow !== undefined && this.lastMoveCol !== undefined) {
+            const res = this.checkWin(this.lastMoveRow, this.lastMoveCol);
+            if (Array.isArray(res)) winCoords = res;
+        }
+        this.winCoords = winCoords;
+        const isUserWin = this.currentPlayer === 'user';
+        if (isUserWin) {
             this.userScore++;
             this.lastAIRoundWin = false;
         } else {
@@ -392,7 +393,8 @@ class OmokGame {
         }
         this.lastAIStrategy = this.aiStrategy;
         this.updateStatus();
-        this.showMessage(`${this.currentPlayer === 'user' ? '유저' : 'AI'} 승리!`);
+        this.showMessage(`${isUserWin ? '유저' : 'AI'} 승리!`, isUserWin);
+        this.redrawBoard(isUserWin); // 승리 강조
     }
 
     updateStatus() {
@@ -435,10 +437,15 @@ class OmokGame {
         document.getElementById('round-timer').textContent = `${minutes}:${seconds}`;
     }
 
-    showMessage(message) {
+    showMessage(message, isUserWin = false) {
         const messageElement = document.getElementById('game-message');
         const messageContent = messageElement.querySelector('.message-content');
         messageContent.textContent = message;
+        if (isUserWin) {
+            messageContent.classList.add('user-win-message');
+        } else {
+            messageContent.classList.remove('user-win-message');
+        }
         messageElement.classList.remove('hidden');
     }
 
@@ -461,9 +468,13 @@ class OmokGame {
     }
 
     // 현재 board 배열을 화면에 반영
-    redrawBoard() {
+    redrawBoard(isUserWin = false) {
         const gameBoard = document.getElementById('game-board');
         gameBoard.innerHTML = '';
+        let winSet = null;
+        if (this.winCoords && Array.isArray(this.winCoords)) {
+            winSet = new Set(this.winCoords.map(([r, c]) => `${r},${c}`));
+        }
         for (let i = 0; i < this.boardSize; i++) {
             for (let j = 0; j < this.boardSize; j++) {
                 const cell = document.createElement('div');
@@ -473,6 +484,12 @@ class OmokGame {
                 if (this.board[i][j]) {
                     const stone = document.createElement('div');
                     stone.className = `stone ${this.board[i][j] === 'user' ? 'black' : 'white'}`;
+                    if (winSet && winSet.has(`${i},${j}`)) {
+                        stone.classList.add('stone-win');
+                        if (isUserWin && this.board[i][j] === 'user') {
+                            stone.classList.add('user-win');
+                        }
+                    }
                     cell.appendChild(stone);
                 }
                 gameBoard.appendChild(cell);

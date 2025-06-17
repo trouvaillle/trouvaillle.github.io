@@ -114,37 +114,46 @@ body {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
 }
 
+.stone-win {
+    border: 3px solid #d32f2f !important;
+    box-shadow: 0 0 10px 2px #d32f2f55;
+    z-index: 2;
+}
+
 #game-message {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
-}
-
-.message-content {
-    background-color: white;
-    padding: 30px;
-    border-radius: 10px;
+    position: static;
+    margin-top: 18px;
     text-align: center;
-    font-size: 2rem;
-    animation: fadeIn 0.5s ease;
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #d32f2f;
+    background: none;
+    border: none;
+    box-shadow: none;
+    z-index: 1;
+    padding: 0;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.8);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+#game-message .message-content {
+    display: inline-block;
+    background: #fff0f0;
+    border: 2px solid #d32f2f;
+    border-radius: 10px;
+    padding: 8px 24px;
+    color: #d32f2f;
+}
+
+.user-win-message {
+    color: #357ab8 !important;
+}
+#game-message .user-win-message {
+    background: #eaf4ff;
+    border: 2px solid #4a90e2;
+    color: #357ab8 !important;
+}
+.stone-win.user-win {
+    border: 3px solid #4a90e2 !important;
+    box-shadow: 0 0 10px 2px #4a90e288;
 }
 
 /* 모바일 대응 */
