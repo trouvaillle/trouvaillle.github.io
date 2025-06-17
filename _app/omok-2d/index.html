@@ -1,0 +1,43 @@
+---
+title: 오목 게임
+layout: none
+permalink: /app/omok-2d
+date: 2025-06-18 01:20:00 +0900
+---
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>오목 게임</title>
+    <link rel="stylesheet" href="omok-2d/styles.css">
+    <link rel="icon" type="image/png" href="../assets/img/omok-2d/image.png">
+</head>
+<body>
+    <div class="game-container">
+        <div class="status-panel">
+            <div class="turn-indicator">
+                <span>현재 턴: </span>
+                <span id="current-turn">유저</span>
+                <span id="ai-loading-spinner" class="spinner hidden"></span>
+            </div>
+            <div class="score-board">
+                <span id="score-line">
+                    <span class="score-label user-label">유저</span> <span id="user-score">0</span> vs <span id="ai-score">0</span> <span class="score-label ai-label">AI</span>
+                </span>
+            </div>
+            <div class="timer">
+                <span>시간: </span>
+                <span id="round-timer">00:00</span>
+            </div>
+        </div>
+        <div class="board-container">
+            <div id="game-board"></div>
+        </div>
+        <div id="game-message" class="hidden">
+            <div class="message-content"></div>
+        </div>
+    </div>
+    <script src="omok-2d/script.js"></script>
+</body>
+</html> 
