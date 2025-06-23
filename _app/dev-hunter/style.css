@@ -1,0 +1,105 @@
+---
+layout: none
+permalink: /app/dev-hunter/style.css
+date: 2025-06-24 03:51:00 +0900
+---
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #232526 0%, #414345 100%);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  overflow: hidden;
+  user-select: none;
+}
+html, body, #game-container, #game-canvas {
+  width: 100vw;
+  height: 100vh;
+  min-width: 100vw;
+  min-height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+#game-container {
+  position: relative;
+  user-select: none;
+}
+#game-canvas {
+  display: block;
+  background: #222;
+  position: absolute;
+  top: 0; left: 0;
+  z-index: 1;
+  touch-action: none;
+  user-select: none;
+}
+#hud {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 40px;
+  font-size: 1.5rem;
+  color: #fff;
+  text-shadow: 0 2px 8px #000a;
+  z-index: 10;
+  background: linear-gradient(90deg, #00bfff33 0%, #ff5e6233 100%);
+  border-radius: 16px;
+  box-shadow: 0 4px 32px #00bfff44, 0 0 8px #fff8;
+  padding: 12px 32px;
+  transition: background 0.5s;
+  user-select: none;
+}
+#hud .flash {
+  animation: flash 0.4s;
+}
+@keyframes flash {
+  0% { color: #fff; text-shadow: 0 0 16px #fff, 0 0 32px #00bfff; }
+  100% { color: #fff; text-shadow: 0 2px 8px #000a; }
+}
+#hud > div {
+  transition: color 0.3s, text-shadow 0.3s;
+}
+#game-over, #game-clear {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  color: #fff;
+  background: rgba(0,0,0,0.7);
+  padding: 40px 80px;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px #000a;
+  z-index: 20;
+  letter-spacing: 0.2em;
+  text-align: center;
+  animation: pop 0.5s cubic-bezier(.68,-0.55,.27,1.55);
+}
+@keyframes pop {
+  0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+@media (max-width: 600px) {
+  #hud { font-size: 1rem; gap: 16px; padding: 8px 8px; }
+  #game-over, #game-clear { font-size: 1.5rem; padding: 20px 10vw; }
+}
+.loading-spinner, .loading-text {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  pointer-events: none;
+  width: max-content;
+  max-width: 90vw;
+  box-sizing: border-box;
+  margin: 0 auto;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} 

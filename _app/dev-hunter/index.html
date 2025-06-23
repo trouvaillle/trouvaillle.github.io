@@ -1,0 +1,29 @@
+---
+title: Dev Hunter 3D
+layout: none
+permalink: /app/dev-hunter
+date: 2025-06-24 03:51:00 +0900
+---
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dev Hunter 3D</title>
+  <link rel="stylesheet" href="dev-hunter/style.css">
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="game-canvas"></canvas>
+    <div id="hud">
+      <div id="score">점수: 0</div>
+      <div id="timer">시간: 60</div>
+      <div id="speed">속도: 0</div>
+      <div id="theme">테마: -</div>
+    </div>
+    <div id="game-over" style="display:none;">GAME OVER</div>
+    <div id="game-clear" style="display:none;">CLEAR!</div>
+  </div>
+  <script type="module" src="dev-hunter/main.js"></script>
+</body>
+</html> 
