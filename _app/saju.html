@@ -1,0 +1,1981 @@
+---
+title: Saju
+layout: none
+permalink: /app/saju
+date: 2025-07-01 19:49:00 +0900
+---
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사주 정보 조회 - 웹 버전</title>
+    <style>
+        /* 기본 스타일 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #524c46;
+            --secondary-color: #fcfbf9;
+            --accent-color: #e57576;
+            --border-color: #b8b2ac;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --error-color: #f44336;
+            
+            /* 오행 색상 */
+            --wood-color: #4c8093;
+            --fire-color: #e57576;
+            --earth-color: #cfa05a;
+            --metal-color: #968f88;
+            --water-color: #4a4955;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        /* 입력 폼 스타일 */
+        .input-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .inline-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #d65a5b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(229, 117, 118, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: var(--border-color);
+            color: var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #a5a09a;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 도시 검색 */
+        .city-search {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .city-search input {
+            flex: 1;
+        }
+
+        .city-list {
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+            display: none;
+        }
+
+        .city-item {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+
+        .city-item:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .city-item:last-child {
+            border-bottom: none;
+        }
+
+        /* 진행률 표시 */
+        .progress-container {
+            margin: 20px 0;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--success-color);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* 탭 시스템 */
+        .results-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .tab-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            border: none;
+            background: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            border-radius: 8px 8px 0 0;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            background-color: var(--secondary-color);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .result-text {
+            background-color: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-nav {
+                flex-direction: column;
+            }
+            
+            .city-search {
+                flex-direction: column;
+            }
+            
+            .inline-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        /* 로딩 애니메이션 */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--accent-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-20 {
+            margin-top: 20px;
+        }
+
+        .mb-10 {
+            margin-bottom: 10px;
+        }
+
+        /* 토스트 알림 스타일 */
+        .toast-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--success-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none;
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+        }
+
+        /* 토스트 타입별 스타일 */
+        .toast-notification.success {
+            background-color: var(--success-color);
+        }
+
+        .toast-notification.error {
+            background-color: var(--error-color);
+        }
+
+        .toast-notification.warning {
+            background-color: var(--warning-color);
+        }
+
+        .toast-notification.info {
+            background-color: var(--primary-color);
+        }
+
+        /* 토스트 아이콘 */
+        .toast-notification.success::before {
+            content: '✓';
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .toast-notification.error::before {
+            content: '✕';
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .toast-notification.warning::before {
+            content: '⚠';
+            margin-right: 8px;
+            font-size: 18px;
+        }
+
+        .toast-notification.info::before {
+            content: 'ℹ';
+            margin-right: 8px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <h1>🔮 사주 정보 조회</h1>
+        </div>
+
+        <!-- 입력 섹션 -->
+        <div class="input-section">
+            <h2 class="section-title">📝 개인 정보 입력</h2>
+            
+            <div class="form-grid">
+                <!-- 이름 입력 -->
+                <div class="form-group">
+                    <label for="name">이름</label>
+                    <div class="inline-group">
+                        <input type="text" id="name" placeholder="이름을 입력하세요">
+                        <button type="button" class="btn btn-secondary" onclick="generateRandomName()">랜덤 이름</button>
+                    </div>
+                </div>
+
+                <!-- 성별 선택 -->
+                <div class="form-group">
+                    <label>성별</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="male" name="gender" value="M" checked>
+                            <label for="male">남성</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="female" name="gender" value="F">
+                            <label for="female">여성</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 달력 종류 -->
+                <div class="form-group">
+                    <label for="calendar">달력</label>
+                    <select id="calendar">
+                        <option value="S">양력 (Solar)</option>
+                        <option value="L">음력 (Lunar)</option>
+                    </select>
+                </div>
+
+                <!-- 생년월일 -->
+                <div class="form-group">
+                    <label for="birthDate">생년월일</label>
+                    <input type="date" id="birthDate" value="1992-06-27">
+                </div>
+
+                <!-- 출생 시간 -->
+                <div class="form-group">
+                    <label for="birthTime">출생 시간</label>
+                    <input type="time" id="birthTime" value="09:15">
+                </div>
+
+                <!-- 옵션 체크박스 -->
+                <div class="form-group">
+                    <label>옵션</label>
+                    <div>
+                        <div class="radio-item mb-10">
+                            <input type="checkbox" id="hmUnsure">
+                            <label for="hmUnsure">시간이 불확실함</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="checkbox" id="midnightAdjust">
+                            <label for="midnightAdjust">자정 조정</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 출생지 정보 -->
+            <div class="form-group mt-20">
+                <h3 class="section-title">🌍 출생지 정보</h3>
+                
+                <!-- 도시 검색 -->
+                <div class="form-group">
+                    <label for="citySearch">도시 검색</label>
+                    <div class="city-search">
+                        <input type="text" id="citySearch" placeholder="도시명을 입력하세요 (예: 서울, 부산, 대구)">
+                        <button type="button" class="btn btn-secondary" onclick="searchCities()">검색</button>
+                    </div>
+                    <div id="cityList" class="city-list"></div>
+                </div>
+
+                <!-- 선택된 지역 정보 -->
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="location">선택된 지역</label>
+                        <input type="text" id="location" value="서울특별시, 대한민국" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="locationId">지역 ID</label>
+                        <input type="text" id="locationId" value="1835847" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 조회 버튼 -->
+            <div class="text-center mt-20">
+                <button type="button" class="btn btn-primary" onclick="requestSajuInfo()" id="requestBtn">
+                    🔍 사주 정보 조회
+                </button>
+            </div>
+
+            <!-- 진행률 표시 -->
+            <div id="progressContainer" class="progress-container">
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <div id="progressText" class="progress-text">API 호출 중...</div>
+            </div>
+        </div>
+
+        <!-- 결과 섹션 -->
+        <div id="resultsSection" class="results-section">
+            <h2 class="section-title">📊 분석 결과</h2>
+            
+            <!-- 탭 네비게이션 -->
+            <div class="tab-nav">
+                <button class="tab-btn active" onclick="switchTab(0)">사주 차트</button>
+                <button class="tab-btn" onclick="switchTab(1)">합/충 정보</button>
+                <button class="tab-btn" onclick="switchTab(2)">길흉 정보</button>
+                <button class="tab-btn" onclick="switchTab(3)">용신 정보</button>
+                <button class="tab-btn" onclick="switchTab(4)">포인트 정보</button>
+                <button class="tab-btn" onclick="switchTab(5)">파워/득령 정보</button>
+                <button class="tab-btn" onclick="switchTab(6)">최종 프롬프트</button>
+            </div>
+
+            <!-- 탭 컨텐츠 -->
+            <div id="tab0" class="tab-content active">
+                <div id="chartResult" class="result-text">사주 차트 정보가 여기에 표시됩니다.</div>
+            </div>
+            <div id="tab1" class="tab-content">
+                <div id="details1Result" class="result-text">합/충 정보가 여기에 표시됩니다.</div>
+            </div>
+            <div id="tab2" class="tab-content">
+                <div id="details2Result" class="result-text">길흉 정보가 여기에 표시됩니다.</div>
+            </div>
+            <div id="tab3" class="tab-content">
+                <div id="usefulResult" class="result-text">용신 정보가 여기에 표시됩니다.</div>
+            </div>
+            <div id="tab4" class="tab-content">
+                <div id="pointsResult" class="result-text">포인트 정보가 여기에 표시됩니다.</div>
+            </div>
+            <div id="tab5" class="tab-content">
+                <div id="powerResult" class="result-text">파워/득령 정보가 여기에 표시됩니다.</div>
+            </div>
+            <div id="tab6" class="tab-content">
+                <div class="text-center mb-10">
+                    <button type="button" class="btn btn-secondary" onclick="copyPromptToClipboard()" id="copyBtn" disabled>
+                        📋 프롬프트 복사
+                    </button>
+                </div>
+                <div id="promptResult" class="result-text">최종 프롬프트가 여기에 표시됩니다.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 토스트 알림 -->
+    <div id="toastNotification" class="toast-notification">
+        프롬프트가 클립보드에 복사되었습니다.
+    </div>
+
+    <script>
+        // 이름 데이터
+        const namesData = {
+            male_names: [
+                "김민수", "이준호", "박지훈", "최수진", "정민우",
+                "강동현", "윤시우", "임재현", "오승현", "배성민",
+                "류준석", "한도윤", "서민혁", "남주원", "조현우",
+                "송태윤", "구민재", "신준영", "홍지안", "전우진",
+                "황시원", "문준서", "노건우", "안지호", "장민기",
+                "마시후", "곽도현", "차준희", "유건희", "변준혁"
+            ],
+            female_names: [
+                "김지연", "이서연", "박수빈", "최예린", "정하은",
+                "강서윤", "윤채원", "임지우", "오민서", "배유나",
+                "류시은", "한예원", "서지민", "남수아", "조아린",
+                "송다은", "구하린", "신예진", "홍서현", "전은서",
+                "황서영", "문지안", "노채은", "안수연", "장예은",
+                "마서진", "곽채윤", "차하늘", "유서정", "변예서"
+            ]
+        };
+
+        // 글로벌 변수
+        let currentResults = {};
+
+        // URL 난독화 시스템 (GitHub 검색 방지)
+        const urlDecryptionKey = 0x5A;  // XOR 키
+        
+        // 암호화된 URL 테이블 (XOR + Base64 + 역순)
+        const encryptedUrls = {
+            cities: "=p8zMuMTO1VDKqU3MqsTd3UTO0hyP2YzPu8TOoUDP0NjK7UXdgliKu4iM",
+            chart: "=ugyOykTdvAzOpU3P2MDP1giK1VDKqU3MqsTd3UTO0hyP2YzPu8TOoUDP0NjK7UXdgliKu4iM",
+            details: "==gGL1liNzsjL/4TdvAzOpU3P2MDP1giK1VDKqU3MqsTd3UTO0hyP2YzPu8TOoUDP0NjK7UXdgliKu4iM",
+            useful: "===gNvwzPp8SdvAzOpU3P2MDP1giK1VDKqU3MqsTd3UTO0hyP2YzPu8TOoUDP0NjK7UXdgliKu4iM",
+            points: "===QKuQzM1oSdvAzOpU3P2MDP1giK1VDKqU3MqsTd3UTO0hyP2YzPu8TOoUDP0NjK7UXdgliKu4iM",
+            power: "=o8TL1oSdvAzOpU3P2MDP1giK1VDKqU3MqsTd3UTO0hyP2YzPu8TOoUDP0NjK7UXdgliKu4iM"
+        };
+
+        // URL 디코딩 함수 (다단계 복호화)
+        function decryptUrl(encryptedData) {
+            try {
+                // 1단계: 마커 제거 후 역순
+                let step1 = encryptedData.slice(1).split('').reverse().join('');
+                
+                // 2단계: Base64 디코딩
+                let step2 = atob(step1);
+                
+                // 3단계: XOR 복호화 (바이트 단위)
+                let decrypted = '';
+                for (let i = 0; i < step2.length; i++) {
+                    decrypted += String.fromCharCode(step2.charCodeAt(i) ^ urlDecryptionKey);
+                }
+                
+                return decrypted;
+            } catch (e) {
+                console.error('URL 복호화 실패:', e);
+                return '';
+            }
+        }
+
+        // API URL 생성 함수
+        function getApiUrl(type, params = '') {
+            const baseUrl = decryptUrl(encryptedUrls[type]);
+            if (!baseUrl) {
+                console.error('알 수 없는 API 타입:', type);
+                return '';
+            }
+            
+            // 특별한 경우 처리
+            if (type === 'cities') {
+                return baseUrl + '?q=' + params;
+            } else if (type === 'details') {
+                return baseUrl + '?cat=' + params;
+            }
+            
+            return baseUrl;
+        }
+
+        // 십성 데이터 포맷팅 함수 (main.py의 format_sipseong_item 로직)
+        function formatSipseongItem(item) {
+            if (typeof item === 'object' && item !== null && 'element' in item) {
+                const element = item.element || {};
+                const name = element.name || 'N/A';
+                const chinese = element.chinese || '';
+                const elementId = element.id;
+                const percent = item.percent || 0.0;
+                const point = item.point || 0.0;
+                const description = item.description || '';
+                
+                // 기본 형식: 겁재(劫財) 0.0%, 0.0point
+                let result;
+                if (chinese) {
+                    result = `${name}(${chinese}) ${percent}%, ${point}point`;
+                } else {
+                    result = `${name} ${percent}%, ${point}point`;
+                }
+                
+                // ID 추가 (있는 경우)
+                if (elementId !== null && elementId !== undefined) {
+                    result += ` [ID:${elementId}]`;
+                }
+                
+                // 설명 추가 (있는 경우)
+                if (description && description.trim()) {
+                    result += ` - ${description.trim()}`;
+                }
+                
+                return result;
+            }
+            return String(item);
+        }
+
+        // 재귀적 데이터 포맷팅 함수 (main.py의 format_any_data 로직)
+        function formatAnyData(data, indent = '') {
+            if (typeof data === 'object' && data !== null) {
+                // 십성 데이터 구조 확인
+                if ('element' in data && 'percent' in data && 'point' in data) {
+                    return formatSipseongItem(data);
+                }
+                
+                if (Array.isArray(data)) {
+                    const result = [];
+                    data.forEach((item, index) => {
+                        if (typeof item === 'object' && item !== null && 'element' in item) {
+                            result.push(`${indent}[${index}]: ${formatSipseongItem(item)}`);
+                        } else {
+                            result.push(`${indent}[${index}]: ${formatAnyData(item, indent)}`);
+                        }
+                    });
+                    return result.join('\n');
+                } else {
+                    const result = [];
+                    Object.entries(data).forEach(([key, value]) => {
+                        if (typeof value === 'object' && value !== null) {
+                            result.push(`${indent}${key}:`);
+                            result.push(formatAnyData(value, indent + '  '));
+                        } else {
+                            result.push(`${indent}${key}: ${value}`);
+                        }
+                    });
+                    return result.join('\n');
+                }
+            } else {
+                return String(data);
+            }
+        }
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            generateRandomName();
+            
+            // Enter 키 이벤트 리스너
+            document.getElementById('citySearch').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchCities();
+                }
+            });
+        });
+
+        // 랜덤 이름 생성
+        function generateRandomName() {
+            const isMale = document.getElementById('male').checked;
+            const names = isMale ? namesData.male_names : namesData.female_names;
+            const randomName = names[Math.floor(Math.random() * names.length)];
+            document.getElementById('name').value = randomName;
+        }
+
+        // 성별 변경 시 랜덤 이름 다시 생성
+        document.querySelectorAll('input[name="gender"]').forEach(radio => {
+            radio.addEventListener('change', generateRandomName);
+        });
+
+        // 도시 검색
+        async function searchCities() {
+            const searchQuery = document.getElementById('citySearch').value.trim();
+            if (!searchQuery) {
+                showToast('검색할 도시명을 입력해주세요.', 'warning');
+                return;
+            }
+
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '검색 중...';
+            btn.disabled = true;
+
+            try {
+                const encodedQuery = encodeURIComponent(searchQuery);
+                const url = getApiUrl('cities', encodedQuery);
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'accept': '*/*',
+                        'accept-language': 'ko,en;q=0.9,ko-KR;q=0.8,en-US;q=0.7',
+                        'sec-fetch-dest': 'empty',
+                        'sec-fetch-mode': 'cors',
+                        'sec-fetch-site': 'same-site'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.status === 200 && data.data && data.data.cities) {
+                        displayCityResults(data.data.cities);
+                    } else {
+                        showToast('도시 검색 결과가 없습니다.', 'info');
+                    }
+                } else {
+                    showToast(`도시 검색 API 오류: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                showToast(`도시 검색 중 오류가 발생했습니다: ${error.message}`, 'error');
+            } finally {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        // 도시 검색 결과 표시
+        function displayCityResults(cities) {
+            const cityList = document.getElementById('cityList');
+            cityList.innerHTML = '';
+
+            if (cities.length === 0) {
+                cityList.style.display = 'none';
+                return;
+            }
+
+            cities.forEach(city => {
+                const cityItem = document.createElement('div');
+                cityItem.className = 'city-item';
+                cityItem.textContent = `${city.name} (${city.fullName})`;
+                cityItem.onclick = () => selectCity(city);
+                cityList.appendChild(cityItem);
+            });
+
+            cityList.style.display = 'block';
+        }
+
+        // 도시 선택
+        function selectCity(city) {
+            document.getElementById('location').value = city.fullName.trim();
+            document.getElementById('locationId').value = city.geonameId;
+            document.getElementById('cityList').style.display = 'none';
+            showToast(`'${city.name}' 지역이 선택되었습니다.`, 'success');
+        }
+
+        // 탭 전환
+        function switchTab(index) {
+            // 모든 탭 버튼과 컨텐츠 비활성화
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // 선택된 탭 활성화
+            document.querySelectorAll('.tab-btn')[index].classList.add('active');
+            document.getElementById(`tab${index}`).classList.add('active');
+        }
+
+        // 사주 정보 API 요청
+        async function requestSajuInfo() {
+            // 입력 데이터 검증
+            const name = document.getElementById('name').value.trim();
+            if (!name) {
+                showToast('이름을 입력해주세요.', 'error');
+                return;
+            }
+
+            // 요청 데이터 구성
+            const requestData = {
+                name: name,
+                gender: document.querySelector('input[name="gender"]:checked').value,
+                calendar: document.getElementById('calendar').value,
+                birthday: document.getElementById('birthDate').value.replace(/-/g, '/'),
+                birthtime: document.getElementById('birthTime').value,
+                hmUnsure: document.getElementById('hmUnsure').checked,
+                midnightAdjust: document.getElementById('midnightAdjust').checked,
+                locationId: parseInt(document.getElementById('locationId').value) || 1835847,
+                locationName: document.getElementById('location').value.trim(),
+                year: new Date(document.getElementById('birthDate').value).getFullYear(),
+                month: new Date(document.getElementById('birthDate').value).getMonth() + 1,
+                day: new Date(document.getElementById('birthDate').value).getDate(),
+                hour: parseInt(document.getElementById('birthTime').value.split(':')[0]),
+                min: parseInt(document.getElementById('birthTime').value.split(':')[1]),
+                options: {
+                    "_합보정": false,
+                    "_조후궁성보정": false
+                }
+            };
+
+            // UI 상태 변경
+            const requestBtn = document.getElementById('requestBtn');
+            const progressContainer = document.getElementById('progressContainer');
+            const resultsSection = document.getElementById('resultsSection');
+            
+            requestBtn.disabled = true;
+            requestBtn.innerHTML = '🔄 조회 중... <span class="loading"></span>';
+            progressContainer.style.display = 'block';
+            
+            // API 목록
+            const apis = [
+                { name: 'chart', url: getApiUrl('chart') },
+                { name: 'details1', url: getApiUrl('details', '1') },
+                { name: 'details2', url: getApiUrl('details', '2') },
+                { name: 'useful', url: getApiUrl('useful') },
+                { name: 'points', url: getApiUrl('points') },
+                { name: 'power', url: getApiUrl('power') }
+            ];
+
+            try {
+                const headers = {
+                    'accept': '*/*',
+                    'accept-language': 'ko,en;q=0.9,ko-KR;q=0.8,en-US;q=0.7',
+                    'content-type': 'application/json',
+                    'sec-fetch-dest': 'empty',
+                    'sec-fetch-mode': 'cors',
+                    'sec-fetch-site': 'same-site'
+                };
+
+                // 병렬 API 호출
+                const promises = apis.map(api => 
+                    fetch(api.url, {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify(requestData)
+                    }).then(response => {
+                        if (response.ok) {
+                            return response.json().then(data => ({ name: api.name, data }));
+                        } else {
+                            throw new Error(`${api.name} API 오류: ${response.status}`);
+                        }
+                    })
+                );
+
+                // 진행률 업데이트
+                let completed = 0;
+                promises.forEach(promise => {
+                    promise.then(() => {
+                        completed++;
+                        const progress = Math.round((completed / apis.length) * 100);
+                        document.getElementById('progressFill').style.width = `${progress}%`;
+                        document.getElementById('progressText').textContent = `API 호출 중... (${completed}/${apis.length})`;
+                    });
+                });
+
+                const results = await Promise.all(promises);
+                
+                // 결과 정리
+                currentResults = {};
+                results.forEach(result => {
+                    currentResults[result.name] = result.data;
+                });
+
+                // 결과 표시
+                displayResults(currentResults);
+                
+                // UI 상태 복원
+                resultsSection.style.display = 'block';
+                
+            } catch (error) {
+                showToast(`API 요청 중 오류가 발생했습니다: ${error.message}`, 'error');
+            } finally {
+                requestBtn.disabled = false;
+                requestBtn.textContent = '🔍 사주 정보 조회';
+                progressContainer.style.display = 'none';
+            }
+        }
+
+        // 결과 표시 함수들
+        function displayResults(results) {
+            displayChartResult(results.chart || {});
+            displayDetails1Result(results.details1 || {});
+            displayDetails2Result(results.details2 || {});
+            displayUsefulResult(results.useful || {});
+            displayPointsResult(results.points || {});
+            displayPowerResult(results.power || {});
+            generateFinalPrompt(results);
+            
+            document.getElementById('copyBtn').disabled = false;
+        }
+
+        function displayChartResult(data) {
+            const element = document.getElementById('chartResult');
+            if (!data || !data.data) {
+                element.textContent = '차트 데이터가 없습니다.';
+                return;
+            }
+
+            const chartData = data.data;
+            let text = [];
+            
+            // 프로필 정보
+            if (chartData.profile) {
+                const profile = chartData.profile;
+                text.push('=== 프로필 정보 ===');
+                text.push(`간지: ${profile.sexagenaryCycle || 'N/A'}`);
+                text.push(`양력 출생: ${profile.sunBirth || 'N/A'}`);
+                text.push(`음력 출생: ${profile.lunBirth || 'N/A'}`);
+                text.push(`보정 출생: ${profile.adjustedBirth || 'N/A'}`);
+                text.push(`출생지: ${profile.location || 'N/A'}`);
+                
+                // adjusted 관련 추가 정보들
+                const adjustedKeys = Object.keys(profile).filter(key => key.toLowerCase().includes('adjust'));
+                adjustedKeys.forEach(key => {
+                    if (key !== 'adjustedBirth') {  // 이미 표시된 것 제외
+                        text.push(`${key}: ${profile[key] || 'N/A'}`);
+                    }
+                });
+                
+                // 기타 보정 관련 정보
+                const correctionKeys = ['correction', 'offset', 'timezone', 'dst', 'julianDay'];
+                correctionKeys.forEach(key => {
+                    if (key in profile) {
+                        text.push(`${key}: ${profile[key] || 'N/A'}`);
+                    }
+                });
+                
+                text.push('');
+            }
+
+            // 기본 명식
+            if (chartData['_기본명식']) {
+                const basic = chartData['_기본명식'];
+                text.push('=== 사주 명식 ===');
+                
+                const positions = ['_세차', '_월건', '_일진', '_시진'];
+                const positionNames = ['연', '월', '일', '시'];
+                
+                positions.forEach((pos, index) => {
+                    if (basic[pos] && basic[pos]['_천간'] && basic[pos]['_지지']) {
+                        const sky = basic[pos]['_천간'];
+                        const earth = basic[pos]['_지지'];
+                        text.push(`${positionNames[index]}주: ${sky.name || ''}(${sky.chinese || ''}) ${earth.name || ''}(${earth.chinese || ''})`);
+                    }
+                });
+                text.push('');
+            }
+
+            // 신살 정보
+            if (chartData['_신살']) {
+                text.push('=== 신살 정보 ===');
+                const sinsal = chartData['_신살'];
+                const positions = ['_세차', '_월건', '_일진', '_시진'];
+                const positionNames = ['연', '월', '일', '시'];
+                positions.forEach((pos, index) => {
+                    if (sinsal[pos]) {
+                        text.push(`${positionNames[index]}: ${sinsal[pos].name || 'N/A'}`);
+                    }
+                });
+                text.push('');
+            }
+
+            // 십성 정보가 있는 다른 섹션들 처리
+            const sipseongSections = ['_십성', '_십성분포', 'elements', 'stats'];
+            sipseongSections.forEach(sectionKey => {
+                if (chartData[sectionKey]) {
+                    text.push(`=== ${sectionKey} ===`);
+                    const formattedData = formatAnyData(chartData[sectionKey]);
+                    text.push(formattedData);
+                    text.push('');
+                }
+            });
+
+            element.textContent = text.join('\n');
+        }
+
+        function displayDetails1Result(data) {
+            const element = document.getElementById('details1Result');
+            if (!data || !data.data) {
+                element.textContent = '상세 정보가 없습니다.';
+                return;
+            }
+
+            const details = data.data;
+            let text = [];
+            
+            const categories = [
+                ['천간합', '천간 합'],
+                ['지지육합', '지지 육합'],
+                ['지지삼합', '지지 삼합'],
+                ['지지방합', '지지 방합'],
+                ['천간충', '천간 충'],
+                ['지지충', '지지 충'],
+                ['공망', '공망'],
+                ['형', '형'],
+                ['파', '파'],
+                ['해', '해'],
+                ['원진', '원진']
+            ];
+
+            categories.forEach(([key, title]) => {
+                if (details[key] && details[key].length > 0) {
+                    text.push(`=== ${title} ===`);
+                    details[key].forEach(item => {
+                        text.push(`제목: ${item.title || ''}`);
+                        text.push(`설명: ${item.subtitle || ''}`);
+                        text.push(`위치: ${JSON.stringify(item.list || [])}`);
+                        text.push('');
+                    });
+                }
+            });
+
+            if (text.length === 0) {
+                text.push('해당하는 합/충 정보가 없습니다.');
+            }
+
+            element.textContent = text.join('\n');
+        }
+
+        function displayDetails2Result(data) {
+            const element = document.getElementById('details2Result');
+            if (!data || !data.data) {
+                element.textContent = '길흉 정보가 없습니다.';
+                return;
+            }
+
+            const details = data.data;
+            let text = [];
+            
+            if (details['길흉']) {
+                text.push('=== 길흉 정보 ===');
+                const 길흉 = details['길흉'];
+                const positionNames = ['연', '월', '일', '시'];
+                
+                for (let i = 0; i < 4; i++) {
+                    if (길흉[i.toString()]) {
+                        const positionData = 길흉[i.toString()];
+                        text.push(`\n${positionNames[i]}주:`);
+                        
+                        Object.entries(positionData).forEach(([category, items]) => {
+                            const categoryName = category === "1" ? "길성" : "흉성";
+                            text.push(`  ${categoryName}: ${items.join(', ')}`);
+                        });
+                    }
+                }
+            }
+
+            if (text.length === 0) {
+                text.push('길흉 정보가 없습니다.');
+            }
+
+            element.textContent = text.join('\n');
+        }
+
+        function displayUsefulResult(data) {
+            const element = document.getElementById('usefulResult');
+            if (!data || !data.data) {
+                element.textContent = '용신 정보가 없습니다.';
+                return;
+            }
+
+            const details = data.data;
+            let text = [];
+            
+            if (details['_용신들']) {
+                text.push('=== 용신 정보 ===');
+                const 용신들 = details['_용신들'];
+                
+                // 조후용신
+                if (용신들['조후용신'] && 용신들['조후용신'].length > 0) {
+                    text.push('\n조후용신:');
+                    용신들['조후용신'].forEach(item => {
+                        text.push(`  - ${item.name || 'N/A'}(${item.chinese || ''})`);
+                    });
+                }
+                
+                // 억부용신
+                if (용신들['억부용신'] && 용신들['억부용신'].length > 0) {
+                    text.push('\n억부용신:');
+                    용신들['억부용신'].forEach(item => {
+                        text.push(`  - ${item.name || 'N/A'}(${item.chinese || ''})`);
+                    });
+                }
+            }
+
+            if (text.length === 0) {
+                text.push('용신 정보가 없습니다.');
+            }
+
+            element.textContent = text.join('\n');
+        }
+
+        function displayPointsResult(data) {
+            const element = document.getElementById('pointsResult');
+            if (!data || !data.data) {
+                element.textContent = '포인트 정보가 없습니다.';
+                return;
+            }
+
+            const details = data.data;
+            let text = ['=== 포인트 정보 ==='];
+            
+            // 데이터 구조를 분석하여 표시
+            if (typeof details === 'object' && details !== null) {
+                Object.entries(details).forEach(([key, value]) => {
+                    if (typeof value === 'object' && value !== null) {
+                        text.push(`\n${key}:`);
+                        if (Array.isArray(value)) {
+                            value.forEach((item, index) => {
+                                // 십성 데이터 구조 확인
+                                if (typeof item === 'object' && item !== null && 'element' in item) {
+                                    const formatted = formatSipseongItem(item);
+                                    text.push(`  [${index}]: ${formatted}`);
+                                } else {
+                                    text.push(`  [${index}]: ${item}`);
+                                }
+                            });
+                        } else {
+                            Object.entries(value).forEach(([subKey, subValue]) => {
+                                // 십성 데이터 구조 확인
+                                if (typeof subValue === 'object' && subValue !== null && 'element' in subValue) {
+                                    const formatted = formatSipseongItem(subValue);
+                                    text.push(`  ${subKey}: ${formatted}`);
+                                } else {
+                                    text.push(`  ${subKey}: ${subValue}`);
+                                }
+                            });
+                        }
+                        text.push("");
+                    } else {
+                        text.push(`${key}: ${value}`);
+                    }
+                });
+            } else {
+                text.push(String(details));
+            }
+
+            if (text.length === 1) {  // 제목만 있는 경우
+                text.push('포인트 정보가 없습니다.');
+            }
+
+            element.textContent = text.join('\n');
+        }
+
+        function displayPowerResult(data) {
+            const element = document.getElementById('powerResult');
+            if (!data || !data.data) {
+                element.textContent = '파워/득령 정보가 없습니다.';
+                return;
+            }
+
+            const details = data.data;
+            let text = ['=== 파워/득령 정보 ==='];
+            
+            // 득령 정보
+            const 득령Info = [
+                ['_득령', '득령'],
+                ['_득지', '득지'],
+                ['_득시', '득시'],
+                ['_득세', '득세']
+            ];
+            
+            text.push('\n득령 상황:');
+            득령Info.forEach(([key, name]) => {
+                if (key in details) {
+                    const status = details[key] ? "○" : "×";
+                    text.push(`  ${name}: ${status}`);
+                }
+            });
+            
+            // 파워 등급
+            if (details.index !== undefined && details.name) {
+                text.push('\n파워 등급:');
+                // 원래 인덱스지만 ID로 표시
+                text.push(`  등급: ${details.name || 'N/A'} (ID: ${details.index || 'N/A'})`);
+            }
+
+            // 기타 정보
+            const otherKeys = Object.keys(details).filter(k => !k.startsWith('_득') && k !== 'index' && k !== 'name');
+            if (otherKeys.length > 0) {
+                text.push('\n기타 정보:');
+                otherKeys.forEach(key => {
+                    text.push(`  ${key}: ${details[key]}`);
+                });
+            }
+
+            element.textContent = text.join('\n');
+        }
+
+        // execution-prompt.md 전문 내용 (단일 파일 원칙 준수)
+        const EXECUTION_PROMPT = `## 시스템 역할 정의
+당신은 50년 경력의 최고 수준 사주명리학 전문가입니다. 사주명리학은 학문적 연구와 분석을 통해 인생의 선천적 운명을 논하는 학문으로서, 다음과 같은 최신 전문성을 보유하고 있습니다:
+
+### 전문 역량
+- **전통 이론 마스터**: 자평명리학, 신살론, 조후론, 물상론, 격국론, 용신론의 심층적 이해
+- **현대적 해석 능력**: 21세기 대학 학제 편입 이후의 체계적 학문 발전을 반영한 현대적 분석 기법
+- **통합적 접근**: 동양 철학과 현대 심리학의 융합적 해석
+- **실무 검증**: 수만 건의 사주 분석 실무 경험과 검증된 예측 정확도
+
+## 분석 프레임워크
+
+### Phase 1: 사주 구조 해체 분석 (Structural Deconstruction)
+
+#### 1.1 기본 명식 구성 분석
+- **사주팔자 구성**: 태어나는 순간 우주로부터 부여받은 운명의 암호로서의 8자 해석
+- **오행 역학**: 목화토금수의 정량적/정성적 분포 및 상호작용
+- **십성 매트릭스**: 10개 십성의 배치와 상대적 영향력 측정
+- **12운성 생명주기**: 각 간지별 생명 에너지 상태 진단
+
+#### 1.2 고급 구조 분석
+- **격국 정밀 판정**: 정격 8개, 외격 4개의 정확한 식별
+- **용신 시스템**: 용신/희신/기신/한신의 4단계 위계 설정
+- **조후 매커니즘**: 계절적 오행 균형과 기후 조절 필요성
+- **통관 네트워크**: 오행 간 에너지 전달 경로 분석
+
+### Phase 2: 다차원 심화 분석 (Multi-Dimensional Deep Analysis)
+
+#### 2.1 전통 이론별 분석 레이어
+
+**A. 자평명리학적 분석**
+\`\`\`
+일간 강약 측정 → 격국 확정 → 용신 설정 → 십성 작용 관계 → 대운 세운 흐름
+\`\`\`
+
+**B. 신살론적 분석**
+- **길신 시스템**: 천을귀인, 월덕귀인, 천덕귀인, 금여옥당, 문창학당 등
+- **흉살 분석**: 양인, 공망, 역마, 원진, 재살, 겁살, 재앙, 고란과수 등
+- **특수 신살**: 홍염살, 도화살, 백호, 현무, 주작, 청룡의 방위별 작용
+
+**C. 조후론적 분석**
+- **계절 오행론**: 춘하추동 4계절별 오행 왕상휴수사 상태
+- **한열조습 균형**: 기후 조건에 따른 조후신의 필요성과 작용
+- **절기별 미세 조정**: 24절기에 따른 세밀한 오행 변화
+
+**D. 물상론적 분석**
+- **간지 물상**: 각 천간지지의 구체적 물리적 특성
+- **환경 적응성**: 거주지, 직업 환경과의 조화도
+- **행동 패턴**: 물상적 특성이 반영된 성격과 습관
+
+#### 2.2 현대적 분석 확장
+
+**E. 심리학적 분석 (Psychological Layer)**
+- **성격 유형론**: 십성 조합을 통한 MBTI식 성격 분류
+- **인지 패턴**: 사고방식과 의사결정 스타일 분석
+- **감정 조절**: 오행 균형에 따른 감정 관리 능력
+
+**F. 사회학적 분석 (Sociological Layer)**
+- **사회적 역할**: 십성과 신살을 통한 사회적 포지션 분석
+- **리더십 스타일**: 관성과 인성의 조합에 따른 리더십 유형
+- **네트워킹 능력**: 육친론을 통한 인간관계 패턴 분석
+
+**G. 경제학적 분석 (Economic Layer)**
+- **부의 축적 패턴**: 재성과 식상의 조합에 따른 재물 획득 방식
+- **투자 성향**: 오행 특성에 따른 투자 선호도와 위험 관리 능력
+- **경제 감각**: 시장 변화에 대한 민감도와 적응력
+
+### Phase 3: 영역별 정밀 분석 (Domain-Specific Precision Analysis)
+
+#### 3.1 성격 분석 (Personality Analysis)
+**핵심 성격 구조**
+- **기본 성향**: 일간과 월지 중심의 타고난 기질
+- **표출 방식**: 년주와 시주를 통한 대외적 표현 스타일
+- **내재 동기**: 용신과 희신을 통한 깊은 욕구 분석
+
+**행동 및 사고 패턴**
+- **의사결정 스타일**: 십성 조합에 따른 판단 방식
+- **스트레스 반응**: 기신과 한신을 통한 스트레스 패턴
+- **성장 잠재력**: 대운 흐름을 통한 인격 발달 가능성
+
+#### 3.2 재물운 분석 (Wealth Analysis)
+**재성 시스템 분석**
+- **재물 획득 능력**: 정재/편재의 위치, 강약, 순수성
+- **재물 축적 패턴**: 재성과 식상의 상생 관계
+- **재물 관리 능력**: 비겁과 재성의 균형 관계
+- **재물 손실 위험**: 겁재, 양인 등의 재물 파괴 요소
+
+**투자 및 사업 분석**
+- **투자 적성**: 오행 특성에 따른 투자 분야 선호도
+- **사업 성공 요인**: 격국과 용신을 통한 사업 적합성
+- **파트너십**: 사주 궁합을 고려한 비즈니스 파트너 선택
+- **재물운 시기**: 대운/세운을 통한 재물 증감 주기
+
+#### 3.3 직업운 분석 (Career Analysis)
+**직업 적성 매트릭스**
+- **천부적 재능**: 일간과 월지를 통한 핵심 역량
+- **학습 능력**: 인성의 강약과 위치에 따른 학습 스타일
+- **창의성**: 식상의 발달도에 따른 창조적 능력
+- **지도력**: 관성의 배치에 따른 리더십 발휘 능력
+
+**직업 분야별 적합도**
+- **학문/교육**: 인성 중심의 지식 전달 능력
+- **예술/창작**: 식상 발달에 따른 창작 능력
+- **경영/관리**: 관성과 재성의 균형에 따른 경영 적성
+- **기술/전문**: 특정 오행의 집중도에 따른 전문성
+
+#### 3.4 연애운 분석 (Romance Analysis)
+**이성관 및 연애 패턴**
+- **이상형**: 부성(남성) 또는 관성(여성)을 통한 이성 취향
+- **연애 스타일**: 십성 조합에 따른 사랑 표현 방식
+- **매력 요소**: 개인의 자연스러운 매력 포인트
+- **연애 장애**: 충극, 공망 등의 연애 방해 요소
+
+**연애 운세 흐름**
+- **연애 활성 시기**: 홍염살, 도화살의 작용 시기
+- **만남의 형태**: 신살을 통한 만남의 방식과 장소
+- **관계 발전**: 십성 작용을 통한 연애 진행 과정
+
+#### 3.5 결혼운 분석 (Marriage Analysis)
+**배우자 분석**
+- **배우자 특성**: 부부궁(일지)을 통한 배우자 성향
+- **배우자 능력**: 배우자성의 강약에 따른 능력 수준
+- **배우자 외모**: 일지의 오행과 물상을 통한 외모 특징
+- **배우자 가문**: 배우자궁의 신살을 통한 가문 배경
+
+**결혼 생활 예측**
+- **결혼 시기**: 대운과 세운을 통한 결혼 적령기
+- **부부 관계**: 부부궁의 안정성과 조화도
+- **가정 분위기**: 전체적인 가족 관계와 가정 운
+- **자녀운**: 식상을 통한 자녀 관계와 자녀 복
+
+### Phase 4: 시공간 통합 분석 (Temporal-Spatial Integration)
+
+#### 4.1 운세 흐름 분석
+**대운 분석 (10년 주기)**
+- **대운별 주요 테마**: 각 대운의 핵심 과제와 기회
+- **격국 변화**: 대운에 따른 격국의 변화와 영향
+- **용신 작용**: 대운이 용신에 미치는 영향 분석
+
+**세운 분석 (1년 주기)**
+- **연도별 운세**: 매년의 구체적 운세 변화
+- **월별 세부 운세**: 계절과 월별 세밀한 운세 흐름
+- **주의 시기**: 충극이 발생하는 위험 시기 예측
+
+#### 4.2 공간 및 방향 분석
+**길흉 방위**
+- **주거 방향**: 오행에 따른 유리한 거주 방향
+- **직업 공간**: 직업적 성공을 위한 최적 환경
+- **여행 방향**: 운세 개선을 위한 이동 방향
+
+### Phase 5: 맞춤형 운세 개선 전략 (Customized Fortune Enhancement)
+
+#### 5.1 전략적 접근법
+**운세 개선 원리**
+1. **보완의 원리**: 부족한 오행 보충을 통한 균형 회복
+2. **상생의 원리**: 유리한 오행 강화를 통한 운세 상승
+3. **시기의 원리**: 적절한 타이밍 활용을 통한 효과 극대화
+4. **환경의 원리**: 유리한 환경 조성을 통한 운세 촉진
+
+#### 5.2 구체적 실천 방안
+
+**A. 단기 개선 전략 (1-3년)**
+- **즉시 실행 가능한 개선 방안**
+  - 의식주 개선: 색상, 음식, 거주 환경 조정
+  - 인맥 활용: 유리한 오행을 가진 사람들과의 교류 확대
+  - 직업 환경: 현재 직장에서의 포지션 조정
+  - 투자 기회: 현재 운세에 최적화된 투자 아이템
+
+**B. 중기 발전 전략 (3-10년)**
+- **체계적 역량 개발**
+  - 전문성 강화: 용신과 연관된 분야의 전문성 개발
+  - 자산 포트폴리오: 오행 분산을 고려한 자산 구성
+  - 네트워크 확장: 장기적 성공을 위한 인맥 구축
+  - 사업 기회: 격국에 맞는 사업 분야 진출
+
+**C. 장기 자산 전략 (10년 이상)**
+- **안정적 기반 구축**
+  - 부동산 투자: 방향과 위치를 고려한 부동산 확보
+  - 금융 자산: 장기 수익을 위한 안정적 투자
+  - 후대 교육: 자녀의 사주를 고려한 교육 투자
+  - 사회적 영향력: 개인 브랜드와 사회적 기여
+
+### Phase 6: 최적 재물 증대 전략 (Ultimate Wealth Maximization)
+
+#### 6.1 개인 맞춤형 재물 전략
+
+**재물 증대 4대 축**
+1. **수입원 다변화**: 십성 조합에 따른 다양한 수입 채널 구축
+2. **투자 최적화**: 오행 특성에 맞는 투자 포트폴리오 구성
+3. **사업 확장**: 격국과 용신을 활용한 사업 영역 확장
+4. **자산 보전**: 재물 손실 요인 차단과 안정적 자산 관리
+
+**구체적 실행 로드맵**
+
+**Phase A: 기반 구축 (1-2년)**
+- **현금 흐름 최적화**: 현재 수입 구조 개선
+- **투자 시드 확보**: 초기 투자 자금 마련
+- **전문성 개발**: 수익 창출을 위한 핵심 역량 강화
+- **네트워크 구축**: 재물 증대를 위한 인맥 형성
+
+**Phase B: 성장 가속 (3-5년)**
+- **사업 런칭**: 본격적인 사업 시작 또는 확장
+- **투자 다변화**: 다양한 투자 상품 포트폴리오 구성
+- **수동 소득 창출**: 임대, 배당 등 수동적 수입원 확보
+- **브랜드 구축**: 개인 또는 사업 브랜드 가치 제고
+
+**Phase C: 자산 극대화 (5-10년)**
+- **대규모 투자**: 부동산, 주식, 사업 등 대형 투자 실행
+- **M&A 활동**: 사업 확장을 위한 인수합병 추진
+- **글로벌 진출**: 해외 시장 진출을 통한 수익 확대
+- **자산 관리**: 전문적인 자산 관리 시스템 구축
+
+#### 6.2 위험 관리 및 보완 전략
+
+**재물 손실 방지**
+- **겁재 대응**: 겁재 작용 시기의 투자 신중성
+- **공망 주의**: 공망 기간의 중요한 재정 결정 회피
+- **충극 대비**: 충극 발생 시기의 자산 보호 조치
+
+**기회 포착 전략**
+- **정재 활용**: 정재 왕성 시기의 안정적 투자 확대
+- **편재 활용**: 편재 강한 시기의 적극적 사업 추진
+- **식상 활용**: 식상 발달 시기의 창의적 수익 모델 개발
+
+## 분석 결과 제시 체계
+
+### 리포트 구성 (Professional Report Structure)
+1. **Executive Summary** (2페이지)
+   - 핵심 운명적 특징 요약
+   - 주요 강점과 과제
+   - 최우선 실행 권고사항
+
+2. **사주 기본 분석** (3-4페이지)
+   - 사주팔자 구성과 오행 분포
+   - 격국 및 용신 분석
+   - 십성과 신살 종합 분석
+
+3. **영역별 상세 분석** (10-12페이지)
+   - 성격 분석 (2페이지)
+   - 재물운 분석 (3페이지)
+   - 직업운 분석 (2페이지)
+   - 연애/결혼운 분석 (3페이지)
+   - 건강운 및 기타 분석 (2페이지)
+
+4. **시기별 운세 분석** (3-4페이지)
+   - 대운별 주요 흐름
+   - 향후 5년 세부 운세
+   - 주요 전환점과 기회
+
+5. **맞춤형 개선 전략** (4-5페이지)
+   - 단기/중기/장기 전략
+   - 구체적 실행 방안
+   - 위험 요소 및 대응책
+
+6. **재물 증대 마스터플랜** (5-6페이지)
+   - 개인 맞춤형 재물 전략
+   - 단계별 실행 로드맵
+   - 투자 및 사업 가이드라인
+   - 성공 체크포인트
+
+### 분석 품질 기준 (Quality Standards)
+- **정확성**: 전통 명리학 이론의 정확한 적용
+- **현실성**: 현대 사회에 적용 가능한 실용적 조언
+- **개별성**: 개인 사주의 고유한 특성 완전 반영
+- **구체성**: 추상적 표현 지양, 구체적 실행 방안 제시
+- **균형성**: 긍정적 측면과 주의사항의 균형 있는 제시
+- **전문성**: 50년 경력 전문가 수준의 깊이 있는 해석
+
+## 윤리적 기준 및 현대적 적용
+
+### 윤리적 원칙
+- **희망적 관점**: 운명론적 체념보다 적극적 개선 방안 중심
+- **개인 주체성**: 개인의 노력과 선택의 중요성 강조
+- **균형적 조언**: 과도한 불안감 조성 금지
+- **현실적 접근**: 비현실적 기대 지양, 실현 가능한 목표 설정
+
+### 현대적 적용 원칙
+- **시대적 적합성**: 현대 사회의 직업군과 라이프스타일 반영
+- **글로벌 관점**: 국제화 시대에 맞는 개방적 해석
+- **기술 융합**: 디지털 시대의 새로운 기회 요소 반영
+- **지속 가능성**: 환경과 사회적 책임을 고려한 발전 방향
+
+이제 제공될 사주 정보를 바탕으로 위의 최신 프레임워크에 따라 종합적이고 심도 있는 전문 분석을 실시하세요.`;
+
+        // 마크다운 형식 컨텍스트 덤프 생성 함수들
+        function parseChartData(data) {
+            if (!data || !data.data) {
+                return "차트 데이터가 없습니다.";
+            }
+
+            const chartData = data.data;
+            let text = [];
+            
+            // 프로필 정보
+            if (chartData.profile) {
+                const profile = chartData.profile;
+                text.push("### 프로필 정보");
+                text.push(`- **간지**: ${profile.sexagenaryCycle || 'N/A'}`);
+                text.push(`- **양력 출생**: ${profile.sunBirth || 'N/A'}`);
+                text.push(`- **음력 출생**: ${profile.lunBirth || 'N/A'}`);
+                text.push(`- **보정 출생**: ${profile.adjustedBirth || 'N/A'}`);
+                text.push(`- **출생지**: ${profile.location || 'N/A'}`);
+                
+                // adjusted 관련 추가 정보들
+                const adjustedKeys = Object.keys(profile).filter(key => key.toLowerCase().includes('adjust'));
+                adjustedKeys.forEach(key => {
+                    if (key !== 'adjustedBirth') {  // 이미 표시된 것 제외
+                        text.push(`- **${key}**: ${profile[key] || 'N/A'}`);
+                    }
+                });
+                
+                // 기타 보정 관련 정보
+                const correctionKeys = ['correction', 'offset', 'timezone', 'dst', 'julianDay'];
+                correctionKeys.forEach(key => {
+                    if (key in profile) {
+                        text.push(`- **${key}**: ${profile[key] || 'N/A'}`);
+                    }
+                });
+                
+                text.push("");
+            }
+
+            // 기본 명식
+            if (chartData['_기본명식']) {
+                const basic = chartData['_기본명식'];
+                text.push("### 사주 명식");
+                
+                const positions = ['_세차', '_월건', '_일진', '_시진'];
+                const positionNames = ['연', '월', '일', '시'];
+                
+                positions.forEach((pos, index) => {
+                    if (basic[pos] && basic[pos]['_천간'] && basic[pos]['_지지']) {
+                        const sky = basic[pos]['_천간'];
+                        const earth = basic[pos]['_지지'];
+                        text.push(`- **${positionNames[index]}주**: ${sky.name || ''}(${sky.chinese || ''}) ${earth.name || ''}(${earth.chinese || ''})`);
+                    }
+                });
+                text.push("");
+            }
+
+            // 신살 정보
+            if (chartData['_신살']) {
+                text.push("### 신살 정보");
+                const sinsal = chartData['_신살'];
+                const positions = ['_세차', '_월건', '_일진', '_시진'];
+                const positionNames = ['연', '월', '일', '시'];
+                positions.forEach((pos, index) => {
+                    if (sinsal[pos]) {
+                        text.push(`- **${positionNames[index]}**: ${sinsal[pos].name || 'N/A'}`);
+                    }
+                });
+                text.push("");
+            }
+
+            // 십성 정보가 있는 다른 섹션들 처리
+            const sipseongSections = ['_십성', '_십성분포', 'elements', 'stats'];
+            sipseongSections.forEach(sectionKey => {
+                if (chartData[sectionKey]) {
+                    text.push(`### ${sectionKey}`);
+                    const formattedData = formatMarkdownData(chartData[sectionKey]);
+                    text.push(formattedData);
+                    text.push("");
+                }
+            });
+
+            return text.join('\n');
+        }
+
+        function parseDetails1Data(data) {
+            if (!data || !data.data) {
+                return "상세 정보가 없습니다.";
+            }
+
+            const details = data.data;
+            let text = [];
+            
+            const categories = [
+                ['천간합', '천간 합'],
+                ['지지육합', '지지 육합'],
+                ['지지삼합', '지지 삼합'],
+                ['지지방합', '지지 방합'],
+                ['천간충', '천간 충'],
+                ['지지충', '지지 충'],
+                ['공망', '공망'],
+                ['형', '형'],
+                ['파', '파'],
+                ['해', '해'],
+                ['원진', '원진']
+            ];
+
+            categories.forEach(([key, title]) => {
+                if (details[key] && details[key].length > 0) {
+                    text.push(`### ${title}`);
+                    details[key].forEach(item => {
+                        if (typeof item === 'object' && item !== null) {
+                            text.push(`- **제목**: ${item.title || ''}`);
+                            text.push(`- **설명**: ${item.subtitle || ''}`);
+                            text.push(`- **위치**: ${JSON.stringify(item.list || [])}`);
+                            text.push("");
+                        }
+                    });
+                }
+            });
+
+            if (text.length === 0) {
+                text.push("해당하는 합/충 정보가 없습니다.");
+            }
+
+            return text.join('\n');
+        }
+
+        function parseDetails2Data(data) {
+            if (!data || !data.data) {
+                return "길흉 정보가 없습니다.";
+            }
+
+            const details = data.data;
+            let text = [];
+            
+            if (details['길흉']) {
+                text.push("### 길흉 정보");
+                const 길흉 = details['길흉'];
+                
+                const positionNames = ['연', '월', '일', '시'];
+                
+                for (let posIdx = 0; posIdx < 4; posIdx++) {
+                    if (길흉[posIdx.toString()]) {
+                        const positionData = 길흉[posIdx.toString()];
+                        text.push(`#### ${positionNames[posIdx]}주`);
+                        
+                        Object.entries(positionData).forEach(([category, items]) => {
+                            const categoryName = category === "1" ? "길성" : "흉성";
+                            text.push(`- **${categoryName}**: ${items.join(', ')}`);
+                        });
+                        text.push("");
+                    }
+                }
+            }
+
+            if (text.length === 0) {
+                text.push("길흉 정보가 없습니다.");
+            }
+
+            return text.join('\n');
+        }
+
+        function parseUsefulData(data) {
+            if (!data || !data.data) {
+                return "용신 정보가 없습니다.";
+            }
+
+            const details = data.data;
+            let text = [];
+            
+            if (details['_용신들']) {
+                text.push("### 용신 정보");
+                const 용신들 = details['_용신들'];
+                
+                // 조후용신
+                if (용신들['조후용신'] && 용신들['조후용신'].length > 0) {
+                    text.push("#### 조후용신");
+                    용신들['조후용신'].forEach(item => {
+                        const name = item.name || 'N/A';
+                        const chinese = item.chinese || '';
+                        text.push(`- ${name}(${chinese})`);
+                    });
+                    text.push("");
+                }
+                
+                // 억부용신
+                if (용신들['억부용신'] && 용신들['억부용신'].length > 0) {
+                    text.push("#### 억부용신");
+                    용신들['억부용신'].forEach(item => {
+                        const name = item.name || 'N/A';
+                        const chinese = item.chinese || '';
+                        text.push(`- ${name}(${chinese})`);
+                    });
+                    text.push("");
+                }
+            }
+
+            if (text.length === 0) {
+                text.push("용신 정보가 없습니다.");
+            }
+
+            return text.join('\n');
+        }
+
+        function parsePointsData(data) {
+            if (!data || !data.data) {
+                return "포인트 정보가 없습니다.";
+            }
+
+            const details = data.data;
+            let text = ["### 포인트 정보"];
+            
+            // 데이터 구조를 분석하여 표시
+            if (typeof details === 'object' && details !== null) {
+                Object.entries(details).forEach(([key, value]) => {
+                    if (typeof value === 'object' && value !== null) {
+                        text.push(`#### ${key}`);
+                        if (Array.isArray(value)) {
+                            value.forEach((item, index) => {
+                                // 십성 데이터 구조 확인
+                                if (typeof item === 'object' && item !== null && 'element' in item) {
+                                    const formatted = formatSipseongItem(item);
+                                    text.push(`- **[${index}]**: ${formatted}`);
+                                } else {
+                                    text.push(`- **[${index}]**: ${item}`);
+                                }
+                            });
+                        } else {
+                            Object.entries(value).forEach(([subKey, subValue]) => {
+                                // 십성 데이터 구조 확인
+                                if (typeof subValue === 'object' && subValue !== null && 'element' in subValue) {
+                                    const formatted = formatSipseongItem(subValue);
+                                    text.push(`- **${subKey}**: ${formatted}`);
+                                } else {
+                                    text.push(`- **${subKey}**: ${subValue}`);
+                                }
+                            });
+                        }
+                        text.push("");
+                    } else {
+                        text.push(`- **${key}**: ${value}`);
+                    }
+                });
+            } else {
+                text.push(String(details));
+            }
+
+            if (text.length === 1) {  // 제목만 있는 경우
+                text.push("포인트 정보가 없습니다.");
+            }
+
+            return text.join('\n');
+        }
+
+        function parsePowerData(data) {
+            if (!data || !data.data) {
+                return "파워/득령 정보가 없습니다.";
+            }
+
+            const details = data.data;
+            let text = ["### 파워/득령 정보"];
+            
+            // 득령 정보
+            const 득령Info = [
+                ['_득령', '득령'],
+                ['_득지', '득지'],
+                ['_득시', '득시'],
+                ['_득세', '득세']
+            ];
+            
+            text.push("#### 득령 상황");
+            득령Info.forEach(([key, name]) => {
+                if (key in details) {
+                    const status = details[key] ? "O" : "X";
+                    text.push(`- **${name}**: ${status}`);
+                }
+            });
+            text.push("");
+            
+            // 파워 등급
+            if (details.index !== undefined && details.name) {
+                text.push("#### 파워 등급");
+                // 원래 인덱스지만 ID로 표시
+                text.push(`- **등급**: ${details.name || 'N/A'} (ID: ${details.index || 'N/A'})`);
+                text.push("");
+            }
+
+            // 기타 정보
+            const otherKeys = Object.keys(details).filter(k => !k.startsWith('_득') && k !== 'index' && k !== 'name');
+            if (otherKeys.length > 0) {
+                text.push("#### 기타 정보");
+                otherKeys.forEach(key => {
+                    text.push(`- **${key}**: ${details[key]}`);
+                });
+                text.push("");
+            }
+
+            return text.join('\n');
+        }
+
+        function formatMarkdownData(data, prefix = "- **") {
+            if (typeof data === 'object' && data !== null) {
+                // 십성 데이터 구조 확인
+                if ('element' in data && 'percent' in data && 'point' in data) {
+                    return formatSipseongItem(data);
+                }
+                
+                if (Array.isArray(data)) {
+                    const result = [];
+                    data.forEach((item, index) => {
+                        if (typeof item === 'object' && item !== null && 'element' in item) {
+                            result.push(`${prefix}[${index}]**: ${formatSipseongItem(item)}`);
+                        } else {
+                            result.push(`${prefix}[${index}]**: ${item}`);
+                        }
+                    });
+                    return result.join('\n');
+                } else {
+                    const result = [];
+                    Object.entries(data).forEach(([key, value]) => {
+                        if (typeof value === 'object' && value !== null) {
+                            result.push(`#### ${key}`);
+                            result.push(formatMarkdownData(value, "- "));
+                        } else {
+                            result.push(`- **${key}**: ${value}`);
+                        }
+                    });
+                    return result.join('\n');
+                }
+            } else {
+                return String(data);
+            }
+        }
+
+        function generateContextDump(results) {
+            let text = [];
+            text.push("# 사주 정보 Context Dump");
+            text.push("");
+
+            // API 결과 데이터 (마크다운 형식으로 파싱)
+            if (results.chart) {
+                text.push("## 1. 사주 차트 정보");
+                text.push(parseChartData(results.chart));
+                text.push("");
+            }
+            
+            if (results.details1) {
+                text.push("## 2. 합/충 상세 정보");
+                text.push(parseDetails1Data(results.details1));
+                text.push("");
+            }
+            
+            if (results.details2) {
+                text.push("## 3. 길흉 상세 정보");
+                text.push(parseDetails2Data(results.details2));
+                text.push("");
+            }
+            
+            if (results.useful) {
+                text.push("## 4. 용신 정보");
+                text.push(parseUsefulData(results.useful));
+                text.push("");
+            }
+            
+            if (results.points) {
+                text.push("## 5. 포인트 정보");
+                text.push(parsePointsData(results.points));
+                text.push("");
+            }
+            
+            if (results.power) {
+                text.push("## 6. 파워/득령 정보");
+                text.push(parsePowerData(results.power));
+                text.push("");
+            }
+            
+            return text.join('\n');
+        }
+
+        function generateFinalPrompt(results) {
+            const element = document.getElementById('promptResult');
+            
+            // execution-prompt.md 로드 (하드코딩된 전문)
+            const executionPrompt = EXECUTION_PROMPT;
+            
+            // context dump 생성 (마크다운 형식)
+            const contextDump = generateContextDump(results);
+            
+            // 최종 프롬프트 병합
+            const finalPromptParts = [];
+            finalPromptParts.push(executionPrompt);
+            finalPromptParts.push("\n" + "===".repeat(1) + "\n");
+            finalPromptParts.push(contextDump);
+            finalPromptParts.push("\n" + "===".repeat(1) + "\n");
+            finalPromptParts.push("위 정보를 바탕으로 전문적인 사주 분석을 실시해 주세요.");
+            
+            const finalPrompt = finalPromptParts.join('');
+            
+            element.textContent = finalPrompt;
+        }
+
+        // 토스트 알림 표시 함수
+        function showToast(message = '프롬프트가 클립보드에 복사되었습니다.', type = 'success') {
+            const toast = document.getElementById('toastNotification');
+            toast.textContent = message;
+            toast.classList.add('show');
+            toast.classList.add(`toast-${type}`);
+            
+            // 1초 후 자동으로 사라지기
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 1000);
+        }
+
+        // 클립보드 복사
+        async function copyPromptToClipboard() {
+            try {
+                const text = document.getElementById('promptResult').textContent;
+                await navigator.clipboard.writeText(text);
+                showToast();
+            } catch (error) {
+                // Fallback for older browsers
+                try {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = document.getElementById('promptResult').textContent;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showToast();
+                } catch (fallbackError) {
+                    showToast('복사 중 오류가 발생했습니다.');
+                }
+            }
+        }
+    </script>
+</body>
+</html> 
