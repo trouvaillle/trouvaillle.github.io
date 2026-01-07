@@ -426,15 +426,6 @@ date: 2025-07-01 19:49:00 +0900
             <h2 class="section-title">📝 개인 정보 입력</h2>
             
             <div class="form-grid">
-                <!-- 이름 입력 -->
-                <div class="form-group">
-                    <label for="name">이름</label>
-                    <div class="inline-group">
-                        <input type="text" id="name" placeholder="이름을 입력하세요">
-                        <button type="button" class="btn btn-secondary" onclick="generateRandomName()">랜덤 이름</button>
-                    </div>
-                </div>
-
                 <!-- 성별 선택 -->
                 <div class="form-group">
                     <label>성별</label>
@@ -462,13 +453,13 @@ date: 2025-07-01 19:49:00 +0900
                 <!-- 생년월일 -->
                 <div class="form-group">
                     <label for="birthDate">생년월일</label>
-                    <input type="date" id="birthDate" value="1992-06-27">
+                    <input type="date" id="birthDate" value="1990-01-01">
                 </div>
 
                 <!-- 출생 시간 -->
                 <div class="form-group">
                     <label for="birthTime">출생 시간</label>
-                    <input type="time" id="birthTime" value="09:15">
+                    <input type="time" id="birthTime" value="08:00">
                 </div>
 
                 <!-- 옵션 체크박스 -->
@@ -581,26 +572,6 @@ date: 2025-07-01 19:49:00 +0900
     </div>
 
     <script>
-        // 이름 데이터
-        const namesData = {
-            male_names: [
-                "김민수", "이준호", "박지훈", "최수진", "정민우",
-                "강동현", "윤시우", "임재현", "오승현", "배성민",
-                "류준석", "한도윤", "서민혁", "남주원", "조현우",
-                "송태윤", "구민재", "신준영", "홍지안", "전우진",
-                "황시원", "문준서", "노건우", "안지호", "장민기",
-                "마시후", "곽도현", "차준희", "유건희", "변준혁"
-            ],
-            female_names: [
-                "김지연", "이서연", "박수빈", "최예린", "정하은",
-                "강서윤", "윤채원", "임지우", "오민서", "배유나",
-                "류시은", "한예원", "서지민", "남수아", "조아린",
-                "송다은", "구하린", "신예진", "홍서현", "전은서",
-                "황서영", "문지안", "노채은", "안수연", "장예은",
-                "마서진", "곽채윤", "차하늘", "유서정", "변예서"
-            ]
-        };
-
         // 글로벌 변수
         let currentResults = {};
 
@@ -728,27 +699,12 @@ date: 2025-07-01 19:49:00 +0900
 
         // 페이지 로드 시 초기화
         document.addEventListener('DOMContentLoaded', function() {
-            generateRandomName();
-            
             // Enter 키 이벤트 리스너
             document.getElementById('citySearch').addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     searchCities();
                 }
             });
-        });
-
-        // 랜덤 이름 생성
-        function generateRandomName() {
-            const isMale = document.getElementById('male').checked;
-            const names = isMale ? namesData.male_names : namesData.female_names;
-            const randomName = names[Math.floor(Math.random() * names.length)];
-            document.getElementById('name').value = randomName;
-        }
-
-        // 성별 변경 시 랜덤 이름 다시 생성
-        document.querySelectorAll('input[name="gender"]').forEach(radio => {
-            radio.addEventListener('change', generateRandomName);
         });
 
         // 도시 검색
@@ -839,16 +795,9 @@ date: 2025-07-01 19:49:00 +0900
 
         // 사주 정보 API 요청
         async function requestSajuInfo() {
-            // 입력 데이터 검증
-            const name = document.getElementById('name').value.trim();
-            if (!name) {
-                showToast('이름을 입력해주세요.', 'error');
-                return;
-            }
-
             // 요청 데이터 구성
             const requestData = {
-                name: name,
+                name: '',
                 gender: document.querySelector('input[name="gender"]:checked').value,
                 calendar: document.getElementById('calendar').value,
                 birthday: document.getElementById('birthDate').value.replace(/-/g, '/'),
@@ -1542,7 +1491,7 @@ date: 2025-07-01 19:49:00 +0900
 이제 제공될 사주 정보를 바탕으로 위의 최신 프레임워크에 따라 종합적이고 심도 있는 전문 분석을 실시하세요.`;
 
         // 마크다운 형식 컨텍스트 덤프 생성 함수들
-        function parseChartData(data) {
+        function parseChartData(data, gender) {
             if (!data || !data.data) {
                 return "차트 데이터가 없습니다.";
             }
@@ -1575,6 +1524,10 @@ date: 2025-07-01 19:49:00 +0900
                         text.push(`- **${key}**: ${profile[key] || 'N/A'}`);
                     }
                 });
+                
+                // 성별 정보 추가
+                const genderText = gender === 'M' ? '남성' : gender === 'F' ? '여성' : 'N/A';
+                text.push(`- **성별**: ${genderText}`);
                 
                 text.push("");
             }
@@ -1880,10 +1833,13 @@ date: 2025-07-01 19:49:00 +0900
             text.push("# 사주 정보 Context Dump");
             text.push("");
 
+            // 성별 정보 가져오기
+            const gender = document.querySelector('input[name="gender"]:checked')?.value || '';
+
             // API 결과 데이터 (마크다운 형식으로 파싱)
             if (results.chart) {
                 text.push("## 1. 사주 차트 정보");
-                text.push(parseChartData(results.chart));
+                text.push(parseChartData(results.chart, gender));
                 text.push("");
             }
             
