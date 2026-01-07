@@ -2,6 +2,7 @@
 layout: none
 permalink: /app/dev-hunter/main.js
 date: 2025-06-24 03:51:00 +0900
+visible: false
 ---
 import * as THREE from 'https://esm.sh/three@0.153.0';
 import { EffectComposer } from 'https://esm.sh/three@0.153.0/examples/jsm/postprocessing/EffectComposer.js';

@@ -2,6 +2,7 @@
 layout: none
 permalink: /app/dev-hunter/buildingThemes.js
 date: 2025-06-24 03:51:00 +0900
+visible: false
 ---
 // 건물 테마/타입/색상/랜덤 규칙 정의 (모듈)
 export const buildingThemes = [
