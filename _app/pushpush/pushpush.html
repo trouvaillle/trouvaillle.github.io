@@ -17,19 +17,24 @@ date: 2022-06-26 00:00:00 +0900
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=PT+Sans&display=swap" rel="stylesheet">
-    <script type="text/javascript" src="/pushpush/script.js"></script>
+    <script type="text/javascript" src="/pushpush/script.js" defer></script>
 </head>
 
 <body>
     <div class="container">
         <div id="header">
-            <span id="back"><i class="fa-solid fa-angle-left"></i></span>
+            <span id="back"><a href="/"><i class="fa-solid fa-angle-left"></i></a></span>
             <span id="spanTitle">{{ page.title | default: "App" }}</span>
             <span id="sound"><i id="soundIcon" class="fa-solid fa-volume-xmark"></i></span>
         </div>
-        <div class="content" id="content">
+        <div id="levelBar">
+            <label for="levelDropdown">Level</label>
+            <select id="levelDropdown"><option>Loading...</option></select>
+            <button id="resetBtn"><i class="fa-solid fa-rotate-left"></i> Reset</button>
         </div>
-    </div>
+        <div class="content" id="content">
+            <canvas id="gameCanvas"></canvas>
+        </div>
     </div>
 </body>
 
