@@ -461,9 +461,10 @@ class Game {
     this.canvas = document.getElementById('gameCanvas');
     this.levelLabel = document.getElementById('levelLabel');
     this.state = STATE.WELCOME;
-    this.currentStage = 0;
     this.lastCleared = this._loadNum('pushpush_lastCleared', 0);
     this.lastPlayed = this._loadNum('pushpush_lastPlayed', 0);
+    const savedStage = this._loadNum('pushpush_currentStage', -1);
+    this.currentStage = savedStage >= 0 ? savedStage : Math.max(0, this.lastPlayed - 1);
     this.loader = new AssetLoader();
     this.renderer = new Renderer(this.canvas, this.loader);
     this.inputManager = new InputManager(this);
@@ -533,7 +534,7 @@ class Game {
   handleInput(input) {
     if (this.state === STATE.WELCOME) {
       this.renderer.stopWelcomeAnimation();
-      this.loadStage(0);
+      this.loadStage(this.currentStage);
       this.state = STATE.PLAYING;
       this.sound.play('start');
       return;
@@ -565,6 +566,7 @@ class Game {
     if (this.renderer.clearTimer) this.renderer.stopClearTimer();
     if (this.state === STATE.WELCOME) this.renderer.stopWelcomeAnimation();
     this.currentStage = Math.min(index, TOTAL_STAGES - 1);
+    this._saveNum('pushpush_currentStage', this.currentStage);
     const grid = this.loader.getStageData(this.currentStage);
     this.board = new Board(grid);
     this.player = new Player(this.board);
