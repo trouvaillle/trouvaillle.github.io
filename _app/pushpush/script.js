@@ -139,6 +139,7 @@ class Player {
   constructor(board) {
     this.board = board;
     const pos = board.findPlayer();
+    if (!pos) throw new Error('Player not found on board');
     this.row = pos[0];
     this.col = pos[1];
   }
