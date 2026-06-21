@@ -22,7 +22,6 @@ html, body {
   max-width: 520px;
   margin: 0 auto;
   background: #1a1a2e;
-  position: relative;
 }
 
 #header {
@@ -129,10 +128,8 @@ html, body {
   grid-template-rows: 1fr 1fr;
   gap: 4px;
   padding: 12px 24px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  flex-shrink: 0;
+  width: 100%;
   max-width: 520px;
   margin: 0 auto;
 }
