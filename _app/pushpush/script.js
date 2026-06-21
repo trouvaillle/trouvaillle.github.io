@@ -690,7 +690,6 @@ class Game {
       this.renderer.stopWelcomeAnimation();
       this.loadStage(this.currentStage);
       this.state = STATE.PLAYING;
-      this.sound.play('start');
       return;
     }
     if (this.state === STATE.GAMEOVER) {
