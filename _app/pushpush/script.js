@@ -677,7 +677,6 @@ class Game {
       const prevCol = this.player.col;
       if (this.player.move(input.dir)) {
         this.moveCount++;
-        this._updateMoveCounter();
         this._pushHistory(prevGrid, prevRow, prevCol);
         this.sound.play('move');
         const stageNum = this.currentStage + 1;
@@ -702,7 +701,6 @@ class Game {
     this.history = [];
     this.redoStack = [];
     this.moveCount = 0;
-    this._updateMoveCounter();
     this._updateUndoButtons();
     this._stopReplay();
     document.getElementById('showMovesBtn').style.display = 'none';
@@ -734,7 +732,6 @@ class Game {
     this.player.row = state.row;
     this.player.col = state.col;
     this.moveCount = Math.max(0, this.moveCount - 1);
-    this._updateMoveCounter();
     this._updateUndoButtons();
   }
 
@@ -750,7 +747,6 @@ class Game {
     this.player.row = state.row;
     this.player.col = state.col;
     this.moveCount++;
-    this._updateMoveCounter();
     this._updateUndoButtons();
   }
 
@@ -832,11 +828,6 @@ class Game {
 
   _saveNum(key, val) {
     try { localStorage.setItem(key, String(val)); } catch {}
-  }
-
-  _updateMoveCounter() {
-    const el = document.getElementById('moveCounter');
-    if (el) el.textContent = `Moves: ${this.moveCount}`;
   }
 
   _loadBests() {

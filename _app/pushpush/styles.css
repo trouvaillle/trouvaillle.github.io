@@ -99,15 +99,6 @@ html, body {
   color: #fff;
 }
 
-#moveCounter {
-  font-size: 14px;
-  color: #e94560;
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-  min-width: 70px;
-  text-align: center;
-}
-
 #resetBtn {
   padding: 4px 12px;
   font-size: 13px;
