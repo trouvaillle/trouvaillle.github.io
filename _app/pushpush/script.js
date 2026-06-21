@@ -444,9 +444,9 @@ class LevelSelect {
 
   update() {
     if (!this.select) return;
-    const maxLevel = this.game.getMaxAccessibleLevel();
     const currentVal = this.game.currentStage + 1;
-    while (this.select.options.length < maxLevel) {
+    const needed = Math.max(this.game.getMaxAccessibleLevel(), currentVal);
+    while (this.select.options.length < needed) {
       const opt = document.createElement('option');
       opt.value = this.select.options.length + 1;
       opt.textContent = `Level ${opt.value}`;
@@ -463,8 +463,7 @@ class Game {
     this.state = STATE.WELCOME;
     this.lastCleared = this._loadNum('pushpush_lastCleared', 0);
     this.lastPlayed = this._loadNum('pushpush_lastPlayed', 0);
-    const savedStage = this._loadNum('pushpush_currentStage', -1);
-    this.currentStage = savedStage >= 0 ? savedStage : Math.max(0, this.lastPlayed - 1);
+    this.currentStage = Math.max(0, this.getMaxAccessibleLevel() - 1);
     this.loader = new AssetLoader();
     this.renderer = new Renderer(this.canvas, this.loader);
     this.inputManager = new InputManager(this);
@@ -567,6 +566,10 @@ class Game {
     if (this.state === STATE.WELCOME) this.renderer.stopWelcomeAnimation();
     this.currentStage = Math.min(index, TOTAL_STAGES - 1);
     this._saveNum('pushpush_currentStage', this.currentStage);
+    if (this.currentStage + 1 > this.lastPlayed) {
+      this.lastPlayed = this.currentStage + 1;
+      this._saveNum('pushpush_lastPlayed', this.lastPlayed);
+    }
     const grid = this.loader.getStageData(this.currentStage);
     this.board = new Board(grid);
     this.player = new Player(this.board);
