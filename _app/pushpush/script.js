@@ -8,7 +8,7 @@ const COLS = 13;
 const ROWS = 13;
 const TOTAL_STAGES = 50;
 const ASSET_PATH = '/assets/img/pushpush/';
-const DATA_PATH = '/pushpush/pushpush.dat';
+const DATA_PATH = '/assets/data/pushpush.dat';
 
 const CELL = {
   PLAYER: 0,
