@@ -324,16 +324,29 @@ class InputManager {
     this.game = game;
     this._onKeyDown = this._onKeyDown.bind(this);
     this._onClick = this._onClick.bind(this);
+    this._onDpadPointerDown = this._onDpadPointerDown.bind(this);
   }
 
   bind() {
     document.addEventListener('keydown', this._onKeyDown);
     document.addEventListener('click', this._onClick);
+    document.querySelectorAll('#dpad button[data-dir]').forEach(btn => {
+      btn.addEventListener('pointerdown', this._onDpadPointerDown);
+    });
   }
 
   unbind() {
     document.removeEventListener('keydown', this._onKeyDown);
     document.removeEventListener('click', this._onClick);
+    document.querySelectorAll('#dpad button[data-dir]').forEach(btn => {
+      btn.removeEventListener('pointerdown', this._onDpadPointerDown);
+    });
+  }
+
+  _onDpadPointerDown(e) {
+    e.preventDefault();
+    const dir = e.currentTarget.getAttribute('data-dir');
+    if (dir) this.game.handleInput({ type: 'move', dir });
   }
 
   _onKeyDown(e) {
@@ -356,6 +369,7 @@ class InputManager {
   }
 
   _onClick(e) {
+    if (e.target.closest('#dpad')) return;
     const canvas = this.game.renderer.canvas;
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
