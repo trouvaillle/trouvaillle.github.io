@@ -578,6 +578,8 @@ class Game {
     this._replayTimer = null;
     this.moveCount = 0;
     this._cheatArmed = false;
+    this._cheatHeaderClicks = 0;
+    this._cheatResetClicks = 0;
   }
 
   async init() {
