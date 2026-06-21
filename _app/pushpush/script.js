@@ -595,7 +595,7 @@ class Game {
     document.getElementById('undoBtn').addEventListener('click', () => this.undo());
     document.getElementById('redoBtn').addEventListener('click', () => this.redo());
     document.getElementById('showMovesBtn').addEventListener('click', () => this.showMoves());
-    document.getElementById('header').addEventListener('click', () => {
+    document.getElementById('header').addEventListener('pointerdown', () => {
       this._cheatHeaderClicks++;
       if (this._cheatHeaderClicks >= 2) {
         this._cheatArmed = true;
