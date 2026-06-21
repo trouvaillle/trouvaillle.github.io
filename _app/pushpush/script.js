@@ -201,6 +201,7 @@ class Renderer {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.ctx.imageSmoothingEnabled = false;
+    this.canvas.style.imageRendering = 'pixelated';
     this.loader = loader;
     this.cellSize = 0;
     this.welcomeFrame = 0;
@@ -209,15 +210,13 @@ class Renderer {
   }
 
   resize(boardWidth, boardHeight) {
-    const dpr = window.devicePixelRatio || 1;
     this.cellSize = Math.floor(Math.min(boardWidth / COLS, boardHeight / ROWS));
     const w = this.cellSize * COLS;
     const h = this.cellSize * ROWS;
     this.canvas.style.width = w + 'px';
     this.canvas.style.height = h + 'px';
-    this.canvas.width = w * dpr;
-    this.canvas.height = h * dpr;
-    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    this.canvas.width = w;
+    this.canvas.height = h;
     this.boardPixelWidth = w;
     this.boardPixelHeight = h;
   }
