@@ -200,6 +200,7 @@ class Renderer {
   constructor(canvas, loader) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
+    this.ctx.imageSmoothingEnabled = false;
     this.loader = loader;
     this.cellSize = 0;
     this.welcomeFrame = 0;
