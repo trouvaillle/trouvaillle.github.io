@@ -794,6 +794,12 @@ class Game {
 
   _finishReplay() {
     this._stopReplay();
+    if (this._finalState) {
+      this.board.restore(this._finalState.grid);
+      this.player.row = this._finalState.row;
+      this.player.col = this._finalState.col;
+      this._finalState = null;
+    }
     this.state = STATE.CLEAR;
     this._updateUndoButtons();
     document.getElementById('showMovesBtn').style.display = '';
