@@ -410,11 +410,11 @@ class InputManager {
     if (!dir) return;
     this.game.handleInput({ type: 'move', dir });
     this._holdDir = dir;
-    this._holdTimer = setTimeout(() => {
-      this._holdTimer = setInterval(() => {
-        if (this._holdDir) this.game.handleInput({ type: 'move', dir: this._holdDir });
-      }, 300);
-    }, 200);
+      this._holdTimer = setTimeout(() => {
+        this._holdTimer = setInterval(() => {
+          if (this._holdDir) this.game.handleInput({ type: 'move', dir: this._holdDir });
+        }, 200);
+      }, 200);
   }
 
   _onDpadUp(e) {
@@ -577,6 +577,7 @@ class Game {
     this.redoStack = [];
     this._replayTimer = null;
     this.moveCount = 0;
+    this._cheatArmed = false;
   }
 
   async init() {
@@ -597,6 +598,19 @@ class Game {
     document.getElementById('undoBtn').addEventListener('click', () => this.undo());
     document.getElementById('redoBtn').addEventListener('click', () => this.redo());
     document.getElementById('showMovesBtn').addEventListener('click', () => this.showMoves());
+    document.getElementById('header').addEventListener('dblclick', () => {
+      this._cheatArmed = true;
+    });
+    document.getElementById('resetBtn').addEventListener('dblclick', () => {
+      if (this._cheatArmed) {
+        this._cheatArmed = false;
+        this.lastCleared = TOTAL_STAGES;
+        this.lastPlayed = TOTAL_STAGES;
+        this._saveNum('pushpush_lastCleared', TOTAL_STAGES);
+        this._saveNum('pushpush_lastPlayed', TOTAL_STAGES);
+        this.levelSelect.update();
+      }
+    });
     this._updateUndoButtons();
     this.renderer.startWelcomeAnimation();
     this.state = STATE.WELCOME;
