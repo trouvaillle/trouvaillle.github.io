@@ -237,6 +237,7 @@ class Renderer {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d');
     this.ctx.imageSmoothingEnabled = false;
+    this.ctx.webkitImageSmoothingEnabled = false;
     this.canvas.style.imageRendering = 'pixelated';
     this.loader = loader;
     this.cellSize = 0;
