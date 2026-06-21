@@ -347,29 +347,58 @@ class InputManager {
     this.game = game;
     this._onKeyDown = this._onKeyDown.bind(this);
     this._onClick = this._onClick.bind(this);
-    this._onDpadPointerDown = this._onDpadPointerDown.bind(this);
+    this._onDpadDown = this._onDpadDown.bind(this);
+    this._onDpadUp = this._onDpadUp.bind(this);
+    this._holdDir = null;
+    this._holdTimer = null;
   }
 
   bind() {
     document.addEventListener('keydown', this._onKeyDown);
     document.addEventListener('click', this._onClick);
     document.querySelectorAll('#dpad button[data-dir]').forEach(btn => {
-      btn.addEventListener('pointerdown', this._onDpadPointerDown);
+      btn.addEventListener('pointerdown', this._onDpadDown);
     });
+    document.addEventListener('pointerup', this._onDpadUp);
+    document.addEventListener('pointercancel', this._onDpadUp);
   }
 
   unbind() {
     document.removeEventListener('keydown', this._onKeyDown);
     document.removeEventListener('click', this._onClick);
     document.querySelectorAll('#dpad button[data-dir]').forEach(btn => {
-      btn.removeEventListener('pointerdown', this._onDpadPointerDown);
+      btn.removeEventListener('pointerdown', this._onDpadDown);
     });
+    document.removeEventListener('pointerup', this._onDpadUp);
+    document.removeEventListener('pointercancel', this._onDpadUp);
+    this._stopHold();
   }
 
-  _onDpadPointerDown(e) {
+  _onDpadDown(e) {
     e.preventDefault();
+    this._stopHold();
     const dir = e.currentTarget.getAttribute('data-dir');
-    if (dir) this.game.handleInput({ type: 'move', dir });
+    if (!dir) return;
+    this.game.handleInput({ type: 'move', dir });
+    this._holdDir = dir;
+    this._holdTimer = setTimeout(() => {
+      this._holdTimer = setInterval(() => {
+        if (this._holdDir) this.game.handleInput({ type: 'move', dir: this._holdDir });
+      }, 100);
+    }, 300);
+  }
+
+  _onDpadUp(e) {
+    if (this._holdDir) this._stopHold();
+  }
+
+  _stopHold() {
+    if (this._holdTimer) {
+      clearTimeout(this._holdTimer);
+      clearInterval(this._holdTimer);
+      this._holdTimer = null;
+    }
+    this._holdDir = null;
   }
 
   _onKeyDown(e) {
