@@ -777,7 +777,7 @@ class Game {
     const levelSelect = document.getElementById('levelDropdown');
     if (levelSelect) levelSelect.disabled = replaying;
     const resetBtn = document.getElementById('resetBtn');
-    if (resetBtn) resetBtn.disabled = replaying;
+    if (resetBtn) resetBtn.disabled = replaying || this.state === STATE.WELCOME;
   }
 
   showMoves() {
