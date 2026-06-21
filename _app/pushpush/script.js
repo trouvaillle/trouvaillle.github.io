@@ -767,6 +767,11 @@ class Game {
     const redoBtn = document.getElementById('redoBtn');
     if (undoBtn) undoBtn.disabled = this.state !== STATE.PLAYING || this.history.length === 0;
     if (redoBtn) redoBtn.disabled = this.state !== STATE.PLAYING || this.redoStack.length === 0;
+    const replaying = this.state === STATE.REPLAY;
+    const levelSelect = document.getElementById('levelDropdown');
+    if (levelSelect) levelSelect.disabled = replaying;
+    const resetBtn = document.getElementById('resetBtn');
+    if (resetBtn) resetBtn.disabled = replaying;
   }
 
   showMoves() {

@@ -132,6 +132,11 @@ html, body {
   cursor: default;
 }
 
+#resetBtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
 #undoBtn:hover:not(:disabled),
 #redoBtn:hover:not(:disabled) {
   background: #6b4fa0;
