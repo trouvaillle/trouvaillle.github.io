@@ -154,14 +154,14 @@ html, body {
   background: rgba(255, 255, 255, 0.3);
 }
 
-#dpadLeft {
-  grid-column: 1;
-  grid-row: 1 / 3;
-}
-
 #dpadUp {
   grid-column: 2;
   grid-row: 1;
+}
+
+#dpadLeft {
+  grid-column: 1;
+  grid-row: 2;
 }
 
 #dpadDown {
@@ -171,5 +171,5 @@ html, body {
 
 #dpadRight {
   grid-column: 3;
-  grid-row: 1 / 3;
+  grid-row: 2;
 }
