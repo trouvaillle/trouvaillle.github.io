@@ -446,6 +446,50 @@ class InputManager {
     if (e.key === ' ' || e.key === 'Enter') {
       e.preventDefault();
       this.game.handleInput({ type: 'confirm' });
+      return;
+    }
+    if (e.key === 'r' || e.key === 'R') {
+      e.preventDefault();
+      this.game.loadStage(this.game.currentStage);
+      this.game.state = STATE.PLAYING;
+      return;
+    }
+    if (e.key === 'u' || e.key === 'U') {
+      if (this.game.state === STATE.PLAYING) {
+        e.preventDefault();
+        this.game.undo();
+      }
+      return;
+    }
+    if (e.key === 'm' || e.key === 'M') {
+      e.preventDefault();
+      this.game.sound.toggle();
+      return;
+    }
+    if (e.key === 'Escape' && this.game.state !== STATE.WELCOME) {
+      e.preventDefault();
+      this.game.renderer.stopClearTimer();
+      this.game._stopReplay();
+      this.game.renderer.stopWelcomeAnimation();
+      this.game.state = STATE.WELCOME;
+      this.game.renderer.startWelcomeAnimation();
+      this.game._updateUndoButtons();
+      return;
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+      if (this.game.state === STATE.PLAYING) {
+        e.preventDefault();
+        if (e.shiftKey) this.game.redo();
+        else this.game.undo();
+      }
+      return;
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'y') {
+      if (this.game.state === STATE.PLAYING) {
+        e.preventDefault();
+        this.game.redo();
+      }
+      return;
     }
   }
 
@@ -486,15 +530,7 @@ class LevelSelect {
 
   build() {
     if (!this.select) return;
-    const maxLevel = this.game.getMaxAccessibleLevel();
-    this.select.innerHTML = '';
-    for (let i = 1; i <= maxLevel; i++) {
-      const opt = document.createElement('option');
-      opt.value = i;
-      opt.textContent = `Level ${i}`;
-      if (i === this.game.currentStage + 1) opt.selected = true;
-      this.select.appendChild(opt);
-    }
+    this._populate();
     this.select.addEventListener('change', () => {
       this.game.loadStage(parseInt(this.select.value) - 1);
     });
@@ -502,15 +538,24 @@ class LevelSelect {
 
   update() {
     if (!this.select) return;
+    this._populate();
+  }
+
+  _populate() {
+    if (!this.select) return;
+    const maxLevel = this.game.getMaxAccessibleLevel();
+    const bests = this.game._loadBests();
     const currentVal = this.game.currentStage + 1;
-    const needed = Math.max(this.game.getMaxAccessibleLevel(), currentVal);
-    while (this.select.options.length < needed) {
+    const needed = Math.max(maxLevel, currentVal);
+    this.select.innerHTML = '';
+    for (let i = 1; i <= needed; i++) {
       const opt = document.createElement('option');
-      opt.value = this.select.options.length + 1;
-      opt.textContent = `Level ${opt.value}`;
+      opt.value = i;
+      const best = bests[i];
+      opt.textContent = best !== undefined ? `Level ${i} (${best})` : `Level ${i}`;
+      if (i === currentVal) opt.selected = true;
       this.select.appendChild(opt);
     }
-    this.select.value = currentVal;
   }
 }
 
@@ -533,6 +578,7 @@ class Game {
     this.history = [];
     this.redoStack = [];
     this._replayTimer = null;
+    this.moveCount = 0;
   }
 
   async init() {
@@ -569,17 +615,19 @@ class Game {
     if (this.state === STATE.PLAYING && this.board) {
       if (this.board.getFilledHouseCount() >= this.board.initialHouseCount) {
         this.state = STATE.CLEAR;
+        this._updateUndoButtons();
         this._onClear();
       } else if (!this.board.hasAnyMovableBall()) {
         this.state = STATE.GAMEOVER;
         this.sound.play('success');
+        this._updateUndoButtons();
       }
-      
     }
   }
 
   _onClear() {
     this.sound.play('clear');
+    this._updateBestScore();
     document.getElementById('showMovesBtn').style.display = this.history.length > 0 ? '' : 'none';
     const stageNum = this.currentStage + 1;
     if (stageNum > this.lastCleared) {
@@ -627,6 +675,8 @@ class Game {
       const prevRow = this.player.row;
       const prevCol = this.player.col;
       if (this.player.move(input.dir)) {
+        this.moveCount++;
+        this._updateMoveCounter();
         this._pushHistory(prevGrid, prevRow, prevCol);
         this.sound.play('move');
         const stageNum = this.currentStage + 1;
@@ -635,7 +685,6 @@ class Game {
           this._saveNum('pushpush_lastPlayed', this.lastPlayed);
           this.levelSelect.update();
         }
-        
       }
     }
   }
@@ -651,6 +700,8 @@ class Game {
     }
     this.history = [];
     this.redoStack = [];
+    this.moveCount = 0;
+    this._updateMoveCounter();
     this._updateUndoButtons();
     this._stopReplay();
     document.getElementById('showMovesBtn').style.display = 'none';
@@ -671,7 +722,7 @@ class Game {
   }
 
   undo() {
-    if (this.history.length === 0) return;
+    if (this.state !== STATE.PLAYING || this.history.length === 0) return;
     const state = this.history.pop();
     this.redoStack.push({
       grid: this.board.snapshot(),
@@ -681,11 +732,13 @@ class Game {
     this.board.restore(state.grid);
     this.player.row = state.row;
     this.player.col = state.col;
+    this.moveCount = Math.max(0, this.moveCount - 1);
+    this._updateMoveCounter();
     this._updateUndoButtons();
   }
 
   redo() {
-    if (this.redoStack.length === 0) return;
+    if (this.state !== STATE.PLAYING || this.redoStack.length === 0) return;
     const state = this.redoStack.pop();
     this.history.push({
       grid: this.board.snapshot(),
@@ -695,14 +748,16 @@ class Game {
     this.board.restore(state.grid);
     this.player.row = state.row;
     this.player.col = state.col;
+    this.moveCount++;
+    this._updateMoveCounter();
     this._updateUndoButtons();
   }
 
   _updateUndoButtons() {
     const undoBtn = document.getElementById('undoBtn');
     const redoBtn = document.getElementById('redoBtn');
-    if (undoBtn) undoBtn.disabled = this.history.length === 0;
-    if (redoBtn) redoBtn.disabled = this.redoStack.length === 0;
+    if (undoBtn) undoBtn.disabled = this.state !== STATE.PLAYING || this.history.length === 0;
+    if (redoBtn) redoBtn.disabled = this.state !== STATE.PLAYING || this.redoStack.length === 0;
   }
 
   showMoves() {
@@ -743,6 +798,7 @@ class Game {
   _finishReplay() {
     this._stopReplay();
     this.state = STATE.CLEAR;
+    this._updateUndoButtons();
     document.getElementById('showMovesBtn').style.display = '';
     this.renderer.startClearTimer(() => this._advanceAfterClear());
   }
@@ -775,6 +831,29 @@ class Game {
 
   _saveNum(key, val) {
     try { localStorage.setItem(key, String(val)); } catch {}
+  }
+
+  _updateMoveCounter() {
+    const el = document.getElementById('moveCounter');
+    if (el) el.textContent = `Moves: ${this.moveCount}`;
+  }
+
+  _loadBests() {
+    try { return JSON.parse(localStorage.getItem('pushpush_bests')) || {}; }
+    catch { return {}; }
+  }
+
+  _saveBests(bests) {
+    try { localStorage.setItem('pushpush_bests', JSON.stringify(bests)); } catch {}
+  }
+
+  _updateBestScore() {
+    const stageNum = this.currentStage + 1;
+    const bests = this._loadBests();
+    if (bests[stageNum] === undefined || this.moveCount < bests[stageNum]) {
+      bests[stageNum] = this.moveCount;
+      this._saveBests(bests);
+    }
   }
 }
 
