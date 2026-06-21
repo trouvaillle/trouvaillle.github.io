@@ -16,7 +16,8 @@ const CELL = {
   HOUSE_EMPTY: 2,
   HOUSE_FILLED: 3,
   WALL: 4,
-  EMPTY: 5
+  EMPTY: 5,
+  VOID: 6
 };
 
 const DIR = {
@@ -146,8 +147,7 @@ class Player {
     const nr = this.row + dr;
     const nc = this.col + dc;
     const target = this.board.get(nr, nc);
-    if (target === null) return false;
-    if (target === CELL.WALL) return false;
+    if (target === null || target === CELL.WALL || target === CELL.VOID) return false;
     if (target === CELL.EMPTY || target === CELL.HOUSE_EMPTY) {
       this.board.set(this.row, this.col, CELL.EMPTY);
       this.row = nr;
