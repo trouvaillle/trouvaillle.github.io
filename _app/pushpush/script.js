@@ -32,7 +32,8 @@ const STATE = {
   WELCOME: 'welcome',
   PLAYING: 'playing',
   CLEAR: 'clear',
-  GAMEOVER: 'gameover'
+  GAMEOVER: 'gameover',
+  REPLAY: 'replay'
 };
 
 class AssetLoader {
@@ -271,7 +272,22 @@ class Renderer {
       this._renderGameOver();
     } else if (state === STATE.CLEAR) {
       this._renderClear();
+    } else if (state === STATE.REPLAY) {
+      this._renderReplay();
     }
+  }
+
+  _renderReplay() {
+    const ctx = this.ctx;
+    const w = this.boardPixelWidth;
+    const h = this.boardPixelHeight;
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+    ctx.font = `bold ${Math.floor(h * 0.12)}px 'PT Sans', sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('\u00BB', w / 2, h / 2);
   }
 
   _renderBoard(board) {
@@ -515,6 +531,7 @@ class Game {
     this._rafId = null;
     this.history = [];
     this.redoStack = [];
+    this._replayTimer = null;
   }
 
   async init() {
@@ -534,6 +551,7 @@ class Game {
     });
     document.getElementById('undoBtn').addEventListener('click', () => this.undo());
     document.getElementById('redoBtn').addEventListener('click', () => this.redo());
+    document.getElementById('showMovesBtn').addEventListener('click', () => this.showMoves());
     this._updateUndoButtons();
     this.renderer.startWelcomeAnimation();
     this.state = STATE.WELCOME;
@@ -561,6 +579,7 @@ class Game {
 
   _onClear() {
     this.sound.play('clear');
+    document.getElementById('showMovesBtn').style.display = this.history.length > 0 ? '' : 'none';
     const stageNum = this.currentStage + 1;
     if (stageNum > this.lastCleared) {
       this.lastCleared = stageNum;
@@ -593,6 +612,9 @@ class Game {
     if (this.state === STATE.CLEAR) {
       return;
     }
+    if (this.state === STATE.REPLAY) {
+      return;
+    }
     if (this.state === STATE.PLAYING && input.type === 'move') {
       const prevGrid = this.board.snapshot();
       const prevRow = this.player.row;
@@ -623,6 +645,8 @@ class Game {
     this.history = [];
     this.redoStack = [];
     this._updateUndoButtons();
+    this._stopReplay();
+    document.getElementById('showMovesBtn').style.display = 'none';
     const grid = this.loader.getStageData(this.currentStage);
     this.board = new Board(grid);
     this.player = new Player(this.board);
@@ -672,6 +696,53 @@ class Game {
     const redoBtn = document.getElementById('redoBtn');
     if (undoBtn) undoBtn.disabled = this.history.length === 0;
     if (redoBtn) redoBtn.disabled = this.redoStack.length === 0;
+  }
+
+  showMoves() {
+    if (this.history.length === 0) return;
+    this._stopReplay();
+    this._finalState = {
+      grid: this.board.snapshot(),
+      row: this.player.row,
+      col: this.player.col
+    };
+    this._replayIndex = 0;
+    const s = this.history[0];
+    this.board.restore(s.grid);
+    this.player.row = s.row;
+    this.player.col = s.col;
+    this.state = STATE.REPLAY;
+    document.getElementById('showMovesBtn').style.display = 'none';
+    this._replayTimer = setInterval(() => this._replayStep(), 150);
+  }
+
+  _replayStep() {
+    this._replayIndex++;
+    if (this._replayIndex < this.history.length) {
+      const s = this.history[this._replayIndex];
+      this.board.restore(s.grid);
+      this.player.row = s.row;
+      this.player.col = s.col;
+    } else if (this._replayIndex === this.history.length) {
+      this.board.restore(this._finalState.grid);
+      this.player.row = this._finalState.row;
+      this.player.col = this._finalState.col;
+    } else {
+      this._finishReplay();
+    }
+  }
+
+  _finishReplay() {
+    this._stopReplay();
+    this.state = STATE.CLEAR;
+    document.getElementById('showMovesBtn').style.display = '';
+  }
+
+  _stopReplay() {
+    if (this._replayTimer) {
+      clearInterval(this._replayTimer);
+      this._replayTimer = null;
+    }
   }
 
   getMaxAccessibleLevel() {

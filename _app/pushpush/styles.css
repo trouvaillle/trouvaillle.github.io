@@ -152,6 +152,26 @@ html, body {
   image-rendering: crisp-edges;
 }
 
+#showMovesBtn {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(233, 69, 96, 0.85);
+  color: #fff;
+  cursor: pointer;
+  font-family: 'PT Sans', sans-serif;
+  z-index: 2;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
 #dpad {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
