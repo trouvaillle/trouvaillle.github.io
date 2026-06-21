@@ -86,6 +86,12 @@ class AssetLoader {
 class Board {
   constructor(grid) {
     this.grid = grid.map(row => [...row]);
+    this.terrain = grid.map(row => row.map(cell => {
+      if (cell === CELL.HOUSE_EMPTY || cell === CELL.HOUSE_FILLED) return CELL.HOUSE_EMPTY;
+      if (cell === CELL.WALL) return CELL.WALL;
+      if (cell === CELL.VOID) return CELL.VOID;
+      return CELL.EMPTY;
+    }));
   }
 
   get(r, c) {
@@ -96,6 +102,11 @@ class Board {
   set(r, c, val) {
     if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return;
     this.grid[r][c] = val;
+  }
+
+  clearCell(r, c) {
+    if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return;
+    this.grid[r][c] = this.terrain[r][c];
   }
 
   countHouseEmpty() {
@@ -150,7 +161,7 @@ class Player {
     const target = this.board.get(nr, nc);
     if (target === null || target === CELL.WALL || target === CELL.VOID) return false;
     if (target === CELL.EMPTY || target === CELL.HOUSE_EMPTY) {
-      this.board.set(this.row, this.col, CELL.EMPTY);
+      this.board.clearCell(this.row, this.col);
       this.row = nr;
       this.col = nc;
       this.board.set(this.row, this.col, CELL.PLAYER);
@@ -161,10 +172,9 @@ class Player {
       const pushTarget = this.board.get(br, bc);
       if (pushTarget === null) return false;
       if (pushTarget !== CELL.EMPTY && pushTarget !== CELL.HOUSE_EMPTY) return false;
-      const wasFilled = (target === CELL.HOUSE_FILLED);
       this.board.set(br, bc, pushTarget === CELL.HOUSE_EMPTY ? CELL.HOUSE_FILLED : CELL.BALL);
-      this.board.set(nr, nc, wasFilled ? CELL.HOUSE_EMPTY : CELL.EMPTY);
-      this.board.set(this.row, this.col, CELL.EMPTY);
+      this.board.clearCell(nr, nc);
+      this.board.clearCell(this.row, this.col);
       this.row = nr;
       this.col = nc;
       this.board.set(this.row, this.col, CELL.PLAYER);
