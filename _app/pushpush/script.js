@@ -359,7 +359,7 @@ class Renderer {
   }
 
   startClearTimer(callback) {
-    this.clearTimer = setTimeout(callback, 1000);
+    this.clearTimer = setTimeout(callback, 3000);
   }
 
   stopClearTimer() {
