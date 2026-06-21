@@ -594,8 +594,11 @@ class Game {
       return;
     }
     if (this.state === STATE.PLAYING && input.type === 'move') {
+      const prevGrid = this.board.snapshot();
+      const prevRow = this.player.row;
+      const prevCol = this.player.col;
       if (this.player.move(input.dir)) {
-        this._pushHistory();
+        this._pushHistory(prevGrid, prevRow, prevCol);
         this.sound.play('move');
         const stageNum = this.currentStage + 1;
         if (stageNum > this.lastPlayed) {
@@ -630,12 +633,8 @@ class Game {
     }
   }
 
-  _pushHistory() {
-    this.history.push({
-      grid: this.board.snapshot(),
-      row: this.player.row,
-      col: this.player.col
-    });
+  _pushHistory(grid, row, col) {
+    this.history.push({ grid, row, col });
     this.redoStack = [];
     this._updateUndoButtons();
   }
