@@ -449,7 +449,7 @@ class InputManager {
   }
 
   _onClick(e) {
-    if (e.target.closest('#dpad') || e.target.closest('#sound')) return;
+    if (e.target.closest('#dpad') || e.target.closest('#sound') || e.target.closest('#showMovesBtn')) return;
     const canvas = this.game.renderer.canvas;
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -586,13 +586,15 @@ class Game {
       this._saveNum('pushpush_lastCleared', this.lastCleared);
     }
     this.levelSelect.update();
-    this.renderer.startClearTimer(() => {
-      if (this.currentStage + 1 < TOTAL_STAGES) {
-        this.loadStage(this.currentStage + 1);
-      } else {
-        this.loadStage(0);
-      }
-    });
+    this.renderer.startClearTimer(() => this._advanceAfterClear());
+  }
+
+  _advanceAfterClear() {
+    if (this.currentStage + 1 < TOTAL_STAGES) {
+      this.loadStage(this.currentStage + 1);
+    } else {
+      this.loadStage(0);
+    }
   }
 
   handleInput(input) {
@@ -610,6 +612,10 @@ class Game {
       return;
     }
     if (this.state === STATE.CLEAR) {
+      if (input.type === 'confirm') {
+        this.renderer.stopClearTimer();
+        this._advanceAfterClear();
+      }
       return;
     }
     if (this.state === STATE.REPLAY) {
@@ -701,6 +707,7 @@ class Game {
   showMoves() {
     if (this.history.length === 0) return;
     this._stopReplay();
+    this.renderer.stopClearTimer();
     this._finalState = {
       grid: this.board.snapshot(),
       row: this.player.row,
@@ -736,6 +743,7 @@ class Game {
     this._stopReplay();
     this.state = STATE.CLEAR;
     document.getElementById('showMovesBtn').style.display = '';
+    this.renderer.startClearTimer(() => this._advanceAfterClear());
   }
 
   _stopReplay() {
