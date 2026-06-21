@@ -9,6 +9,7 @@ const ROWS = 13;
 const TOTAL_STAGES = 50;
 const ASSET_PATH = '/assets/img/pushpush/';
 const DATA_PATH = '/assets/data/pushpush.dat';
+const SOUND_PATH = '/assets/media/pushpush/';
 
 const CELL = {
   PLAYER: 0,
@@ -80,6 +81,28 @@ class AssetLoader {
       stage.push(row);
     }
     return stage;
+  }
+}
+
+class SoundManager {
+  constructor() {
+    this._muted = true;
+    this._sounds = {};
+    this._icon = document.getElementById('soundIcon');
+  }
+
+  play(name) {
+    if (this._muted) return;
+    if (!this._sounds[name]) {
+      this._sounds[name] = new Audio(SOUND_PATH + name + '.wav');
+    }
+    this._sounds[name].currentTime = 0;
+    this._sounds[name].play().catch(() => {});
+  }
+
+  toggle() {
+    this._muted = !this._muted;
+    this._icon.className = this._muted ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high';
   }
 }
 
@@ -369,7 +392,7 @@ class InputManager {
   }
 
   _onClick(e) {
-    if (e.target.closest('#dpad')) return;
+    if (e.target.closest('#dpad') || e.target.closest('#sound')) return;
     const canvas = this.game.renderer.canvas;
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -445,6 +468,7 @@ class Game {
     this.renderer = new Renderer(this.canvas, this.loader);
     this.inputManager = new InputManager(this);
     this.levelSelect = new LevelSelect(this);
+    this.sound = new SoundManager();
     this.board = null;
     this.player = null;
     this._rafId = null;
@@ -461,6 +485,7 @@ class Game {
     this.resize();
     window.addEventListener('resize', () => this.resize());
     this.levelSelect.build();
+    document.getElementById('sound').addEventListener('click', () => this.sound.toggle());
     document.getElementById('resetBtn').addEventListener('click', () => {
       this.loadStage(this.currentStage);
     });
@@ -482,12 +507,14 @@ class Game {
         this._onClear();
       } else if (!this.board.hasAnyMovableBall()) {
         this.state = STATE.GAMEOVER;
+        this.sound.play('success');
       }
       
     }
   }
 
   _onClear() {
+    this.sound.play('clear');
     const stageNum = this.currentStage + 1;
     if (stageNum > this.lastCleared) {
       this.lastCleared = stageNum;
@@ -508,7 +535,7 @@ class Game {
       this.renderer.stopWelcomeAnimation();
       this.loadStage(0);
       this.state = STATE.PLAYING;
-      
+      this.sound.play('start');
       return;
     }
     if (this.state === STATE.GAMEOVER) {
@@ -522,6 +549,7 @@ class Game {
     }
     if (this.state === STATE.PLAYING && input.type === 'move') {
       if (this.player.move(input.dir)) {
+        this.sound.play('move');
         const stageNum = this.currentStage + 1;
         if (stageNum > this.lastPlayed) {
           this.lastPlayed = stageNum;
