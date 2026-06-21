@@ -668,6 +668,7 @@ class Game {
       return;
     }
     if (this.state === STATE.REPLAY) {
+      if (input.type === 'confirm') this._finishReplay();
       return;
     }
     if (this.state === STATE.PLAYING && input.type === 'move') {
