@@ -173,6 +173,18 @@ class Board {
     }
     return null;
   }
+
+  snapshot() {
+    return this.grid.map(row => [...row]);
+  }
+
+  restore(snapshot) {
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        this.grid[r][c] = snapshot[r][c];
+      }
+    }
+  }
 }
 
 class Player {
@@ -501,6 +513,8 @@ class Game {
     this.board = null;
     this.player = null;
     this._rafId = null;
+    this.history = [];
+    this.redoStack = [];
   }
 
   async init() {
@@ -518,6 +532,9 @@ class Game {
     document.getElementById('resetBtn').addEventListener('click', () => {
       this.loadStage(this.currentStage);
     });
+    document.getElementById('undoBtn').addEventListener('click', () => this.undo());
+    document.getElementById('redoBtn').addEventListener('click', () => this.redo());
+    this._updateUndoButtons();
     this.renderer.startWelcomeAnimation();
     this.state = STATE.WELCOME;
     this._loop();
@@ -578,6 +595,7 @@ class Game {
     }
     if (this.state === STATE.PLAYING && input.type === 'move') {
       if (this.player.move(input.dir)) {
+        this._pushHistory();
         this.sound.play('move');
         const stageNum = this.currentStage + 1;
         if (stageNum > this.lastPlayed) {
@@ -599,6 +617,9 @@ class Game {
       this.lastPlayed = this.currentStage + 1;
       this._saveNum('pushpush_lastPlayed', this.lastPlayed);
     }
+    this.history = [];
+    this.redoStack = [];
+    this._updateUndoButtons();
     const grid = this.loader.getStageData(this.currentStage);
     this.board = new Board(grid);
     this.player = new Player(this.board);
@@ -607,6 +628,51 @@ class Game {
     if (this.levelLabel) {
       this.levelLabel.textContent = `Level ${this.currentStage + 1}`;
     }
+  }
+
+  _pushHistory() {
+    this.history.push({
+      grid: this.board.snapshot(),
+      row: this.player.row,
+      col: this.player.col
+    });
+    this.redoStack = [];
+    this._updateUndoButtons();
+  }
+
+  undo() {
+    if (this.history.length === 0) return;
+    const state = this.history.pop();
+    this.redoStack.push({
+      grid: this.board.snapshot(),
+      row: this.player.row,
+      col: this.player.col
+    });
+    this.board.restore(state.grid);
+    this.player.row = state.row;
+    this.player.col = state.col;
+    this._updateUndoButtons();
+  }
+
+  redo() {
+    if (this.redoStack.length === 0) return;
+    const state = this.redoStack.pop();
+    this.history.push({
+      grid: this.board.snapshot(),
+      row: this.player.row,
+      col: this.player.col
+    });
+    this.board.restore(state.grid);
+    this.player.row = state.row;
+    this.player.col = state.col;
+    this._updateUndoButtons();
+  }
+
+  _updateUndoButtons() {
+    const undoBtn = document.getElementById('undoBtn');
+    const redoBtn = document.getElementById('redoBtn');
+    if (undoBtn) undoBtn.disabled = this.history.length === 0;
+    if (redoBtn) redoBtn.disabled = this.redoStack.length === 0;
   }
 
   getMaxAccessibleLevel() {

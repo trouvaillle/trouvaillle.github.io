@@ -108,6 +108,29 @@ html, body {
   background: #6b4fa0;
 }
 
+#undoBtn,
+#redoBtn {
+  padding: 4px 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  background: #533483;
+  color: #fff;
+  cursor: pointer;
+  font-family: 'PT Sans', sans-serif;
+}
+
+#undoBtn:disabled,
+#redoBtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+#undoBtn:hover:not(:disabled),
+#redoBtn:hover:not(:disabled) {
+  background: #6b4fa0;
+}
+
 .content {
   flex: 1;
   display: flex;
