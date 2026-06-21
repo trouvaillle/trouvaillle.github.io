@@ -544,15 +544,13 @@ class LevelSelect {
   _populate() {
     if (!this.select) return;
     const maxLevel = this.game.getMaxAccessibleLevel();
-    const bests = this.game._loadBests();
     const currentVal = this.game.currentStage + 1;
     const needed = Math.max(maxLevel, currentVal);
     this.select.innerHTML = '';
     for (let i = 1; i <= needed; i++) {
       const opt = document.createElement('option');
       opt.value = i;
-      const best = bests[i];
-      opt.textContent = best !== undefined ? `Level ${i} (${best})` : `Level ${i}`;
+      opt.textContent = `Level ${i}`;
       if (i === currentVal) opt.selected = true;
       this.select.appendChild(opt);
     }
