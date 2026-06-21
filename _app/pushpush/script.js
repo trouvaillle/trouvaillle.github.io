@@ -592,23 +592,29 @@ class Game {
     window.addEventListener('resize', () => this.resize());
     this.levelSelect.build();
     document.getElementById('sound').addEventListener('click', () => this.sound.toggle());
-    document.getElementById('resetBtn').addEventListener('click', () => {
-      this.loadStage(this.currentStage);
-    });
     document.getElementById('undoBtn').addEventListener('click', () => this.undo());
     document.getElementById('redoBtn').addEventListener('click', () => this.redo());
     document.getElementById('showMovesBtn').addEventListener('click', () => this.showMoves());
-    document.getElementById('header').addEventListener('dblclick', () => {
-      this._cheatArmed = true;
+    document.getElementById('header').addEventListener('click', () => {
+      this._cheatHeaderClicks++;
+      if (this._cheatHeaderClicks >= 2) {
+        this._cheatArmed = true;
+        this._cheatHeaderClicks = 0;
+      }
     });
-    document.getElementById('resetBtn').addEventListener('dblclick', () => {
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      this.loadStage(this.currentStage);
       if (this._cheatArmed) {
-        this._cheatArmed = false;
-        this.lastCleared = TOTAL_STAGES;
-        this.lastPlayed = TOTAL_STAGES;
-        this._saveNum('pushpush_lastCleared', TOTAL_STAGES);
-        this._saveNum('pushpush_lastPlayed', TOTAL_STAGES);
-        this.levelSelect.update();
+        this._cheatResetClicks++;
+        if (this._cheatResetClicks >= 2) {
+          this._cheatResetClicks = 0;
+          this._cheatArmed = false;
+          this.lastCleared = TOTAL_STAGES;
+          this.lastPlayed = TOTAL_STAGES;
+          this._saveNum('pushpush_lastCleared', TOTAL_STAGES);
+          this._saveNum('pushpush_lastPlayed', TOTAL_STAGES);
+          this.levelSelect.update();
+        }
       }
     });
     this._updateUndoButtons();
