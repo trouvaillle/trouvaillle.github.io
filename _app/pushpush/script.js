@@ -92,18 +92,34 @@ class SoundManager {
     this._icon = document.getElementById('soundIcon');
   }
 
-  play(name) {
-    if (this._muted) return;
+  play(name, loop = false) {
     if (!this._sounds[name]) {
       this._sounds[name] = new Audio(SOUND_PATH + name + '.wav');
     }
+    this._sounds[name].loop = loop;
     this._sounds[name].currentTime = 0;
-    this._sounds[name].play().catch(() => {});
+    if (!this._muted) {
+      this._sounds[name].play().catch(() => {});
+    }
+  }
+
+  stop(name) {
+    if (this._sounds[name]) {
+      this._sounds[name].pause();
+      this._sounds[name].currentTime = 0;
+    }
   }
 
   toggle() {
     this._muted = !this._muted;
     this._icon.className = this._muted ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high';
+    if (this._muted) {
+      Object.values(this._sounds).forEach(s => s.pause());
+    } else {
+      for (const s of Object.values(this._sounds)) {
+        if (s.loop) s.play().catch(() => {});
+      }
+    }
   }
 }
 
@@ -473,6 +489,7 @@ class InputManager {
       this.game.renderer.stopWelcomeAnimation();
       this.game.state = STATE.WELCOME;
       this.game.renderer.startWelcomeAnimation();
+      this.game.sound.play('start', true);
       this.game._updateUndoButtons();
       return;
     }
@@ -622,6 +639,7 @@ class Game {
     this._updateUndoButtons();
     this.renderer.startWelcomeAnimation();
     this.state = STATE.WELCOME;
+    this.sound.play('start', true);
     this._loop();
   }
 
@@ -668,6 +686,7 @@ class Game {
 
   handleInput(input) {
     if (this.state === STATE.WELCOME) {
+      this.sound.stop('start');
       this.renderer.stopWelcomeAnimation();
       this.loadStage(this.currentStage);
       this.state = STATE.PLAYING;
