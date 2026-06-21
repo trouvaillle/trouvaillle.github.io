@@ -110,6 +110,10 @@ class SoundManager {
     }
   }
 
+  stopAll() {
+    Object.values(this._sounds).forEach(s => { s.pause(); s.currentTime = 0; });
+  }
+
   toggle() {
     this._muted = !this._muted;
     this._icon.className = this._muted ? 'fa-solid fa-volume-xmark' : 'fa-solid fa-volume-high';
@@ -728,6 +732,7 @@ class Game {
   }
 
   loadStage(index) {
+    this.sound.stopAll();
     if (this.renderer.clearTimer) this.renderer.stopClearTimer();
     if (this.state === STATE.WELCOME) this.renderer.stopWelcomeAnimation();
     this.currentStage = Math.min(index, TOTAL_STAGES - 1);
