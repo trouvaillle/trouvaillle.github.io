@@ -1,5 +1,8 @@
 source 'https://rubygems.org'
 
+gem "csv"
+gem "base64"
+gem "faraday-retry"
 gem "jekyll"
 gem "jekyll-paginate"
 gem "jekyll-sitemap"

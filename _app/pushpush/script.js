@@ -92,6 +92,12 @@ class Board {
       if (cell === CELL.VOID) return CELL.VOID;
       return CELL.EMPTY;
     }));
+    this.initialHouseCount = 0;
+    for (let r = 0; r < ROWS; r++) {
+      for (let c = 0; c < COLS; c++) {
+        if (this.terrain[r][c] === CELL.HOUSE_EMPTY) this.initialHouseCount++;
+      }
+    }
   }
 
   get(r, c) {
@@ -109,11 +115,11 @@ class Board {
     this.grid[r][c] = this.terrain[r][c];
   }
 
-  countHouseEmpty() {
+  getFilledHouseCount() {
     let count = 0;
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
-        if (this.grid[r][c] === CELL.HOUSE_EMPTY) count++;
+        if (this.grid[r][c] === CELL.HOUSE_FILLED) count++;
       }
     }
     return count;
@@ -457,7 +463,7 @@ class Game {
 
   _update() {
     if (this.state === STATE.PLAYING && this.board) {
-      if (this.board.countHouseEmpty() === 0) {
+      if (this.board.getFilledHouseCount() >= this.board.initialHouseCount) {
         this.state = STATE.CLEAR;
         this._onClear();
       } else if (!this.board.hasAnyMovableBall()) {
