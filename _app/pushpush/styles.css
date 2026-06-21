@@ -6,6 +6,9 @@ visible: false
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 html, body {
@@ -14,6 +17,9 @@ html, body {
   font-family: 'PT Sans', sans-serif;
   background: #222;
   touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .container {
