@@ -719,13 +719,13 @@ class Game {
     this.history = [];
     this.redoStack = [];
     this.moveCount = 0;
+    this.state = STATE.PLAYING;
     this._updateUndoButtons();
     this._stopReplay();
     document.getElementById('showMovesBtn').style.display = 'none';
     const grid = this.loader.getStageData(this.currentStage);
     this.board = new Board(grid);
     this.player = new Player(this.board);
-    this.state = STATE.PLAYING;
     this.levelSelect.update();
     if (this.levelLabel) {
       this.levelLabel.textContent = `Level ${this.currentStage + 1}`;
