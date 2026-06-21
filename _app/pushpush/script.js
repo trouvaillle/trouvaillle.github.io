@@ -384,8 +384,8 @@ class InputManager {
     this._holdTimer = setTimeout(() => {
       this._holdTimer = setInterval(() => {
         if (this._holdDir) this.game.handleInput({ type: 'move', dir: this._holdDir });
-      }, 100);
-    }, 300);
+      }, 500);
+    }, 500);
   }
 
   _onDpadUp(e) {
