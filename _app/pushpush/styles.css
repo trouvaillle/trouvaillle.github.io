@@ -13,6 +13,7 @@ html, body {
   overflow: hidden;
   font-family: 'PT Sans', sans-serif;
   background: #222;
+  touch-action: manipulation;
 }
 
 .container {
