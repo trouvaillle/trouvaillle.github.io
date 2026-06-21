@@ -147,7 +147,7 @@ html, body {
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   user-select: none;
-  min-height: 52px;
+  min-height: 78px;
 }
 
 #dpad button:active {
