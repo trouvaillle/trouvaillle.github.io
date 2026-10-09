@@ -1,0 +1,14 @@
+{
+  "name": "온조 만세력",
+  "short_name": "온조 만세력",
+  "description": "사주 · 절기 · 음양력 계산 라이브러리",
+  "start_url": "/app/perpetual/",
+  "display": "standalone",
+  "background_color": "#11100d",
+  "theme_color": "#11100d",
+  "icons": [
+    { "src": "/app/perpetual/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/app/perpetual/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/app/perpetual/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

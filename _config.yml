@@ -290,7 +290,7 @@ header_pages:
 collections:
   app:
     output: true
-    permalink: /:collection/:name/
+    permalink: /:collection/:path/
   googleacf:
     output: true
     permalink: /googleacf4b0f40f4c4953.html

@@ -1,0 +1,55 @@
+---
+title: Manseryeok
+layout: none
+permalink: /app/perpetual
+date: 2026-10-09 14:09:20 +0900
+visible: true
+---
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>온조 만세력</title>
+    <meta name="description" content="사주 · 절기 · 음양력 계산 라이브러리. 생년월일시로 사주팔자, 대운, 세운, 신살, 지장간을 계산합니다." />
+    <meta name="theme-color" content="#11100d" />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      (function () {
+        try {
+          var mode = localStorage.getItem('onjo-theme') || 'system'
+          var dark = mode === 'dark' || (mode !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+          document.documentElement.dataset.theme = dark ? 'dark' : 'light'
+        } catch (error) {
+          document.documentElement.dataset.theme = 'light'
+        }
+      })()
+    </script>
+    <link rel="icon" href="/app/perpetual/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/svg+xml" href="/app/perpetual/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/app/perpetual/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/app/perpetual/favicon-48.png" />
+    <link rel="apple-touch-icon" href="/app/perpetual/apple-touch-icon.png" />
+    <link rel="manifest" href="/app/perpetual/site.webmanifest" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="온조 만세력" />
+    <meta property="og:title" content="온조 만세력" />
+    <meta property="og:description" content="사주 · 절기 · 음양력 계산 라이브러리. 생년월일시로 사주팔자, 대운, 세운, 신살, 지장간을 계산합니다." />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:image" content="/app/perpetual/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="온조 만세력" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="온조 만세력" />
+    <meta name="twitter:description" content="사주 · 절기 · 음양력 계산 라이브러리." />
+    <meta name="twitter:image" content="/app/perpetual/og.png" />
+    <script type="module" crossorigin src="/app/perpetual/assets/index-BR8xClCj.js"></script>
+    <link rel="stylesheet" crossorigin href="/app/perpetual/assets/index-Dz5047bC.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
