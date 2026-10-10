@@ -52,7 +52,7 @@ header_pages:
                 <span>written by <a href="https://github.com/trouvaillle">trouvaillle</a></span>-->
             </div>
             <div class="right">
-                <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?&title_bg=%23555555&count_bg=%23787878&url={{ site.url | uri_escape }}{{ page.url | replace: '.html', '' | uri_escape }}"></img>
+                <img src="https://komarev.com/ghpvc/?username={{ site.url | uri_escape }}{{ page.url | replace: '.html', '' | uri_escape }}&color=blue"/>
             </div>
         </div>
     </header>
