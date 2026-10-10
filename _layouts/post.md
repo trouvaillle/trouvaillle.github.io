@@ -52,7 +52,9 @@ header_pages:
                 <span>written by <a href="https://github.com/trouvaillle">trouvaillle</a></span>-->
             </div>
             <div class="right">
+                <!--
                 <img src="https://komarev.com/ghpvc/?username={{ site.url | uri_escape }}{{ page.url | replace: '.html', '' | uri_escape }}&color=blue"/>
+                -->
             </div>
         </div>
     </header>
